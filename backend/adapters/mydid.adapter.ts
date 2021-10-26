@@ -1,7 +1,6 @@
-let DidSDK = require('@elastosfoundation/did-js-sdk');
+import { DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
 
-class MyDIDAdapter extends DidSDK.DefaultDIDAdapter {
-
+export class MyDIDAdapter extends DefaultDIDAdapter {
     createIdTransaction(payload, memo) {
         const assistAPIKey = "IdSFtQosmCwCB9NOLltkZrFy5VqtQn8QbxBKQoHPw7zp3w0hDOyOYjgL53DO3MDH";
         const assistAPIEndpoints = {
@@ -31,5 +30,3 @@ class MyDIDAdapter extends DidSDK.DefaultDIDAdapter {
         }).then(console.log)
     }
 }
-
-module.exports = MyDIDAdapter;
