@@ -231,7 +231,7 @@ class DBService {
     public async listCanVoteProposal(title: string, pageNum: number, pageSize: number) {
         let { start, end } = this.getValidVoteDate();
 
-        let query = { title: '', status: 'approved', $gte: { createTime: start.getTime() }, $lt: { createTime: end.getTime() } };
+        let query = { title: '', status: 'approved', createTime: {$gte:start.getTime()} };
         if (title) {
             query['title'] = title;
         }
@@ -256,7 +256,11 @@ class DBService {
             await this.client.connect();
             const collection = this.client.db().collection('votes');
             let result = await collection.find({ creator }, { sort: { voteTime: -1 } }).project({ '_id': 0 }).toArray();
-            return { code: 200, message: 'success', data: result };
+            let data: any[] = [];
+            result.forEach((item) => {
+                data.push(item.proposal);
+            })
+            return {code: 200, message: 'success', data};
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
@@ -273,10 +277,7 @@ class DBService {
             await this.client.connect();
 
             const collectionProposal = this.client.db().collection('proposals');
-            const result = await collectionProposal.find({
-                id: proposal, $gte: { createTime: start.getTime() },
-                $lt: { createTime: end.getTime() }
-            }).limit(1).toArray();
+            const result = await collectionProposal.find({id:proposal, createTime: {$gte: start.getTime()}}).limit(1).toArray();
             if (result.length === 0) {
                 return { code: 403, message: 'forbidden' };
             }
