@@ -9,8 +9,8 @@ import { dbService } from '../services/db.service';
 let router = Router();
 
 /* Used for service check. */
-router.get('/check', (req, res) => {
-    res.json({ code: 200, message: 'success' });
+router.get('/check', async (req, res) => {
+    res.json(await dbService.checkConnect());
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises

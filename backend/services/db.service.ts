@@ -2,6 +2,7 @@ import { MongoClient } from "mongodb";
 import { Config } from "../config";
 import logger from "../logger";
 import { Proposal } from "../model/proposal";
+import { CommonResponse } from "../model/response";
 import { ProposalStatus } from "../model/proposalstatus";
 import { User } from "../model/user";
 
@@ -12,6 +13,19 @@ class DBService {
         this.client = new MongoClient(Config.mongodb, {
             //useNewUrlParser: true, useUnifiedTopology: true
         });
+    }
+
+    public async checkConnect(): Promise<CommonResponse> {
+        try {
+            await this.client.connect();
+            await this.client.db().collection('users').find({}).limit(1);
+            return { code: 200, message: 'success'};
+        } catch (err) {
+            logger.error(err);
+            return { code: 200, message: 'mongodb connect failed'};
+        } finally {
+            await this.client.close();
+        }
     }
 
     public async updateUser(did: string, name: string, email: string): Promise<number> {
@@ -32,7 +46,7 @@ class DBService {
         try {
             await this.client.connect();
             const collection = this.client.db().collection<User>('users');
-            return (await collection.find({ did }).project<User>({ '_id': 0 }).limit(1).toArray())[1];
+            return (await collection.find({ did }).project<User>({ '_id': 0 }).limit(1).toArray())[0];
         } catch (err) {
             logger.error(err);
             return null;
@@ -215,7 +229,7 @@ class DBService {
     }
 
     public async listCanVoteProposal(title: string, pageNum: number, pageSize: number) {
-        let { start, end } = await this.getValidVoteDate();
+        let { start, end } = this.getValidVoteDate();
 
         let query = { title: '', status: 'approved', $gte: { createTime: start.getTime() }, $lt: { createTime: end.getTime() } };
         if (title) {
@@ -253,7 +267,7 @@ class DBService {
 
     // TODO: voter is really string?
     public async vote(proposal: Proposal, voter: string) {
-        let { start, end } = await this.getValidVoteDate();
+        let { start, end } = this.getValidVoteDate();
 
         try {
             await this.client.connect();
