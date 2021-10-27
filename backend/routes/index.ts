@@ -1,18 +1,20 @@
 import { VerifiablePresentation } from '@elastosfoundation/did-js-sdk';
-import express from 'express';
+import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import { v1 as uuidV1 } from 'uuid';
 import { Config } from '../config';
+import { ProposalStatus } from '../model/proposalstatus';
 import { dbService } from '../services/db.service';
 
-let router = express.Router();
+let router = Router();
 
 /* Used for service check. */
-router.get('/check', function (req, res) {
+router.get('/check', (req, res) => {
     res.json({ code: 200, message: 'success' });
 });
 
-router.post('/login', async function (req, res) {
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.post('/login', async (req, res) => {
     let presentationStr = req.body;
     let vp = VerifiablePresentation.parse(presentationStr);
     let valid = await vp.isValid();
@@ -22,6 +24,11 @@ router.post('/login', async function (req, res) {
     }
 
     let did = vp.getHolder().getMethodSpecificId();
+    if (!did) {
+        res.json({ code: 400, message: 'User did not exists' })
+        return;
+    }
+
     let name = vp.getCredential(`name`).getSubject().getProperty('name');
     let email = vp.getCredential(`email`).getSubject().getProperty('email');
     let matchedCount = await dbService.updateUser(did, name, email);
@@ -34,18 +41,20 @@ router.post('/login', async function (req, res) {
     res.json({ code: 200, message: 'success', data: token });
 })
 
-router.get('/currentUser', function (req, res) {
+router.get('/currentUser', (req, res) => {
     res.json({ code: 200, message: 'success', data: req.user })
 })
 
-router.get('/active', async function (req, res) {
-    let code = req.query.code;
-    let did = req.user.did;
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/active', async (req, res) => {
+    let code = req.query.code as string;
+    let did = req.user.did as string;
 
     res.json(await dbService.activateUser(did, code));
 })
 
-router.post('/user/add', async function (req, res) {
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.post('/user/add', async (req, res) => {
     if (req.user.type !== 'admin') {
         res.json({ code: 403, message: 'forbidden' });
         return;
@@ -59,12 +68,14 @@ router.post('/user/add', async function (req, res) {
 
     let code = (Math.random() * 10000 + '').slice(0, 4);
     res.json(await dbService.addUser({
+        key: '',
         id: uuidV1(), tgName, did, type: 'user', code,
         activate: false, createTime: Date.now()
     }));
 })
 
-router.get('/user/remove/:did', async function (req, res) {
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/user/remove/:did', async (req, res) => {
     if (req.user.type !== 'admin') {
         res.json({ code: 403, message: 'forbidden' });
         return;
@@ -78,9 +89,10 @@ router.get('/user/remove/:did', async function (req, res) {
     res.json(await dbService.removeUser(did));
 })
 
-router.get('/user/list', async function (req, res) {
-    let pageNumStr = req.query.pageNum;
-    let pageSizeStr = req.query.pageSize;
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/user/list', async (req, res) => {
+    let pageNumStr = req.query.pageNum as string;
+    let pageSizeStr = req.query.pageSize as string;
     let key = req.user.key;
 
     try {
@@ -100,26 +112,28 @@ router.get('/user/list', async function (req, res) {
     }
 })
 
-router.get('/proposal/audit/:id', async function (req, res) {
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/proposal/audit/:id', async (req, res) => {
     if (req.user.type !== 'admin') {
         res.json({ code: 403, message: 'forbidden' });
         return;
     }
 
-    let proposalId: string = req.params.id;
-    let result: string = req.query.result;
+    let proposalId = req.params.id as string;
+    let result = req.query.result as ProposalStatus;
     if (!proposalId || !result) {
         res.json({ code: 400, message: 'required parameter absence' });
         return;
     }
 
-    let status = result === "rejected" ? "rejected" : "approved";
+    let status: ProposalStatus = result === "rejected" ? ProposalStatus.REJECTED : ProposalStatus.APPROVED;
     let operator = req.user.id;
 
     res.json(await dbService.auditProposal(proposalId, status, operator));
 })
 
-router.post('/proposal/add', async function (req, res) {
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.post('/proposal/add', async (req, res) => {
     if (!req.user.activate) {
         res.json({ code: 403, message: 'forbidden' });
         return;
@@ -134,9 +148,10 @@ router.post('/proposal/add', async function (req, res) {
     res.json(await dbService.addProposal({ id: uuidV1(), title, link, creator: req.user.id, createTime: Date.now(), status: 'new' }));
 })
 
-router.get('/proposal/my', async function (req, res) {
-    let pageNumStr: string = req.query.pageNum;
-    let pageSizeStr: string = req.query.pageSize;
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/proposal/my', async (req, res) => {
+    let pageNumStr = req.query.pageNum as string;
+    let pageSizeStr = req.query.pageSize as string;
     let userId: string = req.user.id;
 
     let pageNum: number, pageSize: number;
@@ -158,10 +173,11 @@ router.get('/proposal/my', async function (req, res) {
     res.json(await dbService.listUsersProposal(userId, pageNum, pageSize));
 })
 
-router.get('/proposal/listAll', async function (req, res) {
-    let pageNumStr: string = req.query.pageNum;
-    let pageSizeStr = req.query.pageSize;
-    let title: string = req.query.title;
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/proposal/listAll', async (req, res) => {
+    let pageNumStr = req.query.pageNum as string;
+    let pageSizeStr = req.query.pageSize as string;
+    let title = req.query.title as string;
 
     try {
         let pageNum = pageNumStr ? parseInt(pageNumStr) : 1;
@@ -181,10 +197,11 @@ router.get('/proposal/listAll', async function (req, res) {
     }
 })
 
-router.get('/proposal/listCanVote', async function (req, res) {
-    let pageNumStr: string = req.query.pageNum;
-    let pageSizeStr: string = req.query.pageSize;
-    let title: string = req.query.title;
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/proposal/listCanVote', async (req, res) => {
+    let pageNumStr = req.query.pageNum as string;
+    let pageSizeStr = req.query.pageSize as string;
+    let title = req.query.title as string;
 
     try {
         let pageNum: number = pageNumStr ? parseInt(pageNumStr) : 1;
@@ -204,7 +221,8 @@ router.get('/proposal/listCanVote', async function (req, res) {
     }
 })
 
-router.get('/proposal/vote/:id', async function (req, res) {
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/proposal/vote/:id', async (req, res) => {
     let id = req.params.id;
     let userId = req.user.id;
 
@@ -216,7 +234,8 @@ router.get('/proposal/vote/:id', async function (req, res) {
     res.json(await dbService.vote(id, userId));
 })
 
-router.get('/proposal/userHaveVoted', async function (req, res) {
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/proposal/userHaveVoted', async (req, res) => {
     let userId = req.user.id;
     res.json(await dbService.userHaveVoted(userId));
 })

@@ -9,6 +9,7 @@ import { MyDIDAdapter } from "./adapters/mydid.adapter";
 import { run as runJobs } from "./jobs";
 import { authMiddleware } from "./middlewares/auth.middleware";
 import router from "./routes/index";
+import { normalizePort } from "./utils";
 
 let app = express();
 
@@ -49,25 +50,21 @@ server.listen(port);
 /**
  * Event listener for HTTP server "error" event.
  */
-server.on('error', (error: any) => {
-    if (error.syscall !== 'listen') {
+server.on('error', (error) => {
+    /* if (error.syscall !== 'listen') {
         throw error;
-    }
+    } */
 
     let bind = typeof port === 'string'
         ? 'Pipe ' + port
         : 'Port ' + port;
 
     // handle specific listen errors with friendly messages
-    switch (error.code) {
+    switch (error.name) {
         case 'EACCES':
-            console.error(bind + ' requires elevated privileges');
-            process.exit(1);
-            break;
+            throw new Error(bind + ' requires elevated privileges');
         case 'EADDRINUSE':
-            console.error(bind + ' is already in use');
-            process.exit(1);
-            break;
+            throw new Error(bind + ' is already in use');
         default:
             throw error;
     }
@@ -78,6 +75,9 @@ server.on('error', (error: any) => {
  */
 server.on('listening', () => {
     let addr = server.address();
+    if (!addr)
+        throw new Error("No server address!");
+
     let bind = typeof addr === 'string'
         ? 'pipe ' + addr
         : 'port ' + addr.port;
@@ -86,21 +86,4 @@ server.on('listening', () => {
 
 console.log("Server started, waiting for requests");
 
-/**
- * Normalize a port into a number, string, or false.
- */
-function normalizePort(val) {
-    let port = parseInt(val, 10);
 
-    if (isNaN(port)) {
-        // named pipe
-        return val;
-    }
-
-    if (port >= 0) {
-        // port number
-        return port;
-    }
-
-    return false;
-}

@@ -1,4 +1,5 @@
 .eslintrc.js
+.eslintrc.cjs
 rollup.*
 jest.*.config.js
 tests/

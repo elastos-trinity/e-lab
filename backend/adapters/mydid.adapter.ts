@@ -1,7 +1,7 @@
 import { DefaultDIDAdapter } from '@elastosfoundation/did-js-sdk';
 
 export class MyDIDAdapter extends DefaultDIDAdapter {
-    createIdTransaction(payload, memo) {
+    createIdTransaction(payload: string, memo: string) {
         const assistAPIKey = "IdSFtQosmCwCB9NOLltkZrFy5VqtQn8QbxBKQoHPw7zp3w0hDOyOYjgL53DO3MDH";
         const assistAPIEndpoints = {
             mainnet: "https://assist-restapi.tuum.tech/v2",
@@ -15,7 +15,7 @@ export class MyDIDAdapter extends DefaultDIDAdapter {
             "didRequest": JSON.parse(payload)
         };
 
-        fetch(assistAPIEndpoints["mainnet"] + "/didtx/create", {
+        void fetch(assistAPIEndpoints["mainnet"] + "/didtx/create", {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors', // no-cors, *cors, same-origin
             cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -25,8 +25,8 @@ export class MyDIDAdapter extends DefaultDIDAdapter {
                 'Authorization': assistAPIKey
             },
             body: JSON.stringify(requestBody)
-        }).then(function (response) {
-            response.json();
+        }).then(response => {
+            void response.json();
         }).then(console.log)
     }
 }

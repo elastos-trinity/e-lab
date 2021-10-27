@@ -2,11 +2,13 @@ module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: "./tsconfig.json"
+    extraFileExtensions: [".cjs"],
+    project: "./backend/tsconfig.json"
   },
   plugins: [
     '@typescript-eslint',
-    'import'
+    'import',
+    "prefer-arrow"
   ],
   extends: [
     'eslint:recommended',
@@ -17,7 +19,7 @@ module.exports = {
   ],
   rules: {
     // Generic JS
-    "space-before-function-paren": "off",
+    "space-before-function-parent": "off",
     "no-tabs": "off",
     "indent": "off",
     "quotes": "off",
@@ -39,6 +41,7 @@ module.exports = {
     "no-promise-executor-return": "error",
     "no-non-null-assertion": "off",
     "import/no-duplicates": "off",
+    "no-param-reassign": "warn",
 
     // Node
     "node/no-unsupported-features/es-syntax": "off",
@@ -47,17 +50,26 @@ module.exports = {
     // TS specific
     "@typescript-eslint/no-misused-promises": "error",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-inferrable-types": "warn",
     "@typescript-eslint/no-namespace": "off",
-    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-extra-semi": "warn",
     "@typescript-eslint/no-this-alias": "off",
     "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-empty-interface": "off",
 
-    "import/no-unresolved": "error"
+    "import/no-unresolved": "error",
+
+    "prefer-arrow/prefer-arrow-functions": [
+      "warn",
+      {
+        "disallowPrototype": true,
+        "singleReturnOnly": false,
+        "classPropertiesAllowed": false
+      }
+    ]
   }
 };

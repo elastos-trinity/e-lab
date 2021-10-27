@@ -18,8 +18,9 @@
     "sourceMap": true,
     "strict": false,
     "skipLibCheck": true,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
+    "noImplicitAny": true,
+    "strictPropertyInitialization": true,
+    "strictNullChecks": true,
     "emitDecoratorMetadata": true,
     "removeComments": true,
     "isolatedModules": false,
@@ -27,6 +28,7 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "typeRoots": [
+      "types",
       "node_modules/@types"
     ]
   }

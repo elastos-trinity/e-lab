@@ -1,40 +1,50 @@
-import mongodb from "mongodb";
+import { MongoClient } from "mongodb";
 import { Config } from "../config";
 import logger from "../logger";
+import { Proposal } from "../model/proposal";
+import { ProposalStatus } from "../model/proposalstatus";
+import { User } from "../model/user";
 
 class DBService {
-    public async updateUser(did, name, email): Promise<number> {
-        let client = new mongodb.MongoClient(Config.mongodb, { useNewUrlParser: true, useUnifiedTopology: true });
+    private client: MongoClient;
+
+    constructor() {
+        this.client = new MongoClient(Config.mongodb, {
+            //useNewUrlParser: true, useUnifiedTopology: true
+        });
+    }
+
+    public async updateUser(did: string, name: string, email: string): Promise<number> {
         try {
-            await client.connect();
-            const collection = client.db().collection('users');
+            await this.client.connect();
+            const collection = this.client.db().collection('users');
             let result = await collection.updateOne({ did }, { $set: { name, email } });
             return result.matchedCount;
         } catch (err) {
             logger.error(err);
+            return -1;
         } finally {
-            await client.close();
+            await this.client.close();
         }
     }
 
-    public async findUserByDID(did) {
-        let client = new mongodb.MongoClient(Config.mongodb, { useNewUrlParser: true, useUnifiedTopology: true });
+    public async findUserByDID(did: string): Promise<User | null> {
         try {
-            await client.connect();
-            const collection = client.db().collection('users');
-            return await collection.find({ did }).project({ '_id': 0 }).limit(1).toArray();
+            await this.client.connect();
+            const collection = this.client.db().collection<User>('users');
+            return (await collection.find({ did }).project<User>({ '_id': 0 }).limit(1).toArray())[1];
         } catch (err) {
             logger.error(err);
+            return null;
         } finally {
-            await client.close();
+            await this.client.close();
         }
     }
 
-    public async activateUser(did, code) {
-        let client = new mongodb.MongoClient(Config.mongodb, { useNewUrlParser: true, useUnifiedTopology: true });
+    public async activateUser(did: string, code: string) {
         try {
-            await client.connect();
-            const collection = client.db().collection('users');
+            await this.client.connect();
+            const collection = this.client.db().collection('users');
             let result = await collection.updateOne({ did, code }, { $set: { active: true } });
             if (result.matchedCount === 1) {
                 return { code: 200, message: 'success' };
@@ -45,15 +55,14 @@ class DBService {
             logger.error(err);
             return { code: 500, message: 'server error' };
         } finally {
-            await client.close();
+            await this.client.close();
         }
     }
 
-    public async addUser(user) {
-        let client = new mongodb.MongoClient(Config.mongodb, { useNewUrlParser: true, useUnifiedTopology: true });
+    public async addUser(user: User) {
         try {
-            await client.connect();
-            const collection = client.db().collection('users');
+            await this.client.connect();
+            const collection = this.client.db().collection('users');
             const docs = await collection.find({ $or: [{ did: user.did }, { tgName: user.tgName }] }).toArray();
             if (docs.length === 0) {
                 await collection.insertOne(user);
@@ -65,15 +74,14 @@ class DBService {
             logger.error(err);
             return { code: 500, message: 'server error' };
         } finally {
-            await client.close();
+            await this.client.close();
         }
     }
 
-    public async removeUser(did) {
-        let client = new mongodb.MongoClient(Config.mongodb, { useNewUrlParser: true, useUnifiedTopology: true });
+    public async removeUser(did: string) {
         try {
-            await client.connect();
-            const collection = client.db().collection('users');
+            await this.client.connect();
+            const collection = this.client.db().collection('users');
             let result = await collection.deleteOne({ did });
             if (result.deletedCount === 1) {
                 return { code: 200, message: 'success' };
@@ -84,21 +92,19 @@ class DBService {
             logger.error(err);
             return { code: 500, message: 'server error' };
         } finally {
-            await client.close();
+            await this.client.close();
         }
     }
 
-    public async listUser(key, pageNum, pageSize) {
-        let client = new mongodb.MongoClient(Config.mongodb, { useNewUrlParser: true, useUnifiedTopology: true });
-
+    public async listUser(key: string, pageNum: number, pageSize: number) {
         let query = { type: 'user' };
         if (key) {
             Object.assign(query, { $or: [{ did: key }, { name: { $regex: key } }, { tgName: { $regex: key } }] })
         }
 
         try {
-            await client.connect();
-            const collection = client.db().collection('users');
+            await this.client.connect();
+            const collection = this.client.db().collection('users');
             let total = await collection.find(query).count();
             let result = await collection.find(query).sort({ createTime: -1 }).project({ "_id": 0 })
                 .limit(pageSize).skip((pageNum - 1) * pageSize).toArray();
@@ -107,15 +113,15 @@ class DBService {
             logger.error(err);
             return { code: 500, message: 'server error' };
         } finally {
-            await client.close();
+            await this.client.close();
         }
     }
 
-    public async auditProposal(id, status, operator) {
-        let client = new mongodb.MongoClient(Config.mongodb, { useNewUrlParser: true, useUnifiedTopology: true });
+    // TODO: operator is really string ?
+    public async auditProposal(id: string, status: ProposalStatus, operator: string) {
         try {
-            await client.connect();
-            const collection = client.db().collection('proposals');
+            await this.client.connect();
+            const collection = this.client.db().collection('proposals');
             let result = await collection.updateOne({ id, status: 'new' },
                 { $set: { status, operator, operateTime: Date.now() } });
             if (result.matchedCount === 1) {
@@ -127,30 +133,29 @@ class DBService {
             logger.error(err);
             return { code: 500, message: 'server error' };
         } finally {
-            await client.close();
+            await this.client.close();
         }
     }
 
-    public async addProposal(proposal) {
-        let client = new mongodb.MongoClient(Config.mongodb, { useNewUrlParser: true, useUnifiedTopology: true });
+    public async addProposal(proposal: Proposal) {
         try {
-            await client.connect();
-            const collection = client.db().collection('proposals');
+            await this.client.connect();
+            const collection = this.client.db().collection('proposals');
             await collection.insertOne(proposal);
             return { code: 200, message: 'success' };
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
         } finally {
-            await client.close();
+            await this.client.close();
         }
     }
 
-    public async listUsersProposal(creator, pageNum, pageSize) {
-        let client = new mongodb.MongoClient(Config.mongodb, { useNewUrlParser: true, useUnifiedTopology: true });
+    // TODO: creator is really string?
+    public async listUsersProposal(creator: string, pageNum: number, pageSize: number) {
         try {
-            await client.connect();
-            const collection = client.db().collection('proposals');
+            await this.client.connect();
+            const collection = this.client.db().collection('proposals');
             let total = await collection.find({ creator }).count();
             let result = await collection.find({ creator }, { sort: { createTime: -1 } }).project({ '_id': 0 })
                 .limit(pageSize).skip((pageNum - 1) * pageSize).toArray();
@@ -159,19 +164,21 @@ class DBService {
             logger.error(err);
             return { code: 500, message: 'server error' };
         } finally {
-            await client.close();
+            await this.client.close();
         }
     }
 
-    public async listAllProposal(title, pageNum, pageSize) {
-        let client = new mongodb.MongoClient(Config.mongodb, { useNewUrlParser: true, useUnifiedTopology: true });
-        let query = {};
+    public async listAllProposal(title: string, pageNum: number, pageSize: number) {
+        let query: {
+            title?: string
+        } = {};
+
         if (title) {
             query['title'] = title;
         }
         try {
-            await client.connect();
-            const collection = client.db().collection('proposals');
+            await this.client.connect();
+            const collection = this.client.db().collection('proposals');
             let total = await collection.find(query).count();
             let result = await collection.find(query, { sort: { createTime: -1 } }).project({ '_id': 0 })
                 .limit(pageSize).skip((pageNum - 1) * pageSize).toArray();
@@ -180,18 +187,18 @@ class DBService {
             logger.error(err);
             return { code: 500, message: 'server error' };
         } finally {
-            await client.close();
+            await this.client.close();
         }
     }
 
-    private async setTimeToZero(date: Date) {
+    private setTimeToZero(date: Date) {
         date.setHours(0);
         date.setMinutes(0);
         date.setSeconds(0);
         date.setMilliseconds(0);
     }
 
-    private async getValidVoteDate() {
+    private getValidVoteDate() {
         let today = new Date(), start = new Date(), end = new Date();
         if (today.getDay() < 16) {
             start.setMonth(today.getMonth() - 1);
@@ -208,17 +215,15 @@ class DBService {
     }
 
     public async listCanVoteProposal(title: string, pageNum: number, pageSize: number) {
-        let client = new mongodb.MongoClient(Config.mongodb, { useNewUrlParser: true, useUnifiedTopology: true });
-
         let { start, end } = await this.getValidVoteDate();
 
-        let query = { status: 'approved', $gte: { createTime: start.getTime() }, $lt: { createTime: end.getTime() } };
+        let query = { title: '', status: 'approved', $gte: { createTime: start.getTime() }, $lt: { createTime: end.getTime() } };
         if (title) {
             query['title'] = title;
         }
         try {
-            await client.connect();
-            const collection = client.db().collection('proposals');
+            await this.client.connect();
+            const collection = this.client.db().collection('proposals');
             let total = await collection.find(query).count();
             let result = await collection.find(query, { sort: { createTime: -1 } }).project({ '_id': 0 })
                 .limit(pageSize).skip((pageNum - 1) * pageSize).toArray();
@@ -227,33 +232,33 @@ class DBService {
             logger.error(err);
             return { code: 500, message: 'server error' };
         } finally {
-            await client.close();
+            await this.client.close();
         }
     }
 
-    public async userHaveVoted(creator) {
-        let client = new mongodb.MongoClient(Config.mongodb, { useNewUrlParser: true, useUnifiedTopology: true });
+    // TODO: creator is really string?
+    public async userHaveVoted(creator: string) {
         try {
-            await client.connect();
-            const collection = client.db().collection('votes');
+            await this.client.connect();
+            const collection = this.client.db().collection('votes');
             let result = await collection.find({ creator }, { sort: { voteTime: -1 } }).project({ '_id': 0 }).toArray();
             return { code: 200, message: 'success', data: result };
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
         } finally {
-            await client.close();
+            await this.client.close();
         }
     }
 
-    public async vote(proposal, voter) {
-        let client = new mongodb.MongoClient(Config.mongodb, { useNewUrlParser: true, useUnifiedTopology: true });
+    // TODO: voter is really string?
+    public async vote(proposal: Proposal, voter: string) {
         let { start, end } = await this.getValidVoteDate();
 
         try {
-            await client.connect();
+            await this.client.connect();
 
-            const collectionProposal = client.db().collection('proposals');
+            const collectionProposal = this.client.db().collection('proposals');
             const result = await collectionProposal.find({
                 id: proposal, $gte: { createTime: start.getTime() },
                 $lt: { createTime: end.getTime() }
@@ -262,7 +267,7 @@ class DBService {
                 return { code: 403, message: 'forbidden' };
             }
 
-            const collection = client.db().collection('votes');
+            const collection = this.client.db().collection('votes');
             const docs = await collection.find({ voter, proposal }).limit(1).toArray();
             if (docs.length === 0) {
                 await collection.insertOne({ voter, proposal, voteTime: Date.now() });
@@ -274,7 +279,7 @@ class DBService {
             logger.error(err);
             return { code: 500, message: 'server error' };
         } finally {
-            await client.close();
+            await this.client.close();
         }
     }
 }
