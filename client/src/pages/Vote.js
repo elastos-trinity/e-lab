@@ -14,20 +14,20 @@ import Page from '../components/Page';
 import UserContext from '../UserContext';
 import { fDateTimeNormal } from '../utils/formatTime';
 import { api } from "../config";
-import ActivationRequired from "../components/ActivationRequired";
+import ActivationRequired from "../components/authentication/ActivationRequired";
 
 export default function Vote() {
-  const [proposal, setProposal] = useState([]);
+  const [proposals, setProposals] = useState([]);
   const [backDropOpen, setBackDropOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
   const [userCanVote, setUserCanVote] = useState(true);
 
   useEffect(() => {
     setBackDropOpen(true)
-    getProposal();
+    fetchProposals();
   }, [])
 
-  const getProposal = () => {
+  const fetchProposals = () => {
     fetch(`${api.url}/api/v1/proposal/listCanVote`,
       {
         method: "GET",
@@ -37,7 +37,7 @@ export default function Vote() {
       }).then(response => response.json()).then(data => {
         if (data.code === 200) {
           const proposals = data.data.result;
-          setProposal(data.data.result);
+          setProposals(data.data.result);
 
           fetch(`${api.url}/api/v1/proposal/userHaveVoted`,
             {
@@ -84,7 +84,7 @@ export default function Vote() {
         },
       }).then(response => response.json()).then(data => {
         if (data.code === 200) {
-          getProposal()
+          fetchProposals()
         } else {
           console.log(data);
         }
@@ -93,6 +93,41 @@ export default function Vote() {
       }).finally(() => {
         setBackDropOpen(false)
       })
+  }
+
+  function NoProposal() {
+    return (<div>Currently no proposal to vote for</div>);
+  }
+
+  function ProposalsList() {
+    proposals.map((row) => {
+      const { id, title, link } = row;
+      return (
+        <Card sx={{ minWidth: 275, mb: "20px", padding: "20px" }} key={id}>
+          <Stack direction="row" justifyContent="space-between">
+            <Stack>
+              <Typography variant="h5" color="text.primary" component="div" sx={{ mb: "15px" }}>
+                {title}
+              </Typography>
+              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                {link}
+              </Typography>
+            </Stack>
+            <Stack direction="column" justifyContent="center">
+              <Button
+                sx={{ width: "150px", mb: "20px" }}
+                variant="contained"
+                component={Button}
+                disabled={!userCanVote}
+                onClick={() => { handleVote() }}
+              >
+                Vote
+              </Button>
+            </Stack>
+          </Stack>
+        </Card>
+      );
+    })
   }
 
   return (
@@ -113,43 +148,8 @@ export default function Vote() {
 
         <ActivationRequired />
 
-        <Stack direction="row" alignItems="center" justifyContent="flex-end">
-          <Button
-            sx={{ width: "150px", mb: "20px" }}
-            variant="contained"
-            component={Button}
-            disabled={!userCanVote}
-            onClick={() => { handleVote() }}
-          >
-            Vote
-          </Button>
-        </Stack>
+        {proposals.length === 0 ? <NoProposal /> : <ProposalsList />}
 
-        {proposal.map((row) => {
-          const { id, title, link } = row;
-          return (
-            <Card sx={{ minWidth: 275, mb: "20px", padding: "20px" }} key={id}>
-              <Stack direction="row" justifyContent="space-between">
-                <Stack>
-                  <Typography variant="h5" color="text.primary" component="div" sx={{ mb: "15px" }}>
-                    {title}
-                  </Typography>
-                  <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                    {link}
-                  </Typography>
-                </Stack>
-                <Stack direction="column" justifyContent="center">
-                  <Radio
-                    checked={selectedValue === id}
-                    onChange={(event) => { setSelectedValue(event.target.value) }}
-                    value={id}
-                    name="radio-buttons"
-                  />
-                </Stack>
-              </Stack>
-            </Card>
-          );
-        })}
       </Container>
     </Page>
   );

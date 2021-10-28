@@ -5,7 +5,7 @@ export type User = {
   type: 'admin' | 'user';
   //key: string; // What is this? Is this optional? Some DB insert don't set this.
   active?: boolean; // Whether this user is active, meaning "confirmed" - telegram verified)
-  tgName?: string; // TODO: use telegram UID (constant), not "name" (can be changed)
-  code?: string; // TODO: what code is this?
+  telegramUserId?: string; // Telegram user ID (not username)
+  telegramVerificationCode?: string; // TODO: what code is this?
   creationTime?: number;
 }

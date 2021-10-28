@@ -15,30 +15,32 @@ import {
   TableContainer,
   TablePagination, Backdrop, CircularProgress
 } from '@mui/material';
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, NewUser } from '../components/_dashboard/user';
-import { api } from "../config";
+import Page from '../../../components/Page';
+import Label from '../../../components/Label';
+import Scrollbar from '../../../components/Scrollbar';
+import SearchNotFound from '../../../components/SearchNotFound';
+import { UserListHead, UserListToolbar, NewUser } from '../../../components/_dashboard/user';
+import { api } from "../../../config";
+import EditUserDialog from '../../../components/admin/EditUserDialog';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
-  { id: 'tgName', label: 'Telegram', alignRight: false },
   { id: 'did', label: 'DID', alignRight: false },
-  { id: 'code', label: 'Code', alignRight: false },
+  { id: 'telegramUserId', label: 'Telegram UID', alignRight: false },
+  { id: 'telegramVerificationCode', label: 'Telegram code', alignRight: false },
   { id: 'active', label: 'Active', alignRight: false },
 ];
 
 
-export default function User() {
+export default function Users() {
   const [page, setPage] = useState(0);
   const [filterName, setFilterName] = useState('');
   const [users, setUsers] = useState([]);
   const [count, setCount] = useState(0);
   const [backDropOpen, setBackDropOpen] = useState(false);
   const [newUserOpen, setNewUserOpen] = useState(false);
+  const [editedUser, setEditedUser] = useState(null);
 
   useEffect(() => {
     setBackDropOpen(true)
@@ -46,7 +48,8 @@ export default function User() {
   }, [page])
 
   const getAllUsers = () => {
-    fetch(`${api.url}/api/v1/user/list?pageNum=${page + 1}&key=${filterName}`,
+    console.log("Fetching users");
+    fetch(`${api.url}/api/v1/users/list?pageNum=${page + 1}&filter=${filterName}`,
       {
         method: "GET",
         headers: {
@@ -103,6 +106,14 @@ export default function User() {
     setFilterName(event.target.value);
   };
 
+  const handleUserClicked = (event, user) => {
+    setEditedUser(user);
+  };
+
+  const onEditUserDialogClosed = () => {
+    setEditedUser(null);
+  };
+
   const isUserNotFound = users.length === 0;
 
   return (
@@ -121,7 +132,7 @@ export default function User() {
           <Typography variant="h4" gutterBottom>
             Users
           </Typography>
-          <Button
+          {/* <Button
             variant="contained"
             component={RouterLink}
             to="#"
@@ -129,7 +140,7 @@ export default function User() {
             onClick={() => setNewUserOpen(true)}
           >
             New User
-          </Button>
+          </Button> */}
         </Stack>
 
         <Card>
@@ -145,24 +156,24 @@ export default function User() {
                   headLabel={TABLE_HEAD}
                 />
                 <TableBody>
-                  {users.map((row) => {
-                    const { id, name, email, tgName, did, code, active } = row;
+                  {users.map((user) => {
+                    const { name, email, telegramUserId, telegramVerificationCode, did, code, active } = user;
                     return (
                       <TableRow
                         hover
-                        key={id}
+                        key={did}
+                        onClick={event => handleUserClicked(event, user)}
                         tabIndex={-1}
-                        role="checkbox"
-                      >
+                        role="checkbox">
                         <TableCell align="left" size="small">
                           <Typography variant="subtitle2" noWrap>
                             {name}
                           </Typography>
                         </TableCell>
                         <TableCell align="left" size="small">{email}</TableCell>
-                        <TableCell align="left" size="small">{tgName}</TableCell>
                         <TableCell align="left">{did}</TableCell>
-                        <TableCell align="left" size="small">{code}</TableCell>
+                        <TableCell align="left" size="small">{telegramUserId}</TableCell>
+                        <TableCell align="left" size="small">{telegramVerificationCode}</TableCell>
                         <TableCell align="left" size="small">
                           <Label
                             variant="ghost"
@@ -185,6 +196,7 @@ export default function User() {
                   </TableBody>
                 )}
               </Table>
+              <EditUserDialog open={editedUser !== null} user={editedUser} onClose={() => onEditUserDialogClosed()} />
             </TableContainer>
           </Scrollbar>
 

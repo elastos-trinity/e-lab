@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Avatar, IconButton } from '@mui/material';
 import MenuPopover from '../../components/MenuPopover';
-import account from '../../_mocks_/account';
-
 
 export default function AccountPopover() {
   const navigate = useNavigate();
@@ -45,7 +43,7 @@ export default function AccountPopover() {
           })
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <Avatar /* src={account.photoURL} */ alt="photoURL" />
       </IconButton>
 
       <MenuPopover

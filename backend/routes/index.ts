@@ -79,15 +79,7 @@ router.get('/currentUser', (req, res) => {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/active', async (req, res) => {
-    let code = req.query.code as string;
-    let did = req.user.did as string;
-
-    res.json(await dbService.activateUser(did, code));
-})
-
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.post('/user/add', async (req, res) => {
+/* router.post('/user/add', async (req, res) => {
     if (req.user.type !== 'admin') {
         res.json({ code: 403, message: 'forbidden' });
         return;
@@ -99,12 +91,11 @@ router.post('/user/add', async (req, res) => {
         return;
     }
 
-    let code = (Math.random() * 10000 + '').slice(0, 4);
     res.json(await dbService.addUser({
-        tgName, did, type: 'user', code,
+        tgName, did, type: 'user',
         active: false, creationTime: Date.now()
     }));
-})
+}) */
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/user/remove/:did', async (req, res) => {
@@ -122,21 +113,51 @@ router.get('/user/remove/:did', async (req, res) => {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/user/list', async (req, res) => {
+router.post('/user/setTelegramUserId', async (req, res) => {
+    if (req.user.type !== 'admin') {
+        res.json({ code: 403, message: 'Admin only' });
+        return;
+    }
+
+    let { did, telegramUserId } = req.body;
+    if (!did || !telegramUserId) {
+        res.json({ code: 400, message: 'Missing DID or telegramUserId' });
+        return;
+    }
+    res.json({
+        code: 200,
+        message: 'success',
+        data: await dbService.setTelegramUserId(did, telegramUserId)
+    });
+})
+
+/**
+ * Attempt to verify the telegram verification code from the user.
+ */
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.post('/user/setTelegramVerificationCode', async (req, res) => {
+    let code = req.query.code as string;
+    let did = req.user.did as string;
+
+    res.json(await dbService.setTelegramVerificationCode(did, code));
+})
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/users/list', async (req, res) => {
     let pageNumStr = req.query.pageNum as string;
     let pageSizeStr = req.query.pageSize as string;
-    let did = req.user.did;
+    let filter = req.query.filter as string;
 
     try {
         let pageNum: number = pageNumStr ? parseInt(pageNumStr) : 1;
         let pageSize: number = pageSizeStr ? parseInt(pageSizeStr) : 10;
 
         if (pageNum < 1 || pageSize < 1) {
-            res.json({ code: 400, message: 'bad request' })
+            res.json({ code: 400, message: 'Invalid page number or page size' })
             return;
         }
 
-        res.json(await dbService.listUser(did, pageNum, pageSize));
+        res.json(await dbService.listUsers(filter, pageNum, pageSize));
     } catch (e) {
         console.log(e);
         res.json({ code: 400, message: 'bad request' });

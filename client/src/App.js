@@ -6,7 +6,6 @@ import Router from './routes';
 import ThemeConfig from './theme';
 import GlobalStyles from './theme/globalStyles';
 import ScrollToTop from './components/ScrollToTop';
-import { BaseOptionChartStyle } from './components/charts/BaseOptionChart';
 import { prepareConnectivitySDK } from './utils/connectivity';
 import UserContext from './UserContext';
 import { api } from "./config";
@@ -81,7 +80,6 @@ export default function App() {
       <ThemeConfig>
         <ScrollToTop />
         <GlobalStyles />
-        <BaseOptionChartStyle />
         <Router />
       </ThemeConfig>
     </UserContext.Provider>

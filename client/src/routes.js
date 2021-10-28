@@ -3,11 +3,7 @@ import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 import Logout from './pages/Logout';
 import Home from './pages/Home';
-import Register from './pages/Register';
-import DashboardHome from './pages/dashboard/Home';
-import Products from './pages/Products';
-import Blog from './pages/Blog';
-import User from './pages/User';
+import Users from './pages/dashboard/admin/Users';
 import NotFound from './pages/Page404';
 import Proposal from './pages/Proposal';
 import UserProposal from './pages/UserProposal';
@@ -20,7 +16,7 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { path: 'home', element: <Vote /> },
-        { path: 'user', element: <User /> },
+        { path: 'user', element: <Users /> },
         { path: 'proposal', element: <Proposal /> },
         { path: 'my-proposal', element: <UserProposal /> },
         { path: 'vote', element: <Vote /> },

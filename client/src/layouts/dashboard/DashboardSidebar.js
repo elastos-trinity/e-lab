@@ -7,10 +7,9 @@ import Logo from '../../components/Logo';
 import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
-import account from '../../_mocks_/account';
 import UserContext from '../../UserContext';
 
-const DRAWER_WIDTH = 280;
+const DRAWER_WIDTH = 550;
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
@@ -61,7 +60,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar, sideba
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
-            <Avatar src={account.photoURL} alt="photoURL" />
+            <Avatar /* src={account.photoURL} */ alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
                 DID: {user.did}

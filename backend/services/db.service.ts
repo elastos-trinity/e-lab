@@ -50,6 +50,69 @@ class DBService {
         }
     }
 
+    /**
+     * Updates telegram user ID and returns an activation code.
+     * When the telegram UID is changed, the user becomes not active until he confirms
+     * the code (in case the uid is changed after the user was confirmed one).
+     */
+    public async setTelegramUserId(did: string, telegramUserId: string): Promise<string | null> {
+        try {
+            await this.client.connect();
+            const collection = this.client.db().collection('users');
+
+            let telegramVerificationCode = new String((10000 + (Math.random() * 10000000))).slice(0, 4);
+            let result = await collection.updateOne({ did }, {
+                $set: {
+                    telegramUserId,
+                    telegramVerificationCode,
+                    active: false
+                }
+            });
+            if (result.matchedCount == 0)
+                return null;
+            else {
+                return telegramVerificationCode;
+            }
+        } catch (err) {
+            logger.error(err);
+            return null;
+        } finally {
+            await this.client.close();
+        }
+    }
+
+    /**
+    * Attempt to verify the telegram verification code from the user.
+    * If the code is right, marks a user as active, meaning that he can now
+    * vote.
+    */
+    public async setTelegramVerificationCode(did: string, code: string) {
+        try {
+            await this.client.connect();
+            const collection = this.client.db().collection('users');
+
+            // Get real user's verification code
+            let user = await collection.findOne({ did });
+            if (!user) {
+                return { code: 404, message: 'User not found' };
+            }
+            let rightCode = user.telegramVerificationCode;
+            if (rightCode !== code) {
+                return { code: 403, message: 'Invalid verification code' };
+            }
+
+            // The code is right, user can become active
+            await collection.updateOne({ did }, { $set: { active: true } });
+
+            return { code: 200, message: 'success' };
+        } catch (err) {
+            logger.error(err);
+            return { code: 500, message: 'server error' };
+        } finally {
+            await this.client.close();
+        }
+    }
+
     public async findUserByDID(did: string): Promise<User | null> {
         try {
             await this.client.connect();
@@ -63,32 +126,11 @@ class DBService {
         }
     }
 
-    /**
-     * Marks a user as active, meaning that his telegram code was confirmed.
-     */
-    public async activateUser(did: string, code: string) {
-        try {
-            await this.client.connect();
-            const collection = this.client.db().collection('users');
-            let result = await collection.updateOne({ did, code }, { $set: { active: true } });
-            if (result.matchedCount === 1) {
-                return { code: 200, message: 'success' };
-            } else {
-                return { code: 400, message: 'user not exists or code error' }
-            }
-        } catch (err) {
-            logger.error(err);
-            return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
-        }
-    }
-
     public async addUser(user: User): Promise<CommonResponse> {
         try {
             await this.client.connect();
             const collection = this.client.db().collection('users');
-            const docs = await collection.find({ $or: [{ did: user.did }, { tgName: user.tgName }] }).toArray();
+            const docs = await collection.find({ did: user.did }).toArray();
             if (docs.length === 0) {
                 await collection.insertOne(user);
                 return { code: 200, message: 'success' };
@@ -121,17 +163,18 @@ class DBService {
         }
     }
 
-    public async listUser(key: string, pageNum: number, pageSize: number) {
-        let query = { type: 'user' };
-        if (key) {
-            Object.assign(query, { $or: [{ did: key }, { name: { $regex: key } }, { tgName: { $regex: key } }] })
+    public async listUsers(filter: string, pageNum: number, pageSize: number) {
+        let query = {};
+        if (filter && filter !== "") {
+            Object.assign(query, { $or: [{ did: filter }, { name: { $regex: filter } }, { tgName: { $regex: filter } }] })
         }
 
         try {
             await this.client.connect();
             const collection = this.client.db().collection('users');
             let total = await collection.find(query).count();
-            let result = await collection.find(query).sort({ createTime: -1 }).project({ "_id": 0 })
+            logger.info("Getting list of users with query", query);
+            let result = await collection.find(query).sort({ creationTime: -1 }).project({ "_id": 0 })
                 .limit(pageSize).skip((pageNum - 1) * pageSize).toArray();
             return { code: 200, message: 'success', data: { total, result } };
         } catch (err) {

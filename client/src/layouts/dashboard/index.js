@@ -65,14 +65,8 @@ const menuConfigAdmin = [
 ];
 
 export default function DashboardLayout() {
-  const navigate = useNavigate();
-
   const [open, setOpen] = useState(false);
   const { user } = useContext(UserContext);
-
-  const authToken = localStorage.getItem('token');
-
-  console.log("dashboard layout", user, authToken);
 
   return (
     <RootStyle>
