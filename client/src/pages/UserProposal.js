@@ -13,7 +13,7 @@ import {
 import Page from '../components/Page';
 import { NewProposal } from '../components/_dashboard/proposal';
 import { fDateTimeNormal } from '../utils/formatTime';
-
+import { api } from "../config";
 
 export default function UserProposal() {
   const [proposal, setProposal] = useState([]);
@@ -26,24 +26,24 @@ export default function UserProposal() {
   }, [])
 
   const getProposal = () => {
-    fetch(`/api/v1/proposal/my?pageNum=1&pageSize=100`,
+    fetch(`${api.url}/api/v1/proposal/my?pageNum=1&pageSize=100`,
       {
         method: "GET",
         headers: {
           "token": localStorage.getItem('token')
         }
-      }).then( response => response.json()).then( data => {
-      if(data.code === 200) {
-        console.log(data.data);
-        setProposal(data.data.result);
-      } else {
-        console.log(data);
-      }
-    }).catch((error) => {
-      console.log(error)
-    }).finally(() => {
-      setBackDropOpen(false)
-    })
+      }).then(response => response.json()).then(data => {
+        if (data.code === 200) {
+          console.log(data.data);
+          setProposal(data.data.result);
+        } else {
+          console.log(data);
+        }
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        setBackDropOpen(false)
+      })
   }
 
   const handleClose = () => {
@@ -53,25 +53,25 @@ export default function UserProposal() {
   const handleAdd = (title, link) => {
     setNewProposalOpen(false);
     setBackDropOpen(true)
-    fetch(`/api/v1/proposal/add`,
+    fetch(`${api.url}/api/v1/proposal/add`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "token": localStorage.getItem('token')
         },
-        body: JSON.stringify({title, link})
-      }).then( response => response.json()).then( data => {
-      if(data.code === 200) {
-        getProposal()
-      } else {
-        console.log(data);
-      }
-    }).catch((error) => {
-      console.log(error)
-    }).finally(() => {
-      setBackDropOpen(false)
-    })
+        body: JSON.stringify({ title, link })
+      }).then(response => response.json()).then(data => {
+        if (data.code === 200) {
+          getProposal()
+        } else {
+          console.log(data);
+        }
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        setBackDropOpen(false)
+      })
   }
 
   return (
@@ -92,9 +92,9 @@ export default function UserProposal() {
           </Typography>
         </Stack>
 
-        <Stack direction="row"  alignItems="center" justifyContent="flex-end">
+        <Stack direction="row" alignItems="center" justifyContent="flex-end">
           <Button
-            sx={{width: "150px", mb: "20px"}}
+            sx={{ width: "150px", mb: "20px" }}
             variant="contained"
             component={RouterLink}
             to="#"
@@ -111,7 +111,7 @@ export default function UserProposal() {
             <Card sx={{ minWidth: 275, mb: "20px", padding: "20px" }} key={id}>
               <Stack direction="row" justifyContent="space-between">
                 <Stack>
-                  <Typography variant="h5" color="text.primary" component="div" sx={{mb: "15px"}}>
+                  <Typography variant="h5" color="text.primary" component="div" sx={{ mb: "15px" }}>
                     {title}
                   </Typography>
                   <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>

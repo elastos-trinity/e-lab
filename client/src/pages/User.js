@@ -20,6 +20,7 @@ import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, NewUser } from '../components/_dashboard/user';
+import { api } from "../config";
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
@@ -45,25 +46,25 @@ export default function User() {
   }, [page])
 
   const getAllUsers = () => {
-    fetch(`/api/v1/user/list?pageNum=${page+1}&key=${filterName}`,
+    fetch(`${api.url}/api/v1/user/list?pageNum=${page + 1}&key=${filterName}`,
       {
         method: "GET",
         headers: {
           "token": localStorage.getItem('token')
         }
-      }).then( response => response.json()).then( data => {
-      if(data.code === 200) {
-        console.log(data.data);
-        setUsers(data.data.result);
-        setCount(data.data.total);
-      } else {
-        console.log(data);
-      }
-    }).catch((error) => {
-      console.log(error)
-    }).finally(() => {
-      setBackDropOpen(false)
-    })
+      }).then(response => response.json()).then(data => {
+        if (data.code === 200) {
+          console.log(data.data);
+          setUsers(data.data.result);
+          setCount(data.data.total);
+        } else {
+          console.log(data);
+        }
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        setBackDropOpen(false)
+      })
   }
 
   const handleClose = () => {
@@ -73,25 +74,25 @@ export default function User() {
   const handleAdd = (tgName, did) => {
     setNewUserOpen(false);
     setBackDropOpen(true)
-    fetch(`/api/v1/user/add`,
+    fetch(`${api.url}/api/v1/user/add`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "token": localStorage.getItem('token')
         },
-        body: JSON.stringify({tgName, did})
-      }).then( response => response.json()).then( data => {
-      if(data.code === 200) {
-        getAllUsers()
-      } else {
-        console.log(data);
-      }
-    }).catch((error) => {
-      console.log(error)
-    }).finally(() => {
-      setBackDropOpen(false)
-    })
+        body: JSON.stringify({ tgName, did })
+      }).then(response => response.json()).then(data => {
+        if (data.code === 200) {
+          getAllUsers()
+        } else {
+          console.log(data);
+        }
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        setBackDropOpen(false)
+      })
   }
 
   const handleChangePage = (event, newPage) => {
@@ -145,34 +146,34 @@ export default function User() {
                 />
                 <TableBody>
                   {users.map((row) => {
-                      const { id, name, email, tgName, did, code, active } = row;
-                      return (
-                        <TableRow
-                          hover
-                          key={id}
-                          tabIndex={-1}
-                          role="checkbox"
-                        >
-                          <TableCell align="left" size="small">
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="left" size="small">{email}</TableCell>
-                          <TableCell align="left" size="small">{tgName}</TableCell>
-                          <TableCell align="left">{did}</TableCell>
-                          <TableCell align="left" size="small">{code}</TableCell>
-                          <TableCell align="left" size="small">
-                            <Label
-                              variant="ghost"
-                              color={(!active && 'error') || 'success'}
-                            >
-                              {active ? "true" : "false"}
-                            </Label>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                    const { id, name, email, tgName, did, code, active } = row;
+                    return (
+                      <TableRow
+                        hover
+                        key={id}
+                        tabIndex={-1}
+                        role="checkbox"
+                      >
+                        <TableCell align="left" size="small">
+                          <Typography variant="subtitle2" noWrap>
+                            {name}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="left" size="small">{email}</TableCell>
+                        <TableCell align="left" size="small">{tgName}</TableCell>
+                        <TableCell align="left">{did}</TableCell>
+                        <TableCell align="left" size="small">{code}</TableCell>
+                        <TableCell align="left" size="small">
+                          <Label
+                            variant="ghost"
+                            color={(!active && 'error') || 'success'}
+                          >
+                            {active ? "true" : "false"}
+                          </Label>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
                 {isUserNotFound && (
                   <TableBody>

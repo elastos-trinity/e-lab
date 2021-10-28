@@ -1,40 +1,43 @@
 import { Box, Grid, Container, Typography, Link, CircularProgress, Backdrop, Button } from '@mui/material';
 import { useContext, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import Page from '../components/Page';
-import UserContext from '../UserContext';
-import { UserActive } from '../components/_dashboard/proposal';
+import Page from '../../components/Page';
+import UserContext from '../../UserContext';
+import { TelegramActivation } from '../../components/_dashboard/proposal';
+import { api } from "../../config";
 
-export default function DashboardApp() {
+export default function DashboardHome() {
   const navigate = useNavigate();
   const [backDropOpen, setBackDropOpen] = useState(false);
-  const [userActiveOpen, setUserActiveOpen] = useState(false);
+  const [userTelegramActivationOpen, setUserTelegramActivationOpen] = useState(false);
 
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
-  if(user.type === 'user' && !user.active) {
-    setUserActiveOpen(true);
+  console.log("Entering dashboard app page", user);
+
+  if (user.type === 'user' && !user.active) {
+    setUserTelegramActivationOpen(true);
   }
 
   const handleActive = (code) => {
     setBackDropOpen(true)
-    fetch(`/api/v1/active?code=${code}`,
+    fetch(`${api.url}/api/v1/active?code=${code}`,
       {
         method: "GET",
         headers: {
           "token": localStorage.getItem('token')
         },
-      }).then( response => response.json()).then( data => {
-      if(data.code === 200) {
-        navigate('/', { replace: true });
-      } else {
-        console.log(data);
-      }
-    }).catch((error) => {
-      console.log(error)
-    }).finally(() => {
-      setBackDropOpen(false)
-    })
+      }).then(response => response.json()).then(data => {
+        if (data.code === 200) {
+          navigate('/', { replace: true });
+        } else {
+          console.log(data);
+        }
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        setBackDropOpen(false)
+      })
   }
 
   return (
@@ -46,8 +49,6 @@ export default function DashboardApp() {
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      <UserActive open={userActiveOpen} handleActive={handleActive} />
-
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}>
           <Typography variant="h4">Hi, Welcome to CR Community Voting</Typography>
@@ -55,7 +56,7 @@ export default function DashboardApp() {
 
         {user.type === 'user' ? (<Box sx={{ pb: 5 }}>
           <Button
-            sx={{width: "150px", mb: "20px"}}
+            sx={{ width: "150px", mb: "20px" }}
             variant="contained"
             component={RouterLink}
             to="/dashboard/vote"

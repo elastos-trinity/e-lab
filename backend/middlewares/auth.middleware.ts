@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { Config } from "../config";
+import { SecretConfig } from "../config/env-secret";
 import { dbService } from "../services/db.service";
 
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
@@ -9,7 +9,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
         let token = req.headers['token'] as string;
         if (token) {
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            jwt.verify(token, Config.jwtSecret, async (error, decoded) => {
+            jwt.verify(token, SecretConfig.Auth.jwtSecret, async (error, decoded) => {
                 if (error || !decoded) {
                     res.json({ code: 403, message: 'Token verify failed' })
                 } else {

@@ -4,16 +4,16 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 
-UserActive.propTypes = {
+TelegramActivation.propTypes = {
   open: PropTypes.bool,
   handleActive: PropTypes.func
 };
 
-export default function UserActive({open, handleActive}) {
+export default function TelegramActivation({ open, handleActive }) {
   const [code, setCode] = useState("");
 
   function checkInputAndSubmit() {
-    if(!code) {
+    if (!code) {
       return;
     }
     handleActive(code);
@@ -35,11 +35,11 @@ export default function UserActive({open, handleActive}) {
           fullWidth
           variant="standard"
           value={code}
-          onChange={(event => {setCode(event.target.value)})}
+          onChange={(event => { setCode(event.target.value) })}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => {checkInputAndSubmit()}}>Active</Button>
+        <Button onClick={() => { checkInputAndSubmit() }}>Active</Button>
       </DialogActions>
     </Dialog>
   )

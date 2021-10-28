@@ -13,7 +13,8 @@ import {
 import Page from '../components/Page';
 import UserContext from '../UserContext';
 import { fDateTimeNormal } from '../utils/formatTime';
-
+import { api } from "../config";
+import ActivationRequired from "../components/ActivationRequired";
 
 export default function Vote() {
   const [proposal, setProposal] = useState([]);
@@ -27,75 +28,75 @@ export default function Vote() {
   }, [])
 
   const getProposal = () => {
-    fetch(`/api/v1/proposal/listCanVote`,
+    fetch(`${api.url}/api/v1/proposal/listCanVote`,
       {
         method: "GET",
         headers: {
           "token": localStorage.getItem('token')
         }
-      }).then( response => response.json()).then( data => {
-      if(data.code === 200) {
-        const proposals = data.data.result;
-        setProposal(data.data.result);
+      }).then(response => response.json()).then(data => {
+        if (data.code === 200) {
+          const proposals = data.data.result;
+          setProposal(data.data.result);
 
-        fetch(`/api/v1/proposal/userHaveVoted`,
-          {
-            method: "GET",
-            headers: {
-              "token": localStorage.getItem('token')
-            }
-          }).then( response => response.json()).then( data => {
-          if(data.code === 200) {
-            console.log(data.data);
-            proposals.forEach(item => {
-              if(data.data.includes(item.id)) {
-                setSelectedValue(item.id);
-                setUserCanVote(false)
+          fetch(`${api.url}/api/v1/proposal/userHaveVoted`,
+            {
+              method: "GET",
+              headers: {
+                "token": localStorage.getItem('token')
               }
+            }).then(response => response.json()).then(data => {
+              if (data.code === 200) {
+                console.log(data.data);
+                proposals.forEach(item => {
+                  if (data.data.includes(item.id)) {
+                    setSelectedValue(item.id);
+                    setUserCanVote(false)
+                  }
+                })
+              } else {
+                console.log(data);
+              }
+            }).catch((error) => {
+              console.log(error)
             })
-          } else {
-            console.log(data);
-          }
-        }).catch((error) => {
-          console.log(error)
-        })
-      } else {
-        console.log(data);
-      }
-    }).catch((error) => {
-      console.log(error)
-    }).finally(() => {
-      setBackDropOpen(false)
-    })
+        } else {
+          console.log(data);
+        }
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        setBackDropOpen(false)
+      })
   }
 
   const handleVote = () => {
-    if(!selectedValue) {
+    if (!selectedValue) {
       alert('Please choose one item to vote');
       return;
     }
     setBackDropOpen(true)
-    fetch(`/api/v1/proposal/vote/${selectedValue}`,
+    fetch(`${api.url}/api/v1/proposal/vote/${selectedValue}`,
       {
         method: "GET",
         headers: {
           "token": localStorage.getItem('token')
         },
-      }).then( response => response.json()).then( data => {
-      if(data.code === 200) {
-        getProposal()
-      } else {
-        console.log(data);
-      }
-    }).catch((error) => {
-      console.log(error)
-    }).finally(() => {
-      setBackDropOpen(false)
-    })
+      }).then(response => response.json()).then(data => {
+        if (data.code === 200) {
+          getProposal()
+        } else {
+          console.log(data);
+        }
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        setBackDropOpen(false)
+      })
   }
 
   return (
-    <Page title="Proposal | CR-Voting">
+    <Page title="Proposals | CR-Voting">
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={backDropOpen}
@@ -106,17 +107,19 @@ export default function Vote() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
           <Typography variant="h4" gutterBottom>
-            Vote
+            Community proposals
           </Typography>
         </Stack>
 
-        <Stack direction="row"  alignItems="center" justifyContent="flex-end">
+        <ActivationRequired />
+
+        <Stack direction="row" alignItems="center" justifyContent="flex-end">
           <Button
-            sx={{width: "150px", mb: "20px"}}
+            sx={{ width: "150px", mb: "20px" }}
             variant="contained"
             component={Button}
             disabled={!userCanVote}
-            onClick={() => {handleVote()}}
+            onClick={() => { handleVote() }}
           >
             Vote
           </Button>
@@ -128,7 +131,7 @@ export default function Vote() {
             <Card sx={{ minWidth: 275, mb: "20px", padding: "20px" }} key={id}>
               <Stack direction="row" justifyContent="space-between">
                 <Stack>
-                  <Typography variant="h5" color="text.primary" component="div" sx={{mb: "15px"}}>
+                  <Typography variant="h5" color="text.primary" component="div" sx={{ mb: "15px" }}>
                     {title}
                   </Typography>
                   <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
@@ -138,7 +141,7 @@ export default function Vote() {
                 <Stack direction="column" justifyContent="center">
                   <Radio
                     checked={selectedValue === id}
-                    onChange={(event) => {setSelectedValue(event.target.value)}}
+                    onChange={(event) => { setSelectedValue(event.target.value) }}
                     value={id}
                     name="radio-buttons"
                   />

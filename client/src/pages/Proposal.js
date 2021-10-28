@@ -21,6 +21,7 @@ import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
 import { fDateTimeNormal } from '../utils/formatTime';
+import { api } from "../config";
 
 const TABLE_HEAD = [
   { id: 'title', label: 'Title', alignRight: false },
@@ -45,25 +46,25 @@ export default function Proposal() {
   }, [page])
 
   const getProposals = () => {
-    fetch(`/api/v1//proposal/listAll?pageNum=${page+1}&title=${filterName}`,
+    fetch(`${api.url}/api/v1//proposal/listAll?pageNum=${page + 1}&title=${filterName}`,
       {
         method: "GET",
         headers: {
           "token": localStorage.getItem('token')
         }
-      }).then( response => response.json()).then( data => {
-      if(data.code === 200) {
-        console.log(data.data);
-        setUsers(data.data.result);
-        setCount(data.data.total);
-      } else {
-        console.log(data);
-      }
-    }).catch((error) => {
-      console.log(error)
-    }).finally(() => {
-      setBackDropOpen(false)
-    })
+      }).then(response => response.json()).then(data => {
+        if (data.code === 200) {
+          console.log(data.data);
+          setUsers(data.data.result);
+          setCount(data.data.total);
+        } else {
+          console.log(data);
+        }
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        setBackDropOpen(false)
+      })
   }
 
 
@@ -77,23 +78,23 @@ export default function Proposal() {
 
   const handleAudit = (result, id) => {
     setBackDropOpen(true)
-    fetch(`/api/v1//proposal/audit/${id}?result=${result}`,
+    fetch(`${api.url}/api/v1//proposal/audit/${id}?result=${result}`,
       {
         method: "GET",
         headers: {
           "token": localStorage.getItem('token')
         }
-      }).then( response => response.json()).then( data => {
-      if(data.code === 200) {
-        getProposals()
-      } else {
-        console.log(data);
-      }
-    }).catch((error) => {
-      console.log(error)
-    }).finally(() => {
-      setBackDropOpen(false)
-    })
+      }).then(response => response.json()).then(data => {
+        if (data.code === 200) {
+          getProposals()
+        } else {
+          console.log(data);
+        }
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        setBackDropOpen(false)
+      })
   }
 
   const isUserNotFound = users.length === 0;
@@ -128,30 +129,30 @@ export default function Proposal() {
                 />
                 <TableBody>
                   {users.map((row) => {
-                      const { id, title, link, creator, createTime, status } = row;
-                      return (
-                        <TableRow
-                          hover
-                          key={id}
-                          tabIndex={-1}
-                          role="checkbox"
-                          height="69px"
-                        >
-                          <TableCell align="left" size="small">
-                            <Typography variant="subtitle2" noWrap>
-                              {title}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="left" size="small">{link}</TableCell>
-                          <TableCell align="left" size="small">{creator}</TableCell>
-                          <TableCell align="left">{fDateTimeNormal(createTime)}</TableCell>
-                          <TableCell align="left" size="small">{status}</TableCell>
-                          <TableCell align="center">
-                            {status === 'new' ? (<UserMoreMenu  proposalId={id} handleAction={handleAudit} />) : (<></>)}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                    const { id, title, link, creator, createTime, status } = row;
+                    return (
+                      <TableRow
+                        hover
+                        key={id}
+                        tabIndex={-1}
+                        role="checkbox"
+                        height="69px"
+                      >
+                        <TableCell align="left" size="small">
+                          <Typography variant="subtitle2" noWrap>
+                            {title}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="left" size="small">{link}</TableCell>
+                        <TableCell align="left" size="small">{creator}</TableCell>
+                        <TableCell align="left">{fDateTimeNormal(createTime)}</TableCell>
+                        <TableCell align="left" size="small">{status}</TableCell>
+                        <TableCell align="center">
+                          {status === 'new' ? (<UserMoreMenu proposalId={id} handleAction={handleAudit} />) : (<></>)}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
                 {isUserNotFound && (
                   <TableBody>

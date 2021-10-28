@@ -2,13 +2,16 @@ import { VerifiablePresentation } from '@elastosfoundation/did-js-sdk';
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import { v1 as uuidV1 } from 'uuid';
-import { Config } from '../config';
+import { SecretConfig } from '../config/env-secret';
+import logger from '../logger';
 import { ProposalStatus } from '../model/proposalstatus';
+import { User } from '../model/user';
 import { dbService } from '../services/db.service';
 
 let router = Router();
 
 /* Used for service check. */
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/check', async (req, res) => {
     res.json(await dbService.checkConnect());
 });
@@ -19,25 +22,55 @@ router.post('/login', async (req, res) => {
     let vp = VerifiablePresentation.parse(presentationStr);
     let valid = await vp.isValid();
     if (!valid) {
-        res.json({ code: 403, message: 'Credential verified failed' });
+        res.json({ code: 403, message: 'Invalid presentation' });
         return;
     }
 
-    let did = vp.getHolder().getMethodSpecificId();
+    let did = vp.getHolder().toString();
     if (!did) {
-        res.json({ code: 400, message: 'User did not exists' })
+        res.json({ code: 400, message: 'Unable to extract owner DID from the presentation' })
         return;
     }
 
-    let name = vp.getCredential(`name`).getSubject().getProperty('name');
-    let email = vp.getCredential(`email`).getSubject().getProperty('email');
-    let matchedCount = await dbService.updateUser(did, name, email);
-    if (matchedCount !== 1) {
-        res.json({ code: 400, message: 'User did not exists' })
-        return;
+    // First check if we know this user yet or not. If not, we will create an entry
+    let existingUser = await dbService.findUserByDID(did);
+    let user: User;
+    if (existingUser) {
+        // Nothing to do yet
+        logger.info("Existing user is signing in", existingUser);
+        user = existingUser;
+    }
+    else {
+        logger.info("Unknown user is signing in with DID", did, ". Creating a new user");
+
+        // Optional name
+        let nameCredential = vp.getCredential(`name`);
+        let name = nameCredential ? nameCredential.getSubject().getProperty('name') : '';
+
+        // Optional email
+        let emailCredential = vp.getCredential(`email`);
+        let email = emailCredential ? emailCredential.getSubject().getProperty('email') : '';
+
+        user = {
+            did,
+            type: 'user',
+            name,
+            email
+        };
+        let result = await dbService.addUser(user);
+        if (result.code != 200) {
+            res.json(result);
+            return;
+        }
+
+        /* let matchedCount = await dbService.updateUser(did, name, email);
+        if (matchedCount !== 1) {
+            res.json({ code: 400, message: 'User does not exist' })
+            return;
+        } */
     }
 
-    let token = jwt.sign({ did }, Config.jwtSecret, { expiresIn: 60 * 60 * 24 * 7 });
+    let token = jwt.sign(user, SecretConfig.Auth.jwtSecret, { expiresIn: 60 * 60 * 24 * 7 });
     res.json({ code: 200, message: 'success', data: token });
 })
 
@@ -68,9 +101,8 @@ router.post('/user/add', async (req, res) => {
 
     let code = (Math.random() * 10000 + '').slice(0, 4);
     res.json(await dbService.addUser({
-        key: '',
-        id: uuidV1(), tgName, did, type: 'user', code,
-        activate: false, createTime: Date.now()
+        tgName, did, type: 'user', code,
+        active: false, creationTime: Date.now()
     }));
 })
 
@@ -93,7 +125,7 @@ router.get('/user/remove/:did', async (req, res) => {
 router.get('/user/list', async (req, res) => {
     let pageNumStr = req.query.pageNum as string;
     let pageSizeStr = req.query.pageSize as string;
-    let key = req.user.key;
+    let did = req.user.did;
 
     try {
         let pageNum: number = pageNumStr ? parseInt(pageNumStr) : 1;
@@ -104,7 +136,7 @@ router.get('/user/list', async (req, res) => {
             return;
         }
 
-        res.json(await dbService.listUser(key, pageNum, pageSize));
+        res.json(await dbService.listUser(did, pageNum, pageSize));
     } catch (e) {
         console.log(e);
         res.json({ code: 400, message: 'bad request' });
@@ -127,32 +159,32 @@ router.get('/proposal/audit/:id', async (req, res) => {
     }
 
     let status: ProposalStatus = result === "rejected" ? ProposalStatus.REJECTED : ProposalStatus.APPROVED;
-    let operator = req.user.id;
+    let operator = req.user.did;
 
     res.json(await dbService.auditProposal(proposalId, status, operator));
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/proposal/add', async (req, res) => {
-    if (!req.user.activate) {
-        res.json({ code: 403, message: 'forbidden' });
+    if (!req.user.active) {
+        res.json({ code: 403, message: 'User is not yet active.' });
         return;
     }
 
     let { title, link } = req.body;
     if (!title || !link) {
-        res.json({ code: 400, message: 'required parameter absence' });
+        res.json({ code: 400, message: 'Missing title or link' });
         return;
     }
 
-    res.json(await dbService.addProposal({ id: uuidV1(), title, link, creator: req.user.id, createTime: Date.now(), status: 'new' }));
+    res.json(await dbService.addProposal({ id: uuidV1(), title, link, creator: req.user.did, createTime: Date.now(), status: 'new' }));
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/proposal/my', async (req, res) => {
     let pageNumStr = req.query.pageNum as string;
     let pageSizeStr = req.query.pageSize as string;
-    let userId: string = req.user.id;
+    let userId: string = req.user.did;
 
     let pageNum: number, pageSize: number;
 
@@ -224,7 +256,7 @@ router.get('/proposal/listCanVote', async (req, res) => {
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/proposal/vote/:id', async (req, res) => {
     let id = req.params.id;
-    let userId = req.user.id;
+    let userId = req.user.did;
 
     if (!id) {
         res.json({ code: 400, message: 'required parameter absence' });
@@ -236,7 +268,7 @@ router.get('/proposal/vote/:id', async (req, res) => {
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/proposal/userHaveVoted', async (req, res) => {
-    let userId = req.user.id;
+    let userId = req.user.did;
     res.json(await dbService.userHaveVoted(userId));
 })
 

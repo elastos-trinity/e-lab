@@ -1,16 +1,24 @@
 import { MongoClient } from "mongodb";
-import { Config } from "../config";
+import { SecretConfig } from "../config/env-secret";
 import logger from "../logger";
 import { Proposal } from "../model/proposal";
-import { CommonResponse } from "../model/response";
 import { ProposalStatus } from "../model/proposalstatus";
+import { CommonResponse } from "../model/response";
 import { User } from "../model/user";
 
 class DBService {
     private client: MongoClient;
 
     constructor() {
-        this.client = new MongoClient(Config.mongodb, {
+        let mongoConnectionUrl;
+        if (SecretConfig.Mongo.user)
+            mongoConnectionUrl = `mongodb://${SecretConfig.Mongo.user}:${SecretConfig.Mongo.password}@${SecretConfig.Mongo.host}:${SecretConfig.Mongo.port}/${SecretConfig.Mongo.dbName}?authSource=admin`;
+        else
+            mongoConnectionUrl = `mongodb://${SecretConfig.Mongo.host}:${SecretConfig.Mongo.port}/${SecretConfig.Mongo.dbName}`;
+
+        console.log("mongoConnectionUrl", mongoConnectionUrl);
+
+        this.client = new MongoClient(mongoConnectionUrl, {
             //useNewUrlParser: true, useUnifiedTopology: true
         });
     }
@@ -19,10 +27,10 @@ class DBService {
         try {
             await this.client.connect();
             await this.client.db().collection('users').find({}).limit(1);
-            return { code: 200, message: 'success'};
+            return { code: 200, message: 'success' };
         } catch (err) {
             logger.error(err);
-            return { code: 200, message: 'mongodb connect failed'};
+            return { code: 200, message: 'mongodb connect failed' };
         } finally {
             await this.client.close();
         }
@@ -55,6 +63,9 @@ class DBService {
         }
     }
 
+    /**
+     * Marks a user as active, meaning that his telegram code was confirmed.
+     */
     public async activateUser(did: string, code: string) {
         try {
             await this.client.connect();
@@ -73,7 +84,7 @@ class DBService {
         }
     }
 
-    public async addUser(user: User) {
+    public async addUser(user: User): Promise<CommonResponse> {
         try {
             await this.client.connect();
             const collection = this.client.db().collection('users');
@@ -231,7 +242,7 @@ class DBService {
     public async listCanVoteProposal(title: string, pageNum: number, pageSize: number) {
         let { start, end } = this.getValidVoteDate();
 
-        let query = { title: '', status: 'approved', createTime: {$gte:start.getTime()} };
+        let query = { title: '', status: 'approved', createTime: { $gte: start.getTime() } };
         if (title) {
             query['title'] = title;
         }
@@ -260,7 +271,7 @@ class DBService {
             result.forEach((item) => {
                 data.push(item.proposal);
             })
-            return {code: 200, message: 'success', data};
+            return { code: 200, message: 'success', data };
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
@@ -277,7 +288,7 @@ class DBService {
             await this.client.connect();
 
             const collectionProposal = this.client.db().collection('proposals');
-            const result = await collectionProposal.find({id:proposal, createTime: {$gte: start.getTime()}}).limit(1).toArray();
+            const result = await collectionProposal.find({ id: proposal, createTime: { $gte: start.getTime() } }).limit(1).toArray();
             if (result.length === 0) {
                 return { code: 403, message: 'forbidden' };
             }

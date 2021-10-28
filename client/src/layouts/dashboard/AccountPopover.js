@@ -20,8 +20,7 @@ export default function AccountPopover() {
   };
 
   const logout = () => {
-    localStorage.clear();
-    navigate('/login', {replace: true})
+    navigate('/logout', { replace: true })
   };
 
   return (

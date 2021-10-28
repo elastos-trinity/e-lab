@@ -1,0 +1,17 @@
+Front-end:
+----------
+
+BEN - Introduction welcome text on main page
+LFY - Same initial sign-in page for regular users and admins
+LFY   - The sign in button requests only the name (optional)
+LFY - After signed in, users arrive on a dashboard page
+LFY   - If the user is in the admin database, he can see a "manage" link
+LFY     - the manage link goes to the admin management page
+LFY   - On the dashboard all users can see the proposals and create a new proposal
+LFY     - When trying to vote for a proposal, if the back-end doesn't know the telegram UID, the user if first sent to the telegram verification page
+LFY        - The telegram verification page explains the steps to get verified on telegram
+LFY     - If the back-end knows that an admin has entered a telegram UID for this user DID, the user sees a confirmation box at the top of the dashboard, to enter the telegram confirmation code.
+
+
+Back-end:
+---------

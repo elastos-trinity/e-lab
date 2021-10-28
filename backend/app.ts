@@ -84,6 +84,4 @@ server.on('listening', () => {
     dbg('Listening on ' + bind);
 });
 
-console.log("Server started, waiting for requests");
-
 

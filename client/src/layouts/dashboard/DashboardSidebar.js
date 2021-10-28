@@ -36,7 +36,7 @@ DashboardSidebar.propTypes = {
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar, sidebarConfig }) {
   const { pathname } = useLocation();
 
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -64,7 +64,10 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar, sideba
             <Avatar src={account.photoURL} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {user.type}
+                DID: {user.did}
+              </Typography>
+              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+                Access: {user.type}
               </Typography>
             </Box>
           </AccountStyle>
