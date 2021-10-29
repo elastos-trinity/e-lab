@@ -1,25 +1,38 @@
 import { useEffect, useState } from 'react';
 import jwtDecode from "jwt-decode";
 import { useNavigate } from 'react-router-dom';
+import { Alert, Snackbar } from '@mui/material';
 
 import Router from './routes';
 import ThemeConfig from './theme';
 import GlobalStyles from './theme/globalStyles';
 import ScrollToTop from './components/ScrollToTop';
 import { prepareConnectivitySDK } from './utils/connectivity';
-import UserContext from './UserContext';
+import UserContext from './contexts/UserContext';
+import ToastContext from './contexts/ToastContext';
 import { api } from "./config";
 
 export default function App() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [isToastShowing, setToastShowing] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastSeverity, setToastSeverity] = useState("");
 
   console.log("Entering App component")
 
   prepareConnectivitySDK();
 
-  function updateUser(user) {
+  const updateUser = (user) => {
     setUser(user);
+  }
+
+  const showToast = (message, severity) => {
+    setToastMessage(message);
+    setToastSeverity(severity);
+
+    setToastShowing(true);
+    setTimeout(() => setToastShowing(false), 3000);
   }
 
   useEffect(() => {
@@ -77,11 +90,21 @@ export default function App() {
 
   return (
     <UserContext.Provider value={{ user, setUser: updateUser }}>
-      <ThemeConfig>
-        <ScrollToTop />
-        <GlobalStyles />
-        <Router />
-      </ThemeConfig>
+      <ToastContext.Provider value={{ showToast }}>
+        <ThemeConfig>
+          <ScrollToTop />
+          <GlobalStyles />
+          <Router />
+        </ThemeConfig>
+        <Snackbar
+          open={isToastShowing}
+          autoHideDuration={6000}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+          <Alert severity={toastSeverity} sx={{ width: '100%' }}>
+            {toastMessage}
+          </Alert>
+        </Snackbar>
+      </ToastContext.Provider>
     </UserContext.Provider>
   );
 }

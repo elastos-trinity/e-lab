@@ -10,10 +10,11 @@ import {
   Typography,
   Backdrop, CircularProgress, CardContent
 } from '@mui/material';
-import Page from '../components/Page';
-import { NewProposal } from '../components/_dashboard/proposal';
-import { fDateTimeNormal } from '../utils/formatTime';
-import { api } from "../config";
+import Page from '../../components/Page';
+import { NewProposal } from '../../components/_dashboard/proposal';
+import { fDateTimeNormal } from '../../utils/formatTime';
+import { api } from "../../config";
+import ActivationRequired from '../../components/authentication/ActivationRequired';
 
 export default function UserProposal() {
   const [proposal, setProposal] = useState([]);
@@ -26,7 +27,7 @@ export default function UserProposal() {
   }, [])
 
   const getProposal = () => {
-    fetch(`${api.url}/api/v1/proposal/my?pageNum=1&pageSize=100`,
+    fetch(`${api.url}/api/v1/proposals/mine?pageNum=1&pageSize=100`,
       {
         method: "GET",
         headers: {
@@ -92,6 +93,8 @@ export default function UserProposal() {
           </Typography>
         </Stack>
 
+        <ActivationRequired />
+
         <Stack direction="row" alignItems="center" justifyContent="flex-end">
           <Button
             sx={{ width: "150px", mb: "20px" }}
@@ -106,7 +109,7 @@ export default function UserProposal() {
         </Stack>
 
         {proposal.map((row) => {
-          const { id, title, link, createTime, status } = row;
+          const { id, title, link, creationTime, status } = row;
           return (
             <Card sx={{ minWidth: 275, mb: "20px", padding: "20px" }} key={id}>
               <Stack direction="row" justifyContent="space-between">
@@ -118,7 +121,7 @@ export default function UserProposal() {
                     {link}
                   </Typography>
                   <Typography color="text.secondary" sx={{ fontSize: 14 }}>
-                    {fDateTimeNormal(createTime)}
+                    <b>Created:</b> {fDateTimeNormal(creationTime)}
                   </Typography>
                 </Stack>
                 <Stack direction="column" justifyContent="center">

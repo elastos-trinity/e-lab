@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react';
 import peopleFill from '@iconify/icons-eva/people-fill';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
-import UserContext from '../../UserContext';
+import UserContext from '../../contexts/UserContext';
 import { api } from "../../config";
 
 const APP_BAR_MOBILE = 64;

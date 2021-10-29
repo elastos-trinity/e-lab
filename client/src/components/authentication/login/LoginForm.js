@@ -6,7 +6,7 @@ import { DID, connectivity, } from "@elastosfoundation/elastos-connectivity-sdk-
 import { LoadingButton } from '@mui/lab';
 import { api } from "../../../config";
 import { essentialsConnector } from "../../../utils/connectivity";
-import UserContext from "../../../UserContext";
+import UserContext from "../../../contexts/UserContext";
 
 export default function LoginForm(props) {
   const navigate = useNavigate();

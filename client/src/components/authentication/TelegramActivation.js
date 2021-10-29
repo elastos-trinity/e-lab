@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types';
 import {
-  Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button
+  Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button, Snackbar, Alert
 } from '@mui/material';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { LoadingButton } from '@mui/lab';
 import { api } from '../../config';
+import ToastContext from '../../contexts/ToastContext';
+import UserContext from '../../contexts/UserContext';
 
 TelegramActivation.propTypes = {
   open: PropTypes.bool,
@@ -13,12 +16,16 @@ TelegramActivation.propTypes = {
 
 export default function TelegramActivation({ open, handleActivation, onClose }) {
   const [code, setCode] = useState("");
+  const [isSubmitting, setSubmitting] = useState(false);
+  const { showToast } = useContext(ToastContext);
+  const { user, setUser } = useContext(UserContext);
 
   function checkInputAndSubmit() {
     if (!code) {
       return;
     }
 
+    setSubmitting(true);
     fetch(`${api.url}/api/v1/user/setTelegramVerificationCode?code=${code}`, {
       method: "POST",
       headers: {
@@ -26,11 +33,20 @@ export default function TelegramActivation({ open, handleActivation, onClose }) 
         "token": localStorage.getItem('token')
       }
     }).then(response => response.json()).then(data => {
+      setSubmitting(false);
+
       if (data.code === 200) {
         console.log(data);
-        // TOOD
+
+        // Update local user with new active status
+        user.active = true;
+        setUser(user);
+
+        showToast("Account successfully activated!", "success");
+        onClose()
       } else {
         console.error(data);
+        showToast("Wrong activation code", "error");
       }
     }).catch((error) => {
       console.log(error)
@@ -60,7 +76,16 @@ export default function TelegramActivation({ open, handleActivation, onClose }) 
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => { checkInputAndSubmit() }}>Activate</Button>
+        {/* <Button onClick={() => { checkInputAndSubmit() }}>Activate</Button> */}
+        <LoadingButton
+          size="small"
+          type="submit"
+          variant="contained"
+          loading={isSubmitting}
+          onClick={() => { checkInputAndSubmit() }}
+        >
+          Activate
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   )

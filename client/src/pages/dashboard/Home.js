@@ -2,7 +2,7 @@ import { Box, Grid, Container, Typography, Link, CircularProgress, Backdrop, But
 import { useContext, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Page from '../../components/Page';
-import UserContext from '../../UserContext';
+import UserContext from '../../contexts/UserContext';
 import { TelegramActivation } from '../../components/_dashboard/proposal';
 import { api } from "../../config";
 

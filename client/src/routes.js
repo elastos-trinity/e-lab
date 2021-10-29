@@ -5,9 +5,9 @@ import Logout from './pages/Logout';
 import Home from './pages/Home';
 import Users from './pages/dashboard/admin/Users';
 import NotFound from './pages/Page404';
-import Proposal from './pages/Proposal';
-import UserProposal from './pages/UserProposal';
-import Vote from './pages/Vote';
+import Proposal from './pages/dashboard/admin/Proposals';
+import UserProposal from './pages/dashboard/MyProposals';
+import VoteForProposals from './pages/dashboard/VoteForProposals';
 
 export default function Router() {
   return useRoutes([
@@ -15,11 +15,11 @@ export default function Router() {
       path: '/dashboard',
       element: <DashboardLayout />,
       children: [
-        { path: 'home', element: <Vote /> },
+        { path: 'home', element: <VoteForProposals /> },
         { path: 'user', element: <Users /> },
         { path: 'proposal', element: <Proposal /> },
         { path: 'my-proposal', element: <UserProposal /> },
-        { path: 'vote', element: <Vote /> },
+        { path: 'vote', element: <VoteForProposals /> },
       ]
     },
     {

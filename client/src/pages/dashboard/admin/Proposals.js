@@ -15,19 +15,19 @@ import {
   TableContainer,
   TablePagination, Backdrop, CircularProgress
 } from '@mui/material';
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
-import { fDateTimeNormal } from '../utils/formatTime';
-import { api } from "../config";
+import Page from '../../../components/Page';
+import Label from '../../../components/Label';
+import Scrollbar from '../../../components/Scrollbar';
+import SearchNotFound from '../../../components/SearchNotFound';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../components/_dashboard/user';
+import { fDateTimeNormal } from '../../../utils/formatTime';
+import { api } from "../../../config";
 
 const TABLE_HEAD = [
   { id: 'title', label: 'Title', alignRight: false },
   { id: 'link', label: 'Link', alignRight: false },
   { id: 'creator', label: 'Creator', alignRight: false },
-  { id: 'createTime', label: 'CreateTime', alignRight: false },
+  { id: 'creationTime', label: 'Creation time', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '', label: 'Operation', alignRight: false },
 ];
@@ -46,7 +46,7 @@ export default function Proposal() {
   }, [page])
 
   const getProposals = () => {
-    fetch(`${api.url}/api/v1//proposal/listAll?pageNum=${page + 1}&title=${filterName}`,
+    fetch(`${api.url}/api/v1//proposals/all?pageNum=${page + 1}&title=${filterName}`,
       {
         method: "GET",
         headers: {
@@ -129,7 +129,7 @@ export default function Proposal() {
                 />
                 <TableBody>
                   {users.map((row) => {
-                    const { id, title, link, creator, createTime, status } = row;
+                    const { id, title, link, creator, creationTime, status } = row;
                     return (
                       <TableRow
                         hover
@@ -145,8 +145,14 @@ export default function Proposal() {
                         </TableCell>
                         <TableCell align="left" size="small">{link}</TableCell>
                         <TableCell align="left" size="small">{creator}</TableCell>
-                        <TableCell align="left">{fDateTimeNormal(createTime)}</TableCell>
-                        <TableCell align="left" size="small">{status}</TableCell>
+                        <TableCell align="left">{fDateTimeNormal(creationTime)}</TableCell>
+                        <TableCell align="left" size="small">
+                          <Label
+                            variant="ghost"
+                            color={status === 'approved' ? 'success' : status === 'rejected' ? 'error' : 'warning'}>
+                            {status}
+                          </Label>
+                        </TableCell>
                         <TableCell align="center">
                           {status === 'new' ? (<UserMoreMenu proposalId={id} handleAction={handleAudit} />) : (<></>)}
                         </TableCell>

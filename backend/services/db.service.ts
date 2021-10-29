@@ -1,3 +1,4 @@
+import { JSONObject } from "@elastosfoundation/did-js-sdk";
 import { MongoClient } from "mongodb";
 import { SecretConfig } from "../config/env-secret";
 import logger from "../logger";
@@ -5,6 +6,7 @@ import { Proposal } from "../model/proposal";
 import { ProposalStatus } from "../model/proposalstatus";
 import { CommonResponse } from "../model/response";
 import { User } from "../model/user";
+import { Vote, VoteChoice } from "../model/vote";
 
 class DBService {
     private client: MongoClient;
@@ -60,7 +62,7 @@ class DBService {
             await this.client.connect();
             const collection = this.client.db().collection('users');
 
-            let telegramVerificationCode = new String((10000 + (Math.random() * 10000000))).slice(0, 4);
+            let telegramVerificationCode = new String((1000000 + (Math.random() * 10000000))).slice(0, 6);
             let result = await collection.updateOne({ did }, {
                 $set: {
                     telegramUserId,
@@ -191,7 +193,7 @@ class DBService {
             await this.client.connect();
             const collection = this.client.db().collection('proposals');
             let result = await collection.updateOne({ id, status: 'new' },
-                { $set: { status, operator, operateTime: Date.now() } });
+                { $set: { status, operator, operatedTime: Date.now() } });
             if (result.matchedCount === 1) {
                 return { code: 200, message: 'success' };
             } else {
@@ -225,7 +227,7 @@ class DBService {
             await this.client.connect();
             const collection = this.client.db().collection('proposals');
             let total = await collection.find({ creator }).count();
-            let result = await collection.find({ creator }, { sort: { createTime: -1 } }).project({ '_id': 0 })
+            let result = await collection.find({ creator }, { sort: { creationTime: -1 } }).project({ '_id': 0 })
                 .limit(pageSize).skip((pageNum - 1) * pageSize).toArray();
             return { code: 200, message: 'success', data: { total, result } };
         } catch (err) {
@@ -236,21 +238,60 @@ class DBService {
         }
     }
 
-    public async listAllProposal(title: string, pageNum: number, pageSize: number) {
-        let query: {
-            title?: string
-        } = {};
+    public async listProposals(title: string, activeOnly: boolean, userId: string, pageNum: number, pageSize: number) {
+        let { start, end } = this.getValidVoteDate();
 
-        if (title) {
+        let query: JSONObject;
+        if (activeOnly)
+            query = { status: 'approved', creationTime: { $gte: start.getTime() } };
+        else
+            query = {}; // all
+
+        if (title)
             query['title'] = title;
-        }
+
         try {
             await this.client.connect();
             const collection = this.client.db().collection('proposals');
             let total = await collection.find(query).count();
-            let result = await collection.find(query, { sort: { createTime: -1 } }).project({ '_id': 0 })
-                .limit(pageSize).skip((pageNum - 1) * pageSize).toArray();
-            return { code: 200, message: 'success', data: { total, result } };
+            let proposals = await collection.find(query, { sort: { creationTime: -1 } })
+                .project({ '_id': 0 })
+                .limit(pageSize)
+                .skip((pageNum - 1) * pageSize)
+                .toArray();
+
+            // For each proposal, build its stats
+            const votesCollection = this.client.db().collection('votes');
+            for (let proposal of proposals) {
+                let proposalVotes = (await votesCollection.aggregate([
+                    { "$match": { proposalId: proposal.id } },
+                    { "$project": { proposalId: 1, voteFor: { $cond: [{ $eq: ["$vote", 'for'] }, 1, 0] }, voteAgainst: { $cond: [{ $eq: ["$vote", 'against'] }, 1, 0] } } },
+                    { "$group": { "_id": "$proposalId", "votesFor": { "$sum": "$voteFor" }, "votesAgainst": { "$sum": "$voteAgainst" } } }
+                ]).toArray())[0];
+
+                if (!proposalVotes) {
+                    // No vote yet
+                    proposal["votesFor"] = 0;
+                    proposal["votesAgainst"] = 0;
+                }
+                else {
+                    proposal["votesFor"] = proposalVotes["votesFor"];
+                    proposal["votesAgainst"] = proposalVotes["votesAgainst"];
+                }
+
+                // Check if user has already voted or not
+                if (!userId) {
+                    proposal["votedByUser"] = false;
+                }
+                else {
+                    let userVoteCount = await votesCollection.count({ voter: userId, proposalId: proposal.id });
+                    proposal["votedByUser"] = userVoteCount > 0 ? true : false;
+                }
+            }
+
+            logger.info("Proposals", proposals);
+
+            return { code: 200, message: 'success', data: { total, result: proposals } };
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
@@ -258,6 +299,29 @@ class DBService {
             await this.client.close();
         }
     }
+    /*
+
+        public async proposalsOpenForVotes(title: string, pageNum: number, pageSize: number) {
+            let { start, end } = this.getValidVoteDate();
+
+            let query: JSONObject = { status: 'approved', creationTime: { $gte: start.getTime() } };
+            if (title) {
+                query['title'] = title;
+            }
+            try {
+                await this.client.connect();
+                const collection = this.client.db().collection('proposals');
+                let total = await collection.find(query).count();
+                let result = await collection.find(query, { sort: { creationTime: -1 } }).project({ '_id': 0 })
+                    .limit(pageSize).skip((pageNum - 1) * pageSize).toArray();
+                return { code: 200, message: 'success', data: { total, result } };
+            } catch (err) {
+                logger.error(err);
+                return { code: 500, message: 'server error' };
+            } finally {
+                await this.client.close();
+            }
+        } */
 
     private setTimeToZero(date: Date) {
         date.setHours(0);
@@ -282,30 +346,8 @@ class DBService {
         return { start, end };
     }
 
-    public async listCanVoteProposal(title: string, pageNum: number, pageSize: number) {
-        let { start, end } = this.getValidVoteDate();
-
-        let query = { title: '', status: 'approved', createTime: { $gte: start.getTime() } };
-        if (title) {
-            query['title'] = title;
-        }
-        try {
-            await this.client.connect();
-            const collection = this.client.db().collection('proposals');
-            let total = await collection.find(query).count();
-            let result = await collection.find(query, { sort: { createTime: -1 } }).project({ '_id': 0 })
-                .limit(pageSize).skip((pageNum - 1) * pageSize).toArray();
-            return { code: 200, message: 'success', data: { total, result } };
-        } catch (err) {
-            logger.error(err);
-            return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
-        }
-    }
-
     // TODO: creator is really string?
-    public async userHaveVoted(creator: string) {
+    /* public async userHaveVoted(creator: string) {
         try {
             await this.client.connect();
             const collection = this.client.db().collection('votes');
@@ -321,28 +363,51 @@ class DBService {
         } finally {
             await this.client.close();
         }
-    }
+    } */
 
     // TODO: voter is really string?
-    public async vote(proposal: Proposal, voter: string) {
+    public async voteForProposal(proposalId: string, voter: string, voteChoice: string) {
         let { start, end } = this.getValidVoteDate();
 
         try {
             await this.client.connect();
 
+            // Make sure the proposal exists and is open for voting
             const collectionProposal = this.client.db().collection('proposals');
-            const result = await collectionProposal.find({ id: proposal, createTime: { $gte: start.getTime() } }).limit(1).toArray();
+            const result = await collectionProposal.find({ id: proposalId, creationTime: { $gte: start.getTime() } }).limit(1).toArray();
             if (result.length === 0) {
-                return { code: 403, message: 'forbidden' };
+                return { code: 403, message: 'Proposal not found, or currently not open for votes' };
             }
 
-            const collection = this.client.db().collection('votes');
-            const docs = await collection.find({ voter, proposal }).limit(1).toArray();
+            // Make sure user is allowed to vote
+            const usersCollection = this.client.db().collection<User>('users');
+            let user = await usersCollection.findOne({
+                did: voter
+            });
+            if (!user || !user.active) {
+                return { code: 403, message: 'Invalid user, or user not approved yet' };
+            }
+
+            // Make sure the vote choice is valid
+            if (voteChoice != 'for' && voteChoice != 'against') {
+                return { code: 403, message: 'Invalid vote value' };
+            }
+
+            // Make sure user hasn't already voted for this proposal
+            const votesCollection = this.client.db().collection('votes');
+            const docs = await votesCollection.find({ voter, proposalId }).limit(1).toArray();
             if (docs.length === 0) {
-                await collection.insertOne({ voter, proposal, voteTime: Date.now() });
+                // Not voted yet, we can record the vote
+                let vote: Vote = {
+                    voter,
+                    proposalId,
+                    voteTime: Date.now(),
+                    vote: voteChoice as VoteChoice
+                }
+                await votesCollection.insertOne(vote);
                 return { code: 200, message: 'success' };
             } else {
-                return { code: 403, message: 'forbidden' };
+                return { code: 403, message: 'Forbidden: already voted' };
             }
         } catch (err) {
             logger.error(err);

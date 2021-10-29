@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { v1 as uuidV1 } from 'uuid';
 import { SecretConfig } from '../config/env-secret';
 import logger from '../logger';
+import { Proposal } from '../model/proposal';
 import { ProposalStatus } from '../model/proposalstatus';
 import { User } from '../model/user';
 import { dbService } from '../services/db.service';
@@ -198,11 +199,19 @@ router.post('/proposal/add', async (req, res) => {
         return;
     }
 
-    res.json(await dbService.addProposal({ id: uuidV1(), title, link, creator: req.user.did, createTime: Date.now(), status: 'new' }));
+    let proposal: Proposal = {
+        id: uuidV1(),
+        title,
+        link,
+        creator: req.user.did,
+        creationTime: Date.now(),
+        status: 'new'
+    };
+    res.json(await dbService.addProposal(proposal));
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/proposal/my', async (req, res) => {
+router.get('/proposals/mine', async (req, res) => {
     let pageNumStr = req.query.pageNum as string;
     let pageSizeStr = req.query.pageSize as string;
     let userId: string = req.user.did;
@@ -227,10 +236,11 @@ router.get('/proposal/my', async (req, res) => {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/proposal/listAll', async (req, res) => {
+router.get('/proposals/all', async (req, res) => {
     let pageNumStr = req.query.pageNum as string;
     let pageSizeStr = req.query.pageSize as string;
     let title = req.query.title as string;
+    let userId: string = req.user.did;
 
     try {
         let pageNum = pageNumStr ? parseInt(pageNumStr) : 1;
@@ -241,7 +251,7 @@ router.get('/proposal/listAll', async (req, res) => {
             return;
         }
 
-        res.json(await dbService.listAllProposal(title, pageNum, pageSize));
+        res.json(await dbService.listProposals(title, false, userId, pageNum, pageSize));
 
     } catch (e) {
         console.log(e);
@@ -251,10 +261,11 @@ router.get('/proposal/listAll', async (req, res) => {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/proposal/listCanVote', async (req, res) => {
+router.get('/proposals/active', async (req, res) => {
     let pageNumStr = req.query.pageNum as string;
     let pageSizeStr = req.query.pageSize as string;
     let title = req.query.title as string;
+    let userId: string = req.user.did;
 
     try {
         let pageNum: number = pageNumStr ? parseInt(pageNumStr) : 1;
@@ -265,7 +276,7 @@ router.get('/proposal/listCanVote', async (req, res) => {
             return;
         }
 
-        res.json(await dbService.listCanVoteProposal(title, pageNum, pageSize));
+        res.json(await dbService.listProposals(title, true, userId, pageNum, pageSize));
 
     } catch (e) {
         console.log(e);
@@ -275,22 +286,23 @@ router.get('/proposal/listCanVote', async (req, res) => {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/proposal/vote/:id', async (req, res) => {
+router.post('/proposal/:id/vote', async (req, res) => {
     let id = req.params.id;
+    let voteChoice = req.query.vote as string;
     let userId = req.user.did;
 
-    if (!id) {
-        res.json({ code: 400, message: 'required parameter absence' });
+    if (!id || !voteChoice) {
+        res.json({ code: 400, message: 'Missing proposal id or vote choice' });
         return;
     }
 
-    res.json(await dbService.vote(id, userId));
+    res.json(await dbService.voteForProposal(id, userId, voteChoice));
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/proposal/userHaveVoted', async (req, res) => {
+/* router.get('/proposal/userHaveVoted', async (req, res) => {
     let userId = req.user.did;
     res.json(await dbService.userHaveVoted(userId));
-})
+}) */
 
 export default router;

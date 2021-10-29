@@ -6,7 +6,7 @@ import { Card, Stack, Link, Container, Typography } from '@mui/material';
 import Page from '../components/Page';
 import { MHidden } from '../components/@material-extend';
 import { LoginForm } from '../components/authentication/login';
-import UserContext from '../UserContext';
+import UserContext from '../contexts/UserContext';
 
 const RootStyle = styled(Page)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
