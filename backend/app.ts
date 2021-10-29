@@ -5,8 +5,10 @@ import debug from "debug";
 import express from "express";
 import http from "http";
 import logger from "morgan";
+import { AddressInfo } from "net";
 import { MyDIDAdapter } from "./adapters/mydid.adapter";
 import { run as runJobs } from "./jobs";
+import traceLogger from "./logger";
 import { authMiddleware } from "./middlewares/auth.middleware";
 import router from "./routes/index";
 import { normalizePort } from "./utils";
@@ -74,7 +76,7 @@ server.on('error', (error) => {
  * Event listener for HTTP server "listening" event.
  */
 server.on('listening', () => {
-    let addr = server.address();
+    let addr = server.address() as AddressInfo;
     if (!addr)
         throw new Error("No server address!");
 
@@ -82,6 +84,8 @@ server.on('listening', () => {
         ? 'pipe ' + addr
         : 'port ' + addr.port;
     dbg('Listening on ' + bind);
+
+    traceLogger.info(`========= CR community voting service started with ${bind} =============`);
 });
 
 

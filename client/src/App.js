@@ -32,7 +32,7 @@ export default function App() {
     setToastSeverity(severity);
 
     setToastShowing(true);
-    setTimeout(() => setToastShowing(false), 3000);
+    setTimeout(() => setToastShowing(false), 5000);
   }
 
   useEffect(() => {

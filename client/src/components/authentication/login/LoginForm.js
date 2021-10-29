@@ -7,10 +7,12 @@ import { LoadingButton } from '@mui/lab';
 import { api } from "../../../config";
 import { essentialsConnector } from "../../../utils/connectivity";
 import UserContext from "../../../contexts/UserContext";
+import ToastContext from "../../../contexts/ToastContext";
 
 export default function LoginForm(props) {
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
+  const { showToast } = useContext(ToastContext);
 
   const formik = useFormik({
     initialValues: {
@@ -70,7 +72,8 @@ export default function LoginForm(props) {
                 console.log(data);
               }
             }).catch((error) => {
-              console.log(error)
+              console.log(error);
+              showToast(`Failed to call the backend API. Check your connectivity and make sure ${api.url} is reachable`, "error");
             })
         }
         formik.setSubmitting(false);

@@ -7,6 +7,7 @@ import {
   Button,
   Container,
   Paper,
+  Grid,
   Icon,
   Link,
   Typography,
@@ -122,50 +123,55 @@ export default function VoteForProposals() {
       const { id, title, link, creator, votedByUser } = proposal;
       return (
         <Card sx={{ minWidth: 275, mb: "20px", padding: "20px" }} key={id}>
-          <Stack direction="row" justifyContent="space-between">
-            <Stack>
-              <Typography variant="h5" color="text.primary" component="div" sx={{ mb: "15px" }}>
-                {title}
-              </Typography>
-              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                <Link href={link} underlined="none" target="_blank" rel="noreferrer">{link}</Link>
-              </Typography>
-              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                <b>Submitted by:</b> {creator}
-              </Typography>
-            </Stack>
-            <Stack direction="row" justifyContent="space-between">
-              <Stack direction="column" justifyContent="center" textAlign="center">
-                <Button
-                  sx={{ mb: "20px", margin: "10px" }}
-                  variant="contained"
-                  component={Button}
-                  disabled={votedByUser}
-                  onClick={() => { handleVote(id, 'for') }}
-                >
-                  It's a yes!
-                </Button>
-                <Stack direction="row" justifyContent="center" textAlign="center">
-                  <Icon component={ThumbUpIcon} sx={{ marginRight: "5px" }} /> {proposal.votesFor}
+          <Grid container spacing={2}>
+            <Grid xs={12} md={6} alignSelf="center" >
+              <Stack>
+                <Typography variant="h5" color="text.primary" component="div" sx={{ mb: "15px" }}>
+                  {title}
+                </Typography>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                  <Link href={link} underlined="none" target="_blank" rel="noreferrer">{link}</Link>
+                </Typography>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                  <b>Submitted by:</b> {creator}
+                </Typography>
+              </Stack>
+            </Grid>
+            <Grid xs={12} md={6} alignSelf="center" justifyItems="flex-end" >
+              <Stack direction="row" justifyContent="flex-end">
+                <Stack direction="column" justifyContent="center" textAlign="center">
+                  <Button
+                    sx={{ mb: "20px", margin: "10px" }}
+                    variant="contained"
+                    component={Button}
+                    disabled={votedByUser}
+                    onClick={() => { handleVote(id, 'for') }}
+                  >
+                    It's a yes!
+                  </Button>
+                  <Stack direction="row" justifyContent="center" textAlign="center">
+                    <Icon component={ThumbUpIcon} sx={{ marginRight: "5px" }} /> {proposal.votesFor}
+                  </Stack>
+                </Stack>
+                <Stack direction="column" justifyContent="center" textAlign="center">
+                  <Button
+                    sx={{ mb: "20px", margin: "10px" }}
+                    variant="contained"
+                    color="warning"
+                    component={Button}
+                    disabled={votedByUser}
+                    onClick={() => { handleVote(id, 'against') }}
+                  >
+                    Sorry, no...
+                  </Button>
+                  <Stack direction="row" justifyContent="center" textAlign="center">
+                    <Icon component={ThumbDownIcon} sx={{ marginRight: "5px" }} />{proposal.votesAgainst}
+                  </Stack>
                 </Stack>
               </Stack>
-              <Stack direction="column" justifyContent="center" textAlign="center">
-                <Button
-                  sx={{ mb: "20px", margin: "10px" }}
-                  variant="contained"
-                  color="warning"
-                  component={Button}
-                  disabled={votedByUser}
-                  onClick={() => { handleVote(id, 'against') }}
-                >
-                  Sorry, no...
-                </Button>
-                <Stack direction="row" justifyContent="center" textAlign="center">
-                  <Icon component={ThumbDownIcon} sx={{ marginRight: "5px" }} />{proposal.votesAgainst}
-                </Stack>
-              </Stack>
-            </Stack>
-          </Stack>
+            </Grid>
+          </Grid>
+
         </Card>
       );
     })
