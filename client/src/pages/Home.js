@@ -48,7 +48,7 @@ export default function Home() {
 
       <h2>How to sign in?</h2>
       <div>
-        1. Either by opening this dApp from Elastos Essentials dApp browser.
+        1. Either by opening this dApp from the Elastos Essentials dApp browser.
       </div>
       <div>
         2. Or by scanning the Wallet Connect QR code using the Elastos Essentials scanner.

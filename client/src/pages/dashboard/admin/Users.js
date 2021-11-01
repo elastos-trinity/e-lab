@@ -201,7 +201,7 @@ export default function Users() {
                   </TableBody>
                 )}
               </Table>
-              <EditUserDialog open={editedUser !== null} user={editedUser} onClose={() => onEditUserDialogClosed()} />
+              <EditUserDialog open={editedUser !== null} editedUser={editedUser} onClose={() => onEditUserDialogClosed()} />
             </TableContainer>
           </Scrollbar>
 

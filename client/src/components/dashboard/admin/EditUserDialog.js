@@ -12,22 +12,22 @@ import UserContext from '../../../contexts/UserContext';
 EditUserDialog.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
-  user: PropTypes.object
+  editedUser: PropTypes.object
 };
 
-export default function EditUserDialog({ open, onClose, user }) {
-  const [telegramUserName, setTelegramUserName] = useState(user ? user.telegramUserName : "");
-  const [telegramUID, setTelegramUID] = useState(user ? user.telegramUserId : "");
-  const [telegramVerificationCode, setTelegramVerificationCode] = useState(user ? user.telegramVerificationCode : "");
+export default function EditUserDialog({ open, onClose, editedUser }) {
+  const [telegramUserName, setTelegramUserName] = useState(editedUser ? editedUser.telegramUserName : "");
+  const [telegramUID, setTelegramUID] = useState(editedUser ? editedUser.telegramUserId : "");
+  const [telegramVerificationCode, setTelegramVerificationCode] = useState(editedUser ? editedUser.telegramVerificationCode : "");
   const [submittingUserStatus, setSubmittingUserStatus] = useState(false);
   const { showToast } = useContext(ToastContext);
-  const { setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
-    setTelegramUserName(user ? user.telegramUserName : "");
-    setTelegramUID(user ? user.telegramUserId : "");
-    setTelegramVerificationCode(user ? user.telegramVerificationCode : "");
-  }, [user]);
+    setTelegramUserName(editedUser ? editedUser.telegramUserName : "");
+    setTelegramUID(editedUser ? editedUser.telegramUserId : "");
+    setTelegramVerificationCode(editedUser ? editedUser.telegramVerificationCode : "");
+  }, [editedUser]);
 
   const onDialogClose = () => {
     onClose();
@@ -43,17 +43,17 @@ export default function EditUserDialog({ open, onClose, user }) {
         "token": localStorage.getItem('token')
       },
       body: JSON.stringify({
-        did: user.did,
+        did: editedUser.did,
         telegramUserName,
         telegramUserId: telegramUID
       })
     }).then(response => response.json()).then(data => {
       if (data.code === 200) {
         console.log(data);
-        user.telegramUserName = telegramUserName;
-        user.telegramUserId = telegramUID;
-        user.telegramVerificationCode = data.data;
-        setTelegramVerificationCode(user.telegramVerificationCode);
+        editedUser.telegramUserName = telegramUserName;
+        editedUser.telegramUserId = telegramUID;
+        editedUser.telegramVerificationCode = data.data;
+        setTelegramVerificationCode(editedUser.telegramVerificationCode);
 
         showToast("User updated", "success");
       } else {
@@ -65,35 +65,36 @@ export default function EditUserDialog({ open, onClose, user }) {
     });
   }
 
-  const toggleUserAdminStatus = (user) => {
+  const toggleUserAdminStatus = () => {
     console.log("Changing user type status");
 
-    const newUserType = (user.type === "user" ? "admin" : "user");
+    const newUserType = (editedUser.type === "user" ? "admin" : "user");
 
     setSubmittingUserStatus(true);
-    fetch(`${api.url} / api / v1 / user / setUserType`, {
+    fetch(`${api.url}/api/v1/user/setUserType`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "token": localStorage.getItem('token')
       },
       body: JSON.stringify({
-        targetDid: user.did,
+        targetDid: editedUser.did,
         type: newUserType
       })
     }).then(response => response.json()).then(data => {
       setSubmittingUserStatus(false);
       if (data.code === 200) {
         console.log(data);
-        user.type = newUserType;
-        setUser(user);
+        editedUser.type = newUserType;
         showToast(`User type changed to ${newUserType}`, "success");
       } else {
         console.error(data);
         showToast("Failed to change user type", "error");
       }
     }).catch((error) => {
-      console.log(error)
+      console.log(error);
+      setSubmittingUserStatus(false);
+      showToast("Server error", "error");
     });
   }
 
@@ -101,7 +102,7 @@ export default function EditUserDialog({ open, onClose, user }) {
     <Dialog open={open} onClose={onDialogClose}>
       <DialogTitle>User information</DialogTitle>
       <DialogContent>
-        {user ?
+        {editedUser ?
           <Table>
             <TableBody>
               <TableRow>
@@ -111,7 +112,7 @@ export default function EditUserDialog({ open, onClose, user }) {
                   </Typography>
                 </TableCell>
                 <TableCell align="left" size="small">
-                  {user.did}
+                  {editedUser.did}
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -121,7 +122,7 @@ export default function EditUserDialog({ open, onClose, user }) {
                   </Typography>
                 </TableCell>
                 <TableCell align="left" size="small">
-                  {user.name}
+                  {editedUser.name}
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -131,7 +132,7 @@ export default function EditUserDialog({ open, onClose, user }) {
                   </Typography>
                 </TableCell>
                 <TableCell align="left" size="small">
-                  {user.email}
+                  {editedUser.email}
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -165,7 +166,7 @@ export default function EditUserDialog({ open, onClose, user }) {
                   </Typography>
                 </TableCell>
                 <TableCell align="left" size="small">
-                  {user.type}
+                  {editedUser.type}
                   {user.canManageAdmins ?
                     (<LoadingButton
                       size="small"
@@ -174,9 +175,9 @@ export default function EditUserDialog({ open, onClose, user }) {
                       color="warning"
                       sx={{ marginLeft: "10px" }}
                       loading={submittingUserStatus}
-                      onClick={() => { toggleUserAdminStatus(user) }}
+                      onClick={() => { toggleUserAdminStatus() }}
                     >
-                      {user.type === "user" ? "Make admin" : "Make regular user"}
+                      {editedUser.type === "user" ? "Make admin" : "Make regular user"}
                     </LoadingButton>) : ''}
                 </TableCell>
               </TableRow>
