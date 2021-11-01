@@ -1,12 +1,8 @@
-import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Card,
   Table,
   Stack,
-  Button,
   TableRow,
   TableBody,
   TableCell,
@@ -15,11 +11,13 @@ import {
   TableContainer,
   TablePagination, Backdrop, CircularProgress
 } from '@mui/material';
-import Page from '../../../components/Page';
-import Label from '../../../components/Label';
-import Scrollbar from '../../../components/Scrollbar';
-import SearchNotFound from '../../../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../components/_dashboard/user';
+import Page from '../../../components/base/Page';
+import Label from '../../../components/base/Label';
+import Scrollbar from '../../../components/base/Scrollbar';
+import SearchNotFound from '../../../components/dashboard/SearchNotFound';
+import UserListHead from '../../../components/dashboard/UserListHead';
+import UserListToolbar from '../../../components/dashboard/UserListToolbar';
+import UserMoreMenu from '../../../components/dashboard/UserMoreMenu';
 import { fDateTimeNormal } from '../../../utils/formatTime';
 import { api } from "../../../config";
 
@@ -122,14 +120,14 @@ export default function Proposal() {
           />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer /* sx={{ minWidth: 800 }} */>
               <Table>
                 <UserListHead
                   headLabel={TABLE_HEAD}
                 />
                 <TableBody>
                   {users.map((row) => {
-                    const { id, title, link, creator, creationTime, status } = row;
+                    const { id, title, link, description, creator, creationTime, status } = row;
                     return (
                       <TableRow
                         hover
@@ -141,6 +139,9 @@ export default function Proposal() {
                         <TableCell align="left" size="small">
                           <Typography variant="subtitle2" noWrap>
                             {title}
+                          </Typography>
+                          <Typography style={{ paddingLeft: "10px" }}>
+                            <i>{description}</i>
                           </Typography>
                         </TableCell>
                         <TableCell align="left" size="small">{link}</TableCell>

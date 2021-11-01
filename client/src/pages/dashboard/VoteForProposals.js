@@ -1,6 +1,4 @@
 import { useContext, useEffect, useState } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Card,
   Stack,
@@ -11,22 +9,22 @@ import {
   Icon,
   Link,
   Typography,
-  Backdrop, CircularProgress, CardContent, Radio, TableBody, TableRow, TableCell, Table
+  Backdrop, CircularProgress, TableBody, TableRow, TableCell, Table
 } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import Page from '../../components/Page';
-import UserContext from '../../contexts/UserContext';
-import { fDateTimeNormal } from '../../utils/formatTime';
+import Page from '../../components/base/Page';
 import { api } from "../../config";
 import ActivationRequired from "../../components/authentication/ActivationRequired";
 import ToastContext from '../../contexts/ToastContext';
+import { fDateTime } from '../../utils/formatTime';
+import UserContext from '../../contexts/UserContext';
 
 export default function VoteForProposals() {
   const [proposals, setProposals] = useState([]);
   const [backDropOpen, setBackDropOpen] = useState(false);
-  const [userCanVote, setUserCanVote] = useState(true);
   const { showToast } = useContext(ToastContext);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     setBackDropOpen(true)
@@ -45,27 +43,6 @@ export default function VoteForProposals() {
           const activeProposals = data.data.result;
           console.log("Received active proposals list:", activeProposals);
           setProposals(activeProposals);
-
-          /* fetch(`${api.url}/api/v1/proposal/userHaveVoted`,
-            {
-              method: "GET",
-              headers: {
-                "token": localStorage.getItem('token')
-              }
-            }).then(response => response.json()).then(data => {
-              if (data.code === 200) {
-                console.log(data.data);
-                activeProposals.forEach(item => {
-                  if (data.data.includes(item.id)) {
-                    setUserCanVote(false)
-                  }
-                })
-              } else {
-                console.log(data);
-              }
-            }).catch((error) => {
-              console.log(error)
-            }) */
         } else {
           console.log(data);
         }
@@ -120,14 +97,17 @@ export default function VoteForProposals() {
 
   function ProposalsList() {
     return proposals.map((proposal) => {
-      const { id, title, link, creator, votedByUser } = proposal;
+      const { id, title, link, description, creator, votedByUser, creationTime } = proposal;
       return (
-        <Card sx={{ minWidth: 275, mb: "20px", padding: "20px" }} key={id}>
+        <Card sx={{ minWidth: 275, mb: "20px", mt: "10px", padding: "20px" }} key={id}>
           <Grid container spacing={2}>
-            <Grid xs={12} md={6} alignSelf="center" >
+            <Grid item xs={12} md={6} alignSelf="center" >
               <Stack>
                 <Typography variant="h5" color="text.primary" component="div" sx={{ mb: "15px" }}>
                   {title}
+                </Typography>
+                <Typography color="text.primary" component="div" sx={{ mb: "15px" }}>
+                  {description}
                 </Typography>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                   <Link href={link} underlined="none" target="_blank" rel="noreferrer">{link}</Link>
@@ -135,16 +115,19 @@ export default function VoteForProposals() {
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                   <b>Submitted by:</b> {creator}
                 </Typography>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                  <b>Created on:</b> {fDateTime(creationTime)}
+                </Typography>
               </Stack>
             </Grid>
-            <Grid xs={12} md={6} alignSelf="center" justifyItems="flex-end" >
+            <Grid item xs={12} md={6} alignSelf="center" justifyItems="flex-end" >
               <Stack direction="row" justifyContent="flex-end">
                 <Stack direction="column" justifyContent="center" textAlign="center">
                   <Button
                     sx={{ mb: "20px", margin: "10px" }}
                     variant="contained"
                     component={Button}
-                    disabled={votedByUser}
+                    disabled={votedByUser || !user.active}
                     onClick={() => { handleVote(id, 'for') }}
                   >
                     It's a yes!
@@ -159,7 +142,7 @@ export default function VoteForProposals() {
                     variant="contained"
                     color="warning"
                     component={Button}
-                    disabled={votedByUser}
+                    disabled={votedByUser || !user.active}
                     onClick={() => { handleVote(id, 'against') }}
                   >
                     Sorry, no...

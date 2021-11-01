@@ -25,11 +25,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(authMiddleware)
 app.use('/api/v1', router);
 
-DIDBackend.initialize(new MyDIDAdapter("mainnet"))
+DIDBackend.initialize(new MyDIDAdapter())
 
 runJobs();
 
-let dbg = debug('feeds-sources-api:server');
+let dbg = debug('cr-community-voting-api:server');
 
 /**
  * Get port from environment and store in Express.

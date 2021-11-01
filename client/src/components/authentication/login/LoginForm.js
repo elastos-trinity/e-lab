@@ -1,17 +1,23 @@
-import { useEffect, useContext } from 'react';
+import PropTypes from 'prop-types';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import jwtDecode from 'jwt-decode';
-import { DID, connectivity, } from "@elastosfoundation/elastos-connectivity-sdk-js";
+import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { LoadingButton } from '@mui/lab';
 import { api } from "../../../config";
 import { essentialsConnector } from "../../../utils/connectivity";
 import UserContext from "../../../contexts/UserContext";
 import ToastContext from "../../../contexts/ToastContext";
 
+LoginForm.propTypes = {
+  action: PropTypes.string,
+  title: PropTypes.string
+};
+
 export default function LoginForm(props) {
   const navigate = useNavigate();
-  const { user, setUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
   const { showToast } = useContext(ToastContext);
 
   const formik = useFormik({
@@ -57,7 +63,7 @@ export default function LoginForm(props) {
             }).then(response => response.json()).then(data => {
               if (data.code === 200) {
                 const token = data.data;
-                console.log(token);
+
                 localStorage.setItem("did", did);
                 localStorage.setItem("token", token);
 
@@ -66,6 +72,8 @@ export default function LoginForm(props) {
                 console.log("Sign in: setting user to:", user);
 
                 setUser(user);
+
+                formik.setSubmitting(false);
 
                 navigate('/dashboard/home');
               } else {
@@ -76,9 +84,9 @@ export default function LoginForm(props) {
               showToast(`Failed to call the backend API. Check your connectivity and make sure ${api.url} is reachable`, "error");
             })
         }
-        formik.setSubmitting(false);
       }
       else {
+        formik.setSubmitting(false);
         navigate('/dashboard/home');
       }
     }

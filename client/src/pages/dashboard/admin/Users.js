@@ -1,33 +1,29 @@
-import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
-import { Link as RouterLink } from 'react-router-dom';
 import {
   Card,
   Table,
-  Stack,
-  Button,
   TableRow,
   TableBody,
   TableCell,
   Container,
   Typography,
   TableContainer,
-  TablePagination, Backdrop, CircularProgress
+  TablePagination, Backdrop, CircularProgress, Link
 } from '@mui/material';
-import Page from '../../../components/Page';
-import Label from '../../../components/Label';
-import Scrollbar from '../../../components/Scrollbar';
-import SearchNotFound from '../../../components/SearchNotFound';
-import { UserListHead, UserListToolbar, NewUser } from '../../../components/_dashboard/user';
+import Page from '../../../components/base/Page';
+import Label from '../../../components/base/Label';
+import Scrollbar from '../../../components/base/Scrollbar';
+import SearchNotFound from '../../../components/dashboard/SearchNotFound';
+import UserListHead from '../../../components/dashboard/UserListHead';
+import UserListToolbar from '../../../components/dashboard/UserListToolbar';
 import { api } from "../../../config";
-import EditUserDialog from '../../../components/admin/EditUserDialog';
+import EditUserDialog from '../../../components/dashboard/admin/EditUserDialog';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
   { id: 'did', label: 'DID', alignRight: false },
-  { id: 'telegramUserId', label: 'Telegram UID', alignRight: false },
+  { id: 'telegram', label: 'Telegram', alignRight: false },
   { id: 'telegramVerificationCode', label: 'Telegram code', alignRight: false },
   { id: 'active', label: 'Active', alignRight: false },
 ];
@@ -42,14 +38,9 @@ export default function Users() {
   const [newUserOpen, setNewUserOpen] = useState(false);
   const [editedUser, setEditedUser] = useState(null);
 
-  useEffect(() => {
-    setBackDropOpen(true)
-    getAllUsers()
-  }, [page])
-
   const getAllUsers = () => {
     console.log("Fetching users");
-    fetch(`${api.url}/api/v1/users/list?pageNum=${page + 1}&filter=${filterName}`,
+    fetch(`${api.url}/api/v1/users/list?pageNum=${page + 1}&search=${filterName}`,
       {
         method: "GET",
         headers: {
@@ -66,7 +57,6 @@ export default function Users() {
       }).catch((error) => {
         console.log(error)
       }).finally(() => {
-        setBackDropOpen(false)
       })
   }
 
@@ -76,7 +66,7 @@ export default function Users() {
 
   const handleAdd = (tgName, did) => {
     setNewUserOpen(false);
-    setBackDropOpen(true)
+    setBackDropOpen(true);
     fetch(`${api.url}/api/v1/user/add`,
       {
         method: "POST",
@@ -94,7 +84,7 @@ export default function Users() {
       }).catch((error) => {
         console.log(error)
       }).finally(() => {
-        setBackDropOpen(false)
+        setBackDropOpen(false);
       })
   }
 
@@ -103,6 +93,7 @@ export default function Users() {
   };
 
   const handleFilterByName = (event) => {
+    console.log("USER FILTER")
     setFilterName(event.target.value);
   };
 
@@ -116,6 +107,10 @@ export default function Users() {
 
   const isUserNotFound = users.length === 0;
 
+  useEffect(() => {
+    getAllUsers();
+  }, [page, filterName])
+
   return (
     <Page title="User | CR-Voting">
       <Backdrop
@@ -125,23 +120,33 @@ export default function Users() {
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      <NewUser open={newUserOpen} handleClose={handleClose} handleAdd={handleAdd} />
+      {/*  <NewUser open={newUserOpen} handleClose={handleClose} handleAdd={handleAdd} /> */}
 
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Users
-          </Typography>
-          {/* <Button
-            variant="contained"
-            component={RouterLink}
-            to="#"
-            startIcon={<Icon icon={plusFill} />}
-            onClick={() => setNewUserOpen(true)}
-          >
-            New User
-          </Button> */}
-        </Stack>
+        <Typography variant="h4" gutterBottom>
+          Telegram activation how to
+        </Typography>
+        <div style={{ padding: "20px" }}>
+          <div style={{ marginBottom: "10px" }}>
+            <i>The very first time, message this bot on telegram: <Link href="https://t.me/userinfobot" target="_blank">@userinfobot</Link></i>
+          </div>
+          <div>
+            1. Wait for users to send you a direct message on telegram.
+          </div>
+          <div>
+            2. Forward user's message to @userinfobot. The bot will give you the user ID.
+          </div>
+          <div>
+            3. Save user's telegram name and telegram UID, a telegram code will be generated.
+          </div>
+          <div>
+            4. Provide the telegram code to the user. He will have to enter this code to confirm his account.
+          </div>
+        </div>
+
+        <Typography variant="h4" gutterBottom>
+          Users
+        </Typography>
 
         <Card>
           <UserListToolbar
@@ -150,14 +155,14 @@ export default function Users() {
           />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer /* sx={{ minWidth: 800 }} */>
               <Table>
                 <UserListHead
                   headLabel={TABLE_HEAD}
                 />
                 <TableBody>
                   {users.map((user) => {
-                    const { name, email, telegramUserId, telegramVerificationCode, did, code, active } = user;
+                    const { name, email, telegramUserName, telegramUserId, telegramVerificationCode, did, active } = user;
                     return (
                       <TableRow
                         hover
@@ -172,7 +177,7 @@ export default function Users() {
                         </TableCell>
                         <TableCell align="left" size="small">{email}</TableCell>
                         <TableCell align="left">{did}</TableCell>
-                        <TableCell align="left" size="small">{telegramUserId}</TableCell>
+                        <TableCell align="left" size="small">{telegramUserName} / {telegramUserId}</TableCell>
                         <TableCell align="left" size="small">{telegramVerificationCode}</TableCell>
                         <TableCell align="left" size="small">
                           <Label

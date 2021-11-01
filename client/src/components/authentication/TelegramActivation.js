@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import {
-  Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button, Snackbar, Alert
+  Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions
 } from '@mui/material';
 import { useContext, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
@@ -10,11 +10,10 @@ import UserContext from '../../contexts/UserContext';
 
 TelegramActivation.propTypes = {
   open: PropTypes.bool,
-  handleActivation: PropTypes.func,
   onClose: PropTypes.func
 };
 
-export default function TelegramActivation({ open, handleActivation, onClose }) {
+export default function TelegramActivation({ open, onClose }) {
   const [code, setCode] = useState("");
   const [isSubmitting, setSubmitting] = useState(false);
   const { showToast } = useContext(ToastContext);
@@ -51,8 +50,6 @@ export default function TelegramActivation({ open, handleActivation, onClose }) 
     }).catch((error) => {
       console.log(error)
     })
-
-    // handleActivation(code);
   }
 
   return (

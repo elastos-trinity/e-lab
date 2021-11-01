@@ -5,7 +5,7 @@ import logger from "../logger";
 import { Proposal } from "../model/proposal";
 import { ProposalStatus } from "../model/proposalstatus";
 import { CommonResponse } from "../model/response";
-import { User } from "../model/user";
+import { User, UserType } from "../model/user";
 import { Vote, VoteChoice } from "../model/vote";
 
 class DBService {
@@ -25,7 +25,7 @@ class DBService {
         });
     }
 
-    public async checkConnect(): Promise<CommonResponse> {
+    public async checkConnect(): Promise<CommonResponse<void>> {
         try {
             await this.client.connect();
             await this.client.db().collection('users').find({}).limit(1);
@@ -53,31 +53,66 @@ class DBService {
     }
 
     /**
-     * Updates telegram user ID and returns an activation code.
+     * Updates telegram user name and ID and returns an activation code.
      * When the telegram UID is changed, the user becomes not active until he confirms
      * the code (in case the uid is changed after the user was confirmed one).
      */
-    public async setTelegramUserId(did: string, telegramUserId: string): Promise<string | null> {
+    public async setTelegramUserInfo(did: string, telegramUserName: string, telegramUserId: string): Promise<CommonResponse<string | null>> {
         try {
             await this.client.connect();
-            const collection = this.client.db().collection('users');
+            const usersCollection = this.client.db().collection('users');
+
+            // Make sure the telegram user ID format is right
+            if (!/^[0-9]+$/.test(telegramUserId)) {
+                return {
+                    code: 403,
+                    message: `Invalid telegram user ID format. Digits only`,
+                    data: null
+                };
+            }
+
+            // Make sure the telegram user id is not already in use by another user
+            let otherUserWithSameTelegramUID = await usersCollection.findOne({
+                did: { $ne: did },
+                telegramUserId
+            });
+            if (otherUserWithSameTelegramUID) {
+                return {
+                    code: 401,
+                    message: `Telegram UID already used by user ${otherUserWithSameTelegramUID.did}`,
+                    data: null
+                };
+            }
 
             let telegramVerificationCode = new String((1000000 + (Math.random() * 10000000))).slice(0, 6);
-            let result = await collection.updateOne({ did }, {
+            let result = await usersCollection.updateOne({ did }, {
                 $set: {
+                    telegramUserName,
                     telegramUserId,
                     telegramVerificationCode,
                     active: false
                 }
             });
             if (result.matchedCount == 0)
-                return null;
+                return {
+                    code: 404,
+                    message: "User not found",
+                    data: null
+                };
             else {
-                return telegramVerificationCode;
+                return {
+                    code: 200,
+                    message: "success",
+                    data: telegramVerificationCode
+                };
             }
         } catch (err) {
             logger.error(err);
-            return null;
+            return {
+                code: 500,
+                message: "Server error",
+                data: null
+            };
         } finally {
             await this.client.close();
         }
@@ -115,6 +150,27 @@ class DBService {
         }
     }
 
+    public async setUserType(targetDid: string, type: UserType) {
+        try {
+            await this.client.connect();
+            const collection = this.client.db().collection('users');
+
+            let user = await collection.findOne({ did: targetDid });
+            if (!user) {
+                return { code: 404, message: 'User not found' };
+            }
+
+            await collection.updateOne({ did: targetDid }, { $set: { type } });
+
+            return { code: 200, message: 'success' };
+        } catch (err) {
+            logger.error(err);
+            return { code: 500, message: 'server error' };
+        } finally {
+            await this.client.close();
+        }
+    }
+
     public async findUserByDID(did: string): Promise<User | null> {
         try {
             await this.client.connect();
@@ -128,7 +184,7 @@ class DBService {
         }
     }
 
-    public async addUser(user: User): Promise<CommonResponse> {
+    public async addUser(user: User): Promise<CommonResponse<void>> {
         try {
             await this.client.connect();
             const collection = this.client.db().collection('users');
@@ -165,10 +221,17 @@ class DBService {
         }
     }
 
-    public async listUsers(filter: string, pageNum: number, pageSize: number) {
+    public async listUsers(search: string, pageNum: number, pageSize: number) {
         let query = {};
-        if (filter && filter !== "") {
-            Object.assign(query, { $or: [{ did: filter }, { name: { $regex: filter } }, { tgName: { $regex: filter } }] })
+        if (search && search !== "") {
+            Object.assign(query, {
+                $or: [
+                    { did: { $regex: search, $options: 'i' } },
+                    { name: { $regex: search, $options: 'i' } },
+                    { email: { $regex: search, $options: 'i' } },
+                    { telegramUserName: { $regex: search, $options: 'i' } }
+                ]
+            })
         }
 
         try {

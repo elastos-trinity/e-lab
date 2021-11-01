@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { alpha } from '@mui/material/styles';
 import { Box, MenuItem, ListItemIcon, ListItemText, IconButton } from '@mui/material';
-import MenuPopover from '../../components/MenuPopover';
+import MenuPopover from '../../components/base/MenuPopover';
 
 const LANGS = [
   {

@@ -1,12 +1,13 @@
 import { useContext } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { Card, Stack, Link, Container, Typography } from '@mui/material';
+import { Card, Stack, Container, Typography, Button } from '@mui/material';
 // layouts
-import Page from '../components/Page';
+import Page from '../components/base/Page';
 import { MHidden } from '../components/@material-extend';
 import { LoginForm } from '../components/authentication/login';
 import UserContext from '../contexts/UserContext';
+import { essentialsConnector, useConnectivitySDK } from "../utils/connectivity";
+import ConnectivityContext from '../contexts/ConnectivityContext';
 
 const RootStyle = styled(Page)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -34,35 +35,37 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function Home() {
-  const { user } = useContext(UserContext);
+  const { user, signOut } = useContext(UserContext);
+  const { isLinkedToEssentials, setIsLinkedToEssentials } = useContext(ConnectivityContext);
 
-  console.log("User context", user)
+  useConnectivitySDK();
 
-  function SignIn() {
-    return (
-      <div>
-        <LoginForm title="Sign in with your DID" action="signin" />
-      </div>
-    )
-  }
+  const SignIn = () => (
+    <div>
+      <LoginForm title="Sign in with your DID" action="signin" />
+    </div>
+  )
 
-  function ReturningSignIn() {
-    return (
-      <div>
-        <p>Signed in with DID <b>{user.did}</b></p>
-        <LoginForm title="Continue with previous DID" action="dashboard" />
-        <br />
-        <LoginForm title="Use another DID" action="signin" />
-      </div>
-    )
-  }
+  const ReturningSignIn = () => (
+    <div>
+      <p style={{ overflowWrap: "anywhere" }}>Signed in with DID <b>{user.did}</b></p>
+      <LoginForm title="Continue" action="dashboard" />
+    </div>
+  )
 
-  function SignInButtons() {
+  const SignInButtons = () => {
     if (user)
       return <ReturningSignIn />;
 
     return <SignIn />;
   }
+
+  const clearEssentialsSession = () => {
+    essentialsConnector.disconnectWalletConnect();
+    signOut();
+    setIsLinkedToEssentials(false);
+  };
+
   return (
     <RootStyle title="Home | CR-Voting">
       <MHidden width="mdDown">
@@ -84,8 +87,22 @@ export default function Home() {
 
           <SignInButtons />
 
+          {
+            // using the essentials connector (used by desktop apps, not by the essentials built-in browser
+            // => show a disconnection button to manually clear wallet connect if needed in case or problem.
+            isLinkedToEssentials ?
+              <Button
+                sx={{ marginTop: "10px" }}
+                variant="outlined"
+                component={Button}
+                onClick={() => { clearEssentialsSession() }}
+              >
+                Clear link to Elastos Essentials
+              </Button> : null
+          }
+
         </ContentStyle>
       </Container>
-    </RootStyle>
+    </RootStyle >
   );
 }

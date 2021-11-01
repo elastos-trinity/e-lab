@@ -1,10 +1,13 @@
 import PropTypes from 'prop-types';
 import {
-  Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button, Table,
+  Dialog, DialogTitle, DialogContent, Button, Table,
   TableRow, TableCell, Typography, Input, TableBody
 } from '@mui/material';
-import { forceUpdate, useEffect, useState } from 'react';
-import { api } from '../../config';
+import { LoadingButton } from '@mui/lab';
+import { useContext, useEffect, useState } from 'react';
+import { api } from '../../../config';
+import ToastContext from '../../../contexts/ToastContext';
+import UserContext from '../../../contexts/UserContext';
 
 EditUserDialog.propTypes = {
   open: PropTypes.bool,
@@ -13,10 +16,15 @@ EditUserDialog.propTypes = {
 };
 
 export default function EditUserDialog({ open, onClose, user }) {
+  const [telegramUserName, setTelegramUserName] = useState(user ? user.telegramUserName : "");
   const [telegramUID, setTelegramUID] = useState(user ? user.telegramUserId : "");
   const [telegramVerificationCode, setTelegramVerificationCode] = useState(user ? user.telegramVerificationCode : "");
+  const [submittingUserStatus, setSubmittingUserStatus] = useState(false);
+  const { showToast } = useContext(ToastContext);
+  const { setUser } = useContext(UserContext);
 
   useEffect(() => {
+    setTelegramUserName(user ? user.telegramUserName : "");
     setTelegramUID(user ? user.telegramUserId : "");
     setTelegramVerificationCode(user ? user.telegramVerificationCode : "");
   }, [user]);
@@ -28,7 +36,7 @@ export default function EditUserDialog({ open, onClose, user }) {
   const saveTelegramUID = () => {
     // Update DB user with the entered telegram UID and get the verification code in return.
     console.log("Saving telegram UID");
-    fetch(`${api.url}/api/v1/user/setTelegramUserId`, {
+    fetch(`${api.url}/api/v1/user/setTelegramUserInfo`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,16 +44,53 @@ export default function EditUserDialog({ open, onClose, user }) {
       },
       body: JSON.stringify({
         did: user.did,
+        telegramUserName,
         telegramUserId: telegramUID
       })
     }).then(response => response.json()).then(data => {
       if (data.code === 200) {
         console.log(data);
+        user.telegramUserName = telegramUserName;
         user.telegramUserId = telegramUID;
         user.telegramVerificationCode = data.data;
         setTelegramVerificationCode(user.telegramVerificationCode);
+
+        showToast("User updated", "success");
       } else {
         console.error(data);
+        showToast(`Update failed: ${data.message}`, "error");
+      }
+    }).catch((error) => {
+      console.log(error)
+    });
+  }
+
+  const toggleUserAdminStatus = (user) => {
+    console.log("Changing user type status");
+
+    const newUserType = (user.type === "user" ? "admin" : "user");
+
+    setSubmittingUserStatus(true);
+    fetch(`${api.url} / api / v1 / user / setUserType`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "token": localStorage.getItem('token')
+      },
+      body: JSON.stringify({
+        targetDid: user.did,
+        type: newUserType
+      })
+    }).then(response => response.json()).then(data => {
+      setSubmittingUserStatus(false);
+      if (data.code === 200) {
+        console.log(data);
+        user.type = newUserType;
+        setUser(user);
+        showToast(`User type changed to ${newUserType}`, "success");
+      } else {
+        console.error(data);
+        showToast("Failed to change user type", "error");
       }
     }).catch((error) => {
       console.log(error)
@@ -92,12 +137,15 @@ export default function EditUserDialog({ open, onClose, user }) {
               <TableRow>
                 <TableCell align="left" size="small">
                   <Typography variant="subtitle2" noWrap>
-                    TG user ID
+                    Telegram
                   </Typography>
                 </TableCell>
                 <TableCell align="left" size="small">
-                  <Input value={telegramUID} onChange={e => setTelegramUID(e.target.value)} />
-                  <Button onClick={() => { saveTelegramUID() }}>Save and create code</Button>
+                  <Input value={telegramUserName} placeholder="Username" onChange={e => setTelegramUserName(e.target.value)} />
+                  <br />
+                  <Input value={telegramUID} placeholder="User ID (important)" onChange={e => setTelegramUID(e.target.value)} />
+                  <br />
+                  <Button variant="contained" onClick={() => { saveTelegramUID() }}>Save and create code</Button>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -108,6 +156,28 @@ export default function EditUserDialog({ open, onClose, user }) {
                 </TableCell>
                 <TableCell align="left" size="small">
                   <b>{telegramVerificationCode}</b> (give this code to the user)
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell align="left" size="small">
+                  <Typography variant="subtitle2" noWrap>
+                    Type
+                  </Typography>
+                </TableCell>
+                <TableCell align="left" size="small">
+                  {user.type}
+                  {user.canManageAdmins ?
+                    (<LoadingButton
+                      size="small"
+                      type="submit"
+                      variant="contained"
+                      color="warning"
+                      sx={{ marginLeft: "10px" }}
+                      loading={submittingUserStatus}
+                      onClick={() => { toggleUserAdminStatus(user) }}
+                    >
+                      {user.type === "user" ? "Make admin" : "Make regular user"}
+                    </LoadingButton>) : ''}
                 </TableCell>
               </TableRow>
             </TableBody>

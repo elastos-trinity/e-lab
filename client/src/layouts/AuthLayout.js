@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Typography } from '@mui/material';
-import Logo from '../components/Logo';
+import Logo from '../components/base/Logo';
 import { MHidden } from '../components/@material-extend';
 
 const HeaderStyle = styled('header')(({ theme }) => ({

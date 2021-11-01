@@ -56,7 +56,8 @@ router.post('/login', async (req, res) => {
             did,
             type: 'user',
             name,
-            email
+            email,
+            canManageAdmins: false
         };
         let result = await dbService.addUser(user);
         if (result.code != 200) {
@@ -114,22 +115,18 @@ router.get('/user/remove/:did', async (req, res) => {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.post('/user/setTelegramUserId', async (req, res) => {
+router.post('/user/setTelegramUserInfo', async (req, res) => {
     if (req.user.type !== 'admin') {
         res.json({ code: 403, message: 'Admin only' });
         return;
     }
 
-    let { did, telegramUserId } = req.body;
-    if (!did || !telegramUserId) {
-        res.json({ code: 400, message: 'Missing DID or telegramUserId' });
+    let { did, telegramUserName, telegramUserId } = req.body;
+    if (!did || !telegramUserName || !telegramUserId) {
+        res.json({ code: 400, message: 'Missing DID or telegramUserName or telegramUserId' });
         return;
     }
-    res.json({
-        code: 200,
-        message: 'success',
-        data: await dbService.setTelegramUserId(did, telegramUserId)
-    });
+    res.json(await dbService.setTelegramUserInfo(did, telegramUserName, telegramUserId));
 })
 
 /**
@@ -144,10 +141,32 @@ router.post('/user/setTelegramVerificationCode', async (req, res) => {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.post('/user/setUserType', async (req, res) => {
+    if (req.user.type !== 'admin' || !req.user.canManageAdmins) {
+        res.json({ code: 403, message: 'Admin with canManageAdmins permission only' });
+        return;
+    }
+
+    let {
+        targetDid,  // User whose admin right will change
+        type // new user type (user, admin)
+    } = req.body;
+    if (!targetDid || !type) {
+        res.json({ code: 400, message: 'Missing targetDid or canManageAdmins' });
+        return;
+    }
+    res.json({
+        code: 200,
+        message: 'success',
+        data: await dbService.setUserType(targetDid, type)
+    });
+})
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/users/list', async (req, res) => {
     let pageNumStr = req.query.pageNum as string;
     let pageSizeStr = req.query.pageSize as string;
-    let filter = req.query.filter as string;
+    let search = req.query.search as string;
 
     try {
         let pageNum: number = pageNumStr ? parseInt(pageNumStr) : 1;
@@ -158,7 +177,7 @@ router.get('/users/list', async (req, res) => {
             return;
         }
 
-        res.json(await dbService.listUsers(filter, pageNum, pageSize));
+        res.json(await dbService.listUsers(search, pageNum, pageSize));
     } catch (e) {
         console.log(e);
         res.json({ code: 400, message: 'bad request' });
@@ -193,9 +212,9 @@ router.post('/proposal/add', async (req, res) => {
         return;
     }
 
-    let { title, link } = req.body;
-    if (!title || !link) {
-        res.json({ code: 400, message: 'Missing title or link' });
+    let { title, link, description } = req.body;
+    if (!title || !link || !description) {
+        res.json({ code: 400, message: 'Missing title, description or link' });
         return;
     }
 
@@ -203,6 +222,7 @@ router.post('/proposal/add', async (req, res) => {
         id: uuidV1(),
         title,
         link,
+        description,
         creator: req.user.did,
         creationTime: Date.now(),
         status: 'new'

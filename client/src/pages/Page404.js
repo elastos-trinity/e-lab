@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box, Button, Typography, Container } from '@mui/material';
 import { MotionContainer, varBounceIn } from '../components/animate';
-import Page from '../components/Page';
+import Page from '../components/base/Page';
 
 const RootStyle = styled(Page)(({ theme }) => ({
   display: 'flex',

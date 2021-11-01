@@ -1,30 +1,29 @@
 import { useEffect, useState } from 'react';
-import jwtDecode from "jwt-decode";
-import { useNavigate } from 'react-router-dom';
 import { Alert, Snackbar } from '@mui/material';
 
 import Router from './routes';
 import ThemeConfig from './theme';
 import GlobalStyles from './theme/globalStyles';
-import ScrollToTop from './components/ScrollToTop';
-import { prepareConnectivitySDK } from './utils/connectivity';
+import ScrollToTop from './components/base/ScrollToTop';
 import UserContext from './contexts/UserContext';
 import ToastContext from './contexts/ToastContext';
 import { api } from "./config";
+import ConnectivityContext from './contexts/ConnectivityContext';
 
 export default function App() {
-  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isToastShowing, setToastShowing] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastSeverity, setToastSeverity] = useState("");
+  const [isLinkedToEssentials, setIsLinkedToEssentials] = useState(false);
 
-  console.log("Entering App component")
+  console.log("Entering App component");
 
-  prepareConnectivitySDK();
-
-  const updateUser = (user) => {
-    setUser(user);
+  const signOut = () => {
+    console.log("Signing out user. Deleting session info, auth token", user);
+    localStorage.removeItem("token");
+    localStorage.removeItem("did");
+    setUser(null);
   }
 
   const showToast = (message, severity) => {
@@ -58,53 +57,27 @@ export default function App() {
           console.log(error)
         })
     }
-
-    /* if (!authToken)
-      navigate('/login', { replace: true });
-    else {
-      const decodedUser = jwtDecode(authToken);
-      setUser(decodedUser);
-      navigate('/dashboard/home', { replace: true });
-    } */
-
-    // TODO: Not good - user data should be extracted from the existing auth JWT token
-    /* fetch(`${api.url}/api/v1/currentUser`,
-      {
-        method: "GET",
-        headers: {
-          "token": localStorage.getItem('token')
-        },
-      }).then(response => response.json()).then(data => {
-        if (data.code === 200) {
-          const user = data.data;
-          console.log("Existing user retrieved:", user);
-          setUser(user);
-        } else {
-          console.log("No active user, redirecting to login page", data);
-          navigate('/login', { replace: true })
-        }
-      }).catch((error) => {
-        console.log(error)
-      }) */
   }, [])
 
   return (
-    <UserContext.Provider value={{ user, setUser: updateUser }}>
-      <ToastContext.Provider value={{ showToast }}>
-        <ThemeConfig>
-          <ScrollToTop />
-          <GlobalStyles />
-          <Router />
-        </ThemeConfig>
-        <Snackbar
-          open={isToastShowing}
-          autoHideDuration={6000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
-          <Alert severity={toastSeverity} sx={{ width: '100%' }}>
-            {toastMessage}
-          </Alert>
-        </Snackbar>
-      </ToastContext.Provider>
-    </UserContext.Provider>
+    <ConnectivityContext.Provider value={{ isLinkedToEssentials, setIsLinkedToEssentials }}>
+      <UserContext.Provider value={{ user, setUser, signOut }}>
+        <ToastContext.Provider value={{ showToast }}>
+          <ThemeConfig>
+            <ScrollToTop />
+            <GlobalStyles />
+            <Router />
+          </ThemeConfig>
+          <Snackbar
+            open={isToastShowing}
+            autoHideDuration={6000}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+            <Alert severity={toastSeverity} sx={{ width: '100%' }}>
+              {toastMessage}
+            </Alert>
+          </Snackbar>
+        </ToastContext.Provider>
+      </UserContext.Provider>
+    </ConnectivityContext.Provider>
   );
 }

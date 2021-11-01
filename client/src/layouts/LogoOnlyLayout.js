@@ -1,6 +1,6 @@
 import { Link as RouterLink, Outlet } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import Logo from '../components/Logo';
+import Logo from '../components/base/Logo';
 
 const HeaderStyle = styled('header')(({ theme }) => ({
   top: 0,

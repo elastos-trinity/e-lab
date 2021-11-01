@@ -1,12 +1,11 @@
-import { useEffect, useState, useContext } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { Outlet } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Icon } from '@iconify/react';
 import peopleFill from '@iconify/icons-eva/people-fill';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
 import UserContext from '../../contexts/UserContext';
-import { api } from "../../config";
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;

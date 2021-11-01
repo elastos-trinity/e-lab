@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Avatar, IconButton } from '@mui/material';
-import MenuPopover from '../../components/MenuPopover';
+import MenuPopover from '../../components/base/MenuPopover';
 
 export default function AccountPopover() {
   const navigate = useNavigate();

@@ -5,7 +5,6 @@ import { alpha, styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
 import { MHidden } from '../../components/@material-extend';
 import AccountPopover from './AccountPopover';
-import LanguagePopover from './LanguagePopover';
 
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;

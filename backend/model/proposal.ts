@@ -2,6 +2,7 @@ export type Proposal = {
   id: string; // Our own custom unique identifier for the proposal
   title: string;
   link: string;
+  description: string;
   creator: string; // User DID
   creationTime?: number; // Timestamp (ms) at which this approval was created
   status: 'new' | 'approved' | 'rejected';

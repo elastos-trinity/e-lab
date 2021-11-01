@@ -2,14 +2,14 @@ import PropTypes from 'prop-types';
 import { useContext, useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
-import Logo from '../../components/Logo';
-import Scrollbar from '../../components/Scrollbar';
-import NavSection from '../../components/NavSection';
+import { Box, Link, Drawer, Typography, Avatar } from '@mui/material';
+import Logo from '../../components/base/Logo';
+import Scrollbar from '../../components/base/Scrollbar';
+import NavSection from '../../components/base/NavSection';
 import { MHidden } from '../../components/@material-extend';
 import UserContext from '../../contexts/UserContext';
 
-const DRAWER_WIDTH = 550;
+const DRAWER_WIDTH = 350;
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
@@ -62,7 +62,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar, sideba
           <AccountStyle>
             <Avatar /* src={account.photoURL} */ alt="photoURL" />
             <Box sx={{ ml: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+              <Typography variant="subtitle2" sx={{ color: 'text.primary', overflowWrap: "anywhere" }}>
                 DID: {user.did}
               </Typography>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>

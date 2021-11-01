@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 import {
@@ -8,15 +8,19 @@ import {
   Button,
   Container,
   Typography,
-  Backdrop, CircularProgress, CardContent
+  Backdrop, CircularProgress
 } from '@mui/material';
-import Page from '../../components/Page';
-import { NewProposal } from '../../components/_dashboard/proposal';
+import Page from '../../components/base/Page';
+import NewProposal from '../../components/dashboard/NewProposal';
 import { fDateTimeNormal } from '../../utils/formatTime';
 import { api } from "../../config";
 import ActivationRequired from '../../components/authentication/ActivationRequired';
+import UserContext from '../../contexts/UserContext';
+import ToastContext from '../../contexts/ToastContext';
 
 export default function UserProposal() {
+  const { user } = useContext(UserContext);
+  const { showToast } = useContext(ToastContext);
   const [proposal, setProposal] = useState([]);
   const [backDropOpen, setBackDropOpen] = useState(false);
   const [newProposalOpen, setNewProposalOpen] = useState(false);
@@ -51,7 +55,7 @@ export default function UserProposal() {
     setNewProposalOpen(false);
   };
 
-  const handleAdd = (title, link) => {
+  const handleAdd = (title, link, description) => {
     setNewProposalOpen(false);
     setBackDropOpen(true)
     fetch(`${api.url}/api/v1/proposal/add`,
@@ -61,12 +65,14 @@ export default function UserProposal() {
           "Content-Type": "application/json",
           "token": localStorage.getItem('token')
         },
-        body: JSON.stringify({ title, link })
+        body: JSON.stringify({ title, link, description })
       }).then(response => response.json()).then(data => {
         if (data.code === 200) {
-          getProposal()
+          getProposal();
+          showToast("Proposal was created", "success");
         } else {
           console.log(data);
+          showToast(`Failed to created the proposal was created: ${data.message}`, "error");
         }
       }).catch((error) => {
         console.log(error)
@@ -97,10 +103,11 @@ export default function UserProposal() {
 
         <Stack direction="row" alignItems="center" justifyContent="flex-end">
           <Button
-            sx={{ width: "150px", mb: "20px" }}
+            sx={{ width: "150px", mb: "20px", mt: "10px" }}
             variant="contained"
             component={RouterLink}
             to="#"
+            disabled={!user.active}
             startIcon={<Icon icon={plusFill} />}
             onClick={() => setNewProposalOpen(true)}
           >
@@ -109,7 +116,7 @@ export default function UserProposal() {
         </Stack>
 
         {proposal.map((row) => {
-          const { id, title, link, creationTime, status } = row;
+          const { id, title, link, description, creationTime, status } = row;
           return (
             <Card sx={{ minWidth: 275, mb: "20px", padding: "20px" }} key={id}>
               <Stack direction="row" justifyContent="space-between">
@@ -120,8 +127,11 @@ export default function UserProposal() {
                   <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                     {link}
                   </Typography>
+                  <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                    <i>{description}</i>
+                  </Typography>
                   <Typography color="text.secondary" sx={{ fontSize: 14 }}>
-                    <b>Created:</b> {fDateTimeNormal(creationTime)}
+                    <b>Created on:</b> {fDateTimeNormal(creationTime)}
                   </Typography>
                 </Stack>
                 <Stack direction="column" justifyContent="center">

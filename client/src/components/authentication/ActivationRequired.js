@@ -1,7 +1,6 @@
-import PropTypes from 'prop-types';
 import { useContext, useState } from "react";
-import { Paper, Typography, Card, Stack, Button, Grid } from '@mui/material';
-import { Box, styled } from '@mui/system';
+import { Button, Grid } from '@mui/material';
+import { styled } from '@mui/system';
 import TelegramActivation from "./TelegramActivation";
 import UserContext from '../../contexts/UserContext';
 
@@ -20,27 +19,21 @@ export default function ActivationRequired() {
   const { user } = useContext(UserContext);
 
   function handleActivationPrompt() {
-    console.log("handleActivationPrompt")
     setUserTelegramActivationOpen(true);
   }
 
   function onClose() {
-    console.log("onclose")
     setUserTelegramActivationOpen(false);
-  }
-
-  function handleActivationRequest() {
-
   }
 
   if (!user.active)
     return (
       <RootStyle>
-        <Grid container spacing={2} sx={{ color: 'white', display: 'flex', width: '100%', padding: "20px", background: '#027B55', borderRadius: '10px' }}>
-          <Grid xs={8} md={8} alignSelf="center" >
-            Your account is not yet activated. Please activate it before voting.
+        <Grid container sx={{ color: 'white', display: 'flex', padding: "20px", background: '#027B55', borderRadius: '10px' }}>
+          <Grid item xs={8} md={8} padding="5px" alignSelf="center" >
+            Your account is not yet activated. Please activate it before voting or submitting a proposal.
           </Grid>
-          <Grid xs={4} md={4}>
+          <Grid item xs={4} md={4} alignSelf="center">
             <Button
               variant="contained"
               component={Button}
@@ -50,7 +43,7 @@ export default function ActivationRequired() {
             </Button>
           </Grid>
         </Grid>
-        <TelegramActivation open={userTelegramActivationOpen} onClose={() => onClose()} handleActivation={() => handleActivationRequest()} />
+        <TelegramActivation open={userTelegramActivationOpen} onClose={() => onClose()} />
       </RootStyle>
     )
   else

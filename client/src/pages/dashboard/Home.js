@@ -1,9 +1,9 @@
 import { Box, Grid, Container, Typography, Link, CircularProgress, Backdrop, Button } from '@mui/material';
 import { useContext, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import Page from '../../components/Page';
+import Page from '../../components/base/Page';
 import UserContext from '../../contexts/UserContext';
-import { TelegramActivation } from '../../components/_dashboard/proposal';
+import { TelegramActivation } from '../../components/_unused/proposal';
 import { api } from "../../config";
 
 export default function DashboardHome() {
