@@ -41,7 +41,7 @@ export default function Proposal() {
   useEffect(() => {
     setBackDropOpen(true);
     getProposals();
-  }, [page])
+  }, [page]);
 
   const getProposals = () => {
     fetch(`${api.url}/api/v1//proposals/all?pageNum=${page + 1}&title=${filterName}`,

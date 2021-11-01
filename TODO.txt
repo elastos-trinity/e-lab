@@ -1,10 +1,7 @@
-# GUIDANCE
-- activation: clickable link to the telegram admin page + button copy did string/request message
-
 # USABILITY
 - catch qr code modal closed to stop the signin button from spinning
 - my proposals: can edit
-- open proposals links in external browser
+- essentials: open proposals links in external browser
 
 # UI
 - show creators names instead of DID

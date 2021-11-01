@@ -42,8 +42,19 @@ export default function Home() {
 
   const SignIn = () => (
     <div>
-      <LoginForm title="Sign in with your DID" action="signin" />
+      <div style={{ marginBottom: "20px" }} >
+        <LoginForm title="Sign in with your DID" action="signin" />
+      </div>
+
+      <h2>How to sign in?</h2>
+      <div>
+        1. Either by opening this dApp from Elastos Essentials dApp browser.
+      </div>
+      <div>
+        2. Or by scanning the Wallet Connect QR code using the Elastos Essentials scanner.
+      </div>
     </div>
+
   )
 
   const ReturningSignIn = () => (

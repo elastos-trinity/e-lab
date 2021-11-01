@@ -113,7 +113,8 @@ export default function VoteForProposals() {
                   <Link href={link} underlined="none" target="_blank" rel="noreferrer">{link}</Link>
                 </Typography>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                  <b>Submitted by:</b> {creator}
+                  <b>Submitted by:</b><br />
+                  {creator}
                 </Typography>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                   <b>Created on:</b> {fDateTime(creationTime)}
