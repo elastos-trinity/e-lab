@@ -1,9 +1,0 @@
-# USABILITY
-- catch qr code modal closed to stop the signin button from spinning
-- my proposals: can edit
-- essentials: open proposals links in external browser
-
-# UI
-- show creators names instead of DID
-- design
-- proposals: show current vote period start/end
