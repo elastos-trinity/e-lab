@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Button, Grid } from '@mui/material';
 import { styled } from '@mui/system';
 import TelegramActivation from "./TelegramActivation";
+import KYCActivation from "./KYCActivation";
 import UserContext from '../../contexts/UserContext';
 
 ActivationRequired.propTypes = {
@@ -14,16 +15,20 @@ const RootStyle = styled("div")({
   justifyContent: 'flex-center',
 });
 
+/**
+ * Component that checks if user is activated and recommends to activate the account by providing
+ * KYC-ed credentials if needed.
+ */
 export default function ActivationRequired() {
-  const [userTelegramActivationOpen, setUserTelegramActivationOpen] = useState(false);
+  const [kycActivationOpened, setKycActivationOpened] = useState(false);
   const { user } = useContext(UserContext);
 
   function handleActivationPrompt() {
-    setUserTelegramActivationOpen(true);
+    setKycActivationOpened(true);
   }
 
   function onClose() {
-    setUserTelegramActivationOpen(false);
+    setKycActivationOpened(false);
   }
 
   if (!user.active)
@@ -39,11 +44,12 @@ export default function ActivationRequired() {
               component={Button}
               // disabled={!userCanVote}
               onClick={() => { handleActivationPrompt() }}>
-              Activate account {userTelegramActivationOpen}
+              Activate account {kycActivationOpened}
             </Button>
           </Grid>
         </Grid>
-        <TelegramActivation open={userTelegramActivationOpen} onClose={() => onClose()} />
+        {/* <TelegramActivation open={userTelegramActivationOpen} onClose={() => onClose()} /> */}
+        <KYCActivation open={kycActivationOpened} onClose={() => onClose()} />
       </RootStyle>
     )
   else

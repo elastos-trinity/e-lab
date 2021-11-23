@@ -9,7 +9,8 @@ export type User = {
   active?: boolean; // Whether this user is active, meaning "confirmed" - telegram verified)
   telegramUserName?: string; // Telegram user name, purely informative as this can change.
   telegramUserId?: string; // Telegram user ID (not username)
-  telegramVerificationCode?: string; // TODO: what code is this?
+  telegramVerificationCode?: string;
+  kycIdentityHash?: string; // MD5 hash of a specific string representing the unique KYC-ed identity of a user
   creationTime?: number;
   canManageAdmins?: boolean; // Whether this user is allowed to add/remove other admins
 }

@@ -171,11 +171,43 @@ class DBService {
         }
     }
 
+    public async activateUserFromKYC(targetDid: string, kycIdentityHash: string) {
+        console.log(`Activating user ${targetDid} with identity hash ${kycIdentityHash}`);
+
+        try {
+            await this.client.connect();
+            const collection = this.client.db().collection('users');
+
+            await collection.updateOne({ did: targetDid }, { $set: { kycIdentityHash, active: true } });
+
+            return { code: 200, message: 'success' };
+        } catch (err) {
+            logger.error(err);
+            return { code: 500, message: 'server error' };
+        } finally {
+            await this.client.close();
+        }
+    }
+
     public async findUserByDID(did: string): Promise<User | null> {
         try {
             await this.client.connect();
             const collection = this.client.db().collection<User>('users');
             return (await collection.find({ did }).project<User>({ '_id': 0 }).limit(1).toArray())[0];
+        } catch (err) {
+            logger.error(err);
+            return null;
+        } finally {
+            await this.client.close();
+        }
+    }
+
+    public async findUserByKYCIdentityHash(kycIdentityHash: string): Promise<User | null> {
+        try {
+            await this.client.connect();
+            const collection = this.client.db().collection<User>('users');
+            let user = await collection.findOne({ kycIdentityHash }) || null;
+            return user;
         } catch (err) {
             logger.error(err);
             return null;

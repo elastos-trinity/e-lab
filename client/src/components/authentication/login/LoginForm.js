@@ -31,10 +31,10 @@ export default function LoginForm(props) {
 
         console.log("Trying to sign in using the connectivity SDK");
         try {
-          presentation = await didAccess.getCredentials({
-            claims: {
-              name: false
-            }
+          presentation = await didAccess.requestCredentials({
+            claims: [
+              DID.simpleIdClaim("Your name", "name", false)
+            ]
           });
         } catch (e) {
           // Possible exception while using wallet connect (i.e. not an identity wallet)

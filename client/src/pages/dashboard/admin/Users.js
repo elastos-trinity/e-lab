@@ -23,11 +23,10 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
   { id: 'did', label: 'DID', alignRight: false },
-  { id: 'telegram', label: 'Telegram', alignRight: false },
-  { id: 'telegramVerificationCode', label: 'Telegram code', alignRight: false },
-  { id: 'active', label: 'Active', alignRight: false },
+  /* { id: 'telegram', label: 'Telegram', alignRight: false },
+  { id: 'telegramVerificationCode', label: 'Telegram code', alignRight: false }, */
+  { id: 'active', label: 'KYC', alignRight: false },
 ];
-
 
 export default function Users() {
   const [page, setPage] = useState(0);
@@ -123,7 +122,7 @@ export default function Users() {
       {/*  <NewUser open={newUserOpen} handleClose={handleClose} handleAdd={handleAdd} /> */}
 
       <Container>
-        <Typography variant="h4" gutterBottom>
+        {/* <Typography variant="h4" gutterBottom>
           Telegram activation how to
         </Typography>
         <div style={{ padding: "20px" }}>
@@ -142,7 +141,7 @@ export default function Users() {
           <div>
             4. Provide the telegram code to the user. He will have to enter this code to confirm his account.
           </div>
-        </div>
+        </div> */}
 
         <Typography variant="h4" gutterBottom>
           Users
@@ -177,8 +176,8 @@ export default function Users() {
                         </TableCell>
                         <TableCell align="left" size="small">{email}</TableCell>
                         <TableCell align="left">{did}</TableCell>
-                        <TableCell align="left" size="small">{telegramUserName} / {telegramUserId}</TableCell>
-                        <TableCell align="left" size="small">{telegramVerificationCode}</TableCell>
+                        {/* <TableCell align="left" size="small">{telegramUserName} / {telegramUserId}</TableCell>
+                        <TableCell align="left" size="small">{telegramVerificationCode}</TableCell> */}
                         <TableCell align="left" size="small">
                           <Label
                             variant="ghost"

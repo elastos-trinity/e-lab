@@ -7,7 +7,9 @@ import logger from '../logger';
 import { Proposal } from '../model/proposal';
 import { ProposalStatus } from '../model/proposalstatus';
 import { User } from '../model/user';
+import { credentialsService } from '../services/credentials.service';
 import { dbService } from '../services/db.service';
+import { apiError } from '../utils/api';
 
 let router = Router();
 
@@ -161,6 +163,35 @@ router.post('/user/setUserType', async (req, res) => {
         data: await dbService.setUserType(targetDid, type)
     });
 })
+
+/**
+ * Attempt to activate the user from his KYC-ed information.
+ */
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.post('/user/kycactivation', async (req, res) => {
+    let did = req.user.did as string;
+
+    let user = await dbService.findUserByDID(did);
+    if (!user) {
+        return res.json({ code: 401, message: "Inexisting user" });
+    }
+
+    // Forbid user to activate himself again, possibly with another identity somehow,
+    // if he is already active
+    if (user.active) {
+        return res.json({ code: 400, message: "User already activated, cannot activate by KYC again" });
+    }
+
+    let presentationStr = req.body;
+    let vp = VerifiablePresentation.parse(presentationStr);
+
+    let response = await credentialsService.prepareKycActivationFromPresentation(did, vp);
+
+    if (response.error)
+        apiError(res, response);
+    else
+        res.json({ code: 200, message: 'success' });
+});
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/users/list', async (req, res) => {

@@ -3,6 +3,7 @@ import log4js from "log4js";
 log4js.configure({
   appenders: {
     stdout: { type: 'stdout' },
+    stderr: { type: 'stderr' },
     voting: { type: 'dateFile', filename: 'logs/voting.log', pattern: ".yyyy-MM-dd.log", compress: true, }
   },
   categories: { default: { appenders: ['stdout', 'voting'], level: 'info' } },
