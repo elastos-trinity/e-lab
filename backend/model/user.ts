@@ -13,4 +13,5 @@ export type User = {
   kycIdentityHash?: string; // MD5 hash of a specific string representing the unique KYC-ed identity of a user
   creationTime?: number;
   canManageAdmins?: boolean; // Whether this user is allowed to add/remove other admins
+  wallets?: string[]; // List of bound wallet addresses
 }

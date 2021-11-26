@@ -8,6 +8,7 @@ import NotFound from './pages/Page404';
 import Proposal from './pages/dashboard/admin/Proposals';
 import UserProposal from './pages/dashboard/MyProposals';
 import VoteForProposals from './pages/dashboard/VoteForProposals';
+import MyProfile from './pages/dashboard/MyProfile';
 
 export default function Router() {
   return useRoutes([
@@ -18,6 +19,7 @@ export default function Router() {
         { path: 'home', element: <VoteForProposals /> },
         { path: 'user', element: <Users /> },
         { path: 'proposal', element: <Proposal /> },
+        { path: 'my-profile', element: <MyProfile /> },
         { path: 'my-proposal', element: <UserProposal /> },
         { path: 'vote', element: <VoteForProposals /> },
       ]

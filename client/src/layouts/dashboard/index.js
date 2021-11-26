@@ -33,6 +33,11 @@ const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
 
 const menuConfigUser = [
   {
+    title: 'My profile',
+    path: '/dashboard/my-profile',
+    icon: getIcon(peopleFill)
+  },
+  {
     title: 'Community proposals',
     path: '/dashboard/vote',
     icon: getIcon(peopleFill)

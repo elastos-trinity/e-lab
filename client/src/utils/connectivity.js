@@ -24,6 +24,10 @@ export function useConnectivitySDK() {
     const hasLink = isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession();
     console.log("Has link to essentials?", hasLink);
     setIsLinkedToEssentials(hasLink);
+
+    // Restore the wallet connect session - TODO: should be done by the connector itself?
+    if (hasLink && !essentialsConnector.getWalletConnectProvider().connected)
+      essentialsConnector.getWalletConnectProvider().enable();
   });
 }
 

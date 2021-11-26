@@ -37,8 +37,8 @@
   },
   "dependencies": {
     "@elastosfoundation/did-js-sdk": "^2.1.3",
-    "@elastosfoundation/elastos-connectivity-sdk-js": "^1.0.10",
-    "@elastosfoundation/essentials-connector-client-browser": "^1.0.20",
+    "@elastosfoundation/elastos-connectivity-sdk-js": "^1.0.11",
+    "@elastosfoundation/essentials-connector-client-browser": "^1.0.25",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@iconify/icons-ant-design": "^1.1.0",
@@ -75,6 +75,7 @@
     "simplebar": "^5.3.5",
     "simplebar-react": "^2.3.5",
     "web-vitals": "^2.1.0",
+    "web3": "^1.3.5",
     "yup": "^0.32.9"
   },
   "devDependencies": {

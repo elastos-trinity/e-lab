@@ -282,6 +282,24 @@ class DBService {
         }
     }
 
+    public async addUserWallet(targetDid: string, walletAddress: string) {
+        console.log(`Binding wallet address ${walletAddress} to user ${targetDid}`);
+
+        try {
+            await this.client.connect();
+            const collection = this.client.db().collection('users');
+
+            await collection.updateOne({ did: targetDid }, { $push: { wallets: walletAddress } });
+
+            return { code: 200, message: 'success' };
+        } catch (err) {
+            logger.error(err);
+            return { code: 500, message: 'server error' };
+        } finally {
+            await this.client.close();
+        }
+    }
+
     // TODO: operator is really string ?
     public async auditProposal(id: string, status: ProposalStatus, operator: string) {
         try {

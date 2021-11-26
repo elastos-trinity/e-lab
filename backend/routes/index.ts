@@ -193,6 +193,30 @@ router.post('/user/kycactivation', async (req, res) => {
         res.json({ code: 200, message: 'success' });
 });
 
+/**
+ * Bind a new wallet address to the user.
+ */
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.post('/user/wallet', async (req, res) => {
+    let did = req.user.did as string;
+
+    let user = await dbService.findUserByDID(did);
+    if (!user) {
+        return res.json({ code: 401, message: "Inexisting user" });
+    }
+
+    let walletAddress = req.body.walletAddress;
+    if (!walletAddress) {
+        return res.json({ code: 401, message: "walletAddress is missing" });
+    }
+
+    res.json({
+        code: 200,
+        message: 'success',
+        data: await dbService.addUserWallet(did, walletAddress)
+    });
+});
+
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/users/list', async (req, res) => {
     let pageNumStr = req.query.pageNum as string;
