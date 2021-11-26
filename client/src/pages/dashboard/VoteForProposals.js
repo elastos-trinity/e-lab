@@ -19,6 +19,7 @@ import ActivationRequired from "../../components/authentication/ActivationRequir
 import ToastContext from '../../contexts/ToastContext';
 import { fDateTime } from '../../utils/formatTime';
 import UserContext from '../../contexts/UserContext';
+import { openExternalLink } from '../../utils/links';
 
 export default function VoteForProposals() {
   const [proposals, setProposals] = useState([]);
@@ -77,6 +78,10 @@ export default function VoteForProposals() {
       })
   }
 
+  const openProposalLink = (link) => {
+    openExternalLink(link);
+  }
+
   function NoProposal() {
     return (
       <Table>
@@ -110,7 +115,7 @@ export default function VoteForProposals() {
                   {description}
                 </Typography>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                  <Link href={link} underlined="none" target="_blank" rel="noreferrer">{link}</Link>
+                  <Link onClick={() => { openProposalLink(link) }} underlined="none" target="_blank" rel="noreferrer">{link}</Link>
                 </Typography>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                   <b>Submitted by:</b><br />

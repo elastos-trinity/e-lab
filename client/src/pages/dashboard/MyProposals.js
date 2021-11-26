@@ -81,6 +81,16 @@ export default function UserProposal() {
       })
   }
 
+  const getDisplayableStatus = (status) => {
+    // TODO: approved -> show "active" or "finished" or "not started" depending on the vote period
+    switch (status) {
+      case "approved": return "Approved";
+      case "rejected": return "Rejected";
+      case "new": return "Awaiting validation";
+      default: return status;
+    }
+  }
+
   return (
     <Page title="Proposal | CR-Voting">
       <Backdrop
@@ -136,7 +146,7 @@ export default function UserProposal() {
                 </Stack>
                 <Stack direction="column" justifyContent="center">
                   <Typography color="text.secondary" sx={{ fontSize: 14 }}>
-                    {status}
+                    {getDisplayableStatus(status)}
                   </Typography>
                 </Stack>
               </Stack>
