@@ -1,3 +1,4 @@
+import moment from "moment";
 import { format, formatDistanceToNow } from 'date-fns';
 
 export function fDate(date) {
@@ -20,4 +21,12 @@ export function fToNow(date) {
   return formatDistanceToNow(new Date(date), {
     addSuffix: true
   });
+}
+
+/**
+ * Tells if a given milliseconds timestamp is more than one month old or not.
+ */
+export const msTimestampIsMoreThanOneMonthAgo = (timestampMs) => {
+  let now = moment();
+  return moment.unix(timestampMs / 1000).add(1, "month").isBefore(now);
 }

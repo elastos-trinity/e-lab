@@ -5,6 +5,7 @@ import { v1 as uuidV1 } from 'uuid';
 import { SecretConfig } from '../config/env-secret';
 import logger from '../logger';
 import { Proposal } from '../model/proposal';
+import { ProposalGrant } from '../model/proposalgrant';
 import { ProposalStatus } from '../model/proposalstatus';
 import { User } from '../model/user';
 import { credentialsService } from '../services/credentials.service';
@@ -261,6 +262,26 @@ router.get('/proposal/audit/:id', async (req, res) => {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/proposal/grant/:id', async (req, res) => {
+    if (req.user.type !== 'admin') {
+        res.json({ code: 403, message: 'forbidden' });
+        return;
+    }
+
+    let proposalId = req.params.id as string;
+    let result = req.query.result as ProposalGrant;
+    if (!proposalId || !result) {
+        res.json({ code: 400, message: 'required parameter absence' });
+        return;
+    }
+
+    let grant: ProposalGrant = result === "granted" ? ProposalGrant.GRANTED : ProposalGrant.NOT_GRANTED;
+    let operator = req.user.did;
+
+    res.json(await dbService.grantProposal(proposalId, grant, operator));
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/proposal/add', async (req, res) => {
     if (!req.user.active) {
         res.json({ code: 403, message: 'User is not yet active.' });
@@ -280,7 +301,8 @@ router.post('/proposal/add', async (req, res) => {
         description,
         creator: req.user.did,
         creationTime: Date.now(),
-        status: 'new'
+        status: 'new',
+        grant: 'undecided'
     };
     res.json(await dbService.addProposal(proposal));
 })

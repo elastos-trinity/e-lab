@@ -17,9 +17,11 @@ import Page from '../../components/base/Page';
 import { api } from "../../config";
 import ActivationRequired from "../../components/authentication/ActivationRequired";
 import ToastContext from '../../contexts/ToastContext';
-import { fDateTime } from '../../utils/formatTime';
 import UserContext from '../../contexts/UserContext';
 import { openExternalLink } from '../../utils/links';
+import { currentlyInVotePeriod, getVotePeriodInfo } from '../../utils/voteinfo';
+import { fDateTime, msTimestampIsMoreThanOneMonthAgo } from '../../utils/dateUtils';
+import Label from '../../components/base/Label';
 
 export default function VoteForProposals() {
   const [proposals, setProposals] = useState([]);
@@ -102,7 +104,7 @@ export default function VoteForProposals() {
 
   function ProposalsList() {
     return proposals.map((proposal) => {
-      const { id, title, link, description, creator, votedByUser, creationTime } = proposal;
+      const { id, title, link, description, creator, votedByUser, creationTime, grant } = proposal;
       return (
         <Card sx={{ minWidth: 275, mb: "20px", mt: "10px", padding: "20px" }} key={id}>
           <Grid container spacing={2}>
@@ -127,37 +129,61 @@ export default function VoteForProposals() {
               </Stack>
             </Grid>
             <Grid item xs={12} md={6} alignSelf="center" justifyItems="flex-end" >
-              <Stack direction="row" justifyContent="flex-end">
-                <Stack direction="column" justifyContent="center" textAlign="center">
-                  <Button
-                    sx={{ mb: "20px", margin: "10px" }}
-                    variant="contained"
-                    component={Button}
-                    disabled={votedByUser || !user.active}
-                    onClick={() => { handleVote(id, 'for') }}
-                  >
-                    It's a yes!
-                  </Button>
-                  <Stack direction="row" justifyContent="center" textAlign="center">
-                    <Icon component={ThumbUpIcon} sx={{ marginRight: "5px" }} /> {proposal.votesFor}
+              {currentlyInVotePeriod() && !msTimestampIsMoreThanOneMonthAgo(creationTime) ?
+                <Stack direction="row" justifyContent="flex-end">
+                  <Stack direction="column" justifyContent="center" textAlign="center">
+                    <Button
+                      sx={{ mb: "20px", margin: "10px" }}
+                      variant="contained"
+                      component={Button}
+                      disabled={votedByUser || !user.active}
+                      onClick={() => { handleVote(id, 'for') }}
+                    >
+                      It's a yes!
+                    </Button>
+                    <Stack direction="row" justifyContent="center" textAlign="center">
+                      <Icon component={ThumbUpIcon} sx={{ marginRight: "5px" }} /> {proposal.votesFor}
+                    </Stack>
+                  </Stack>
+                  <Stack direction="column" justifyContent="center" textAlign="center">
+                    <Button
+                      sx={{ mb: "20px", margin: "10px" }}
+                      variant="contained"
+                      color="warning"
+                      component={Button}
+                      disabled={votedByUser || !user.active}
+                      onClick={() => { handleVote(id, 'against') }}
+                    >
+                      Sorry, no...
+                    </Button>
+                    <Stack direction="row" justifyContent="center" textAlign="center">
+                      <Icon component={ThumbDownIcon} sx={{ marginRight: "5px" }} />{proposal.votesAgainst}
+                    </Stack>
                   </Stack>
                 </Stack>
-                <Stack direction="column" justifyContent="center" textAlign="center">
-                  <Button
-                    sx={{ mb: "20px", margin: "10px" }}
-                    variant="contained"
-                    color="warning"
-                    component={Button}
-                    disabled={votedByUser || !user.active}
-                    onClick={() => { handleVote(id, 'against') }}
-                  >
-                    Sorry, no...
-                  </Button>
-                  <Stack direction="row" justifyContent="center" textAlign="center">
-                    <Icon component={ThumbDownIcon} sx={{ marginRight: "5px" }} />{proposal.votesAgainst}
-                  </Stack>
+                :
+                <Stack direction="row" justifyContent="flex-end">
+                  {!msTimestampIsMoreThanOneMonthAgo(creationTime) ?
+                    <div>Vote starts on {getVotePeriodInfo().displayableStartDate}</div>
+                    :
+                    <div>
+                      Vote ended
+                      <Stack direction="row" justifyContent="center" textAlign="center">
+                        <Icon component={ThumbUpIcon} sx={{ marginRight: "5px" }} /> {proposal.votesFor}
+                      </Stack>
+                      <Stack direction="row" justifyContent="center" textAlign="center">
+                        <Icon component={ThumbDownIcon} sx={{ marginRight: "5px" }} />{proposal.votesAgainst}
+                      </Stack>
+                      {/*Admin proposal grant status*/}
+                      <Label
+                        variant="ghost"
+                        color={grant === 'granted' ? 'success' : grant === 'notgranted' ? 'error' : 'warning'}>
+                        {grant}
+                      </Label>
+                    </div>
+                  }
                 </Stack>
-              </Stack>
+              }
             </Grid>
           </Grid>
 
@@ -179,6 +205,12 @@ export default function VoteForProposals() {
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
           <Typography variant="h4" gutterBottom>
             Community proposals
+          </Typography>
+          <Typography gutterBottom>
+            {currentlyInVotePeriod() ?
+              <div><b>Vote in progress</b> - Vote ends on {getVotePeriodInfo().displayableEndDate}</div> :
+              <div>Votes are <b>closed</b> - Next vote: {getVotePeriodInfo().displayableStartDate} - {getVotePeriodInfo().displayableEndDate}</div>
+            }
           </Typography>
         </Stack>
 

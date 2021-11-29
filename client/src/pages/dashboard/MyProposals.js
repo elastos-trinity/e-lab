@@ -10,13 +10,17 @@ import {
   Typography,
   Backdrop, CircularProgress
 } from '@mui/material';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import Page from '../../components/base/Page';
 import NewProposal from '../../components/dashboard/NewProposal';
-import { fDateTimeNormal } from '../../utils/formatTime';
+import { fDateTimeNormal, msTimestampIsMoreThanOneMonthAgo } from '../../utils/dateUtils';
 import { api } from "../../config";
 import ActivationRequired from '../../components/authentication/ActivationRequired';
 import UserContext from '../../contexts/UserContext';
 import ToastContext from '../../contexts/ToastContext';
+import { getVotePeriodInfo } from '../../utils/voteinfo';
+import Label from '../../components/base/Label';
 
 export default function UserProposal() {
   const { user } = useContext(UserContext);
@@ -126,7 +130,7 @@ export default function UserProposal() {
         </Stack>
 
         {proposal.map((row) => {
-          const { id, title, link, description, creationTime, status } = row;
+          const { id, title, link, description, creationTime, status, grant } = row;
           return (
             <Card sx={{ minWidth: 275, mb: "20px", padding: "20px" }} key={id}>
               <Stack direction="row" justifyContent="space-between">
@@ -147,6 +151,26 @@ export default function UserProposal() {
                 <Stack direction="column" justifyContent="center">
                   <Typography color="text.secondary" sx={{ fontSize: 14 }}>
                     {getDisplayableStatus(status)}
+
+                    {status === 'approved' && !msTimestampIsMoreThanOneMonthAgo(creationTime) ?
+                      <div>Vote starts on {getVotePeriodInfo().displayableStartDate}</div>
+                      :
+                      <div>
+                        Vote ended
+                        <Stack direction="row" justifyContent="center" textAlign="center">
+                          <Icon component={ThumbUpIcon} sx={{ marginRight: "5px" }} /> {proposal.votesFor}
+                        </Stack>
+                        <Stack direction="row" justifyContent="center" textAlign="center">
+                          <Icon component={ThumbDownIcon} sx={{ marginRight: "5px" }} />{proposal.votesAgainst}
+                        </Stack>
+                        {/*Admin proposal grant status*/}
+                        <Label
+                          variant="ghost"
+                          color={grant === 'granted' ? 'success' : grant === 'notgranted' ? 'error' : 'warning'}>
+                          {grant}
+                        </Label>
+                      </div>
+                    }
                   </Typography>
                 </Stack>
               </Stack>

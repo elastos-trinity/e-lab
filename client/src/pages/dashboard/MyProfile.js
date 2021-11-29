@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import Page from '../../components/base/Page';
 import NewProposal from '../../components/dashboard/NewProposal';
-import { fDateTimeNormal } from '../../utils/formatTime';
+import { fDateTimeNormal } from '../../utils/dateUtils';
 import { api } from "../../config";
 import ActivationRequired from '../../components/authentication/ActivationRequired';
 import UserContext from '../../contexts/UserContext';

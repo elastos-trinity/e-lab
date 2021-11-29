@@ -3,6 +3,7 @@ import { MongoClient } from "mongodb";
 import { SecretConfig } from "../config/env-secret";
 import logger from "../logger";
 import { Proposal } from "../model/proposal";
+import { ProposalGrant } from "../model/proposalgrant";
 import { ProposalStatus } from "../model/proposalstatus";
 import { CommonResponse } from "../model/response";
 import { User, UserType } from "../model/user";
@@ -300,7 +301,6 @@ class DBService {
         }
     }
 
-    // TODO: operator is really string ?
     public async auditProposal(id: string, status: ProposalStatus, operator: string) {
         try {
             await this.client.connect();
@@ -311,6 +311,25 @@ class DBService {
                 return { code: 200, message: 'success' };
             } else {
                 return { code: 400, message: 'proposal not exists or not in proper status' }
+            }
+        } catch (err) {
+            logger.error(err);
+            return { code: 500, message: 'server error' };
+        } finally {
+            await this.client.close();
+        }
+    }
+
+    public async grantProposal(id: string, grant: ProposalGrant, operator: string) {
+        try {
+            await this.client.connect();
+            const collection = this.client.db().collection('proposals');
+            let result = await collection.updateOne({ id },
+                { $set: { grant, operator, operatedTime: Date.now() } });
+            if (result.matchedCount === 1) {
+                return { code: 200, message: 'success' };
+            } else {
+                return { code: 400, message: 'proposal doesn\'t exist' }
             }
         } catch (err) {
             logger.error(err);
@@ -352,11 +371,9 @@ class DBService {
     }
 
     public async listProposals(title: string, activeOnly: boolean, userId: string, pageNum: number, pageSize: number) {
-        let { start, end } = this.getValidVoteDate();
-
         let query: JSONObject;
         if (activeOnly)
-            query = { status: 'approved', creationTime: { $gte: start.getTime() } };
+            query = { status: 'approved' };
         else
             query = {}; // all
 

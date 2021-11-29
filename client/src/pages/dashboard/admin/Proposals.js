@@ -17,9 +17,11 @@ import Scrollbar from '../../../components/base/Scrollbar';
 import SearchNotFound from '../../../components/dashboard/SearchNotFound';
 import UserListHead from '../../../components/dashboard/UserListHead';
 import UserListToolbar from '../../../components/dashboard/UserListToolbar';
-import UserMoreMenu from '../../../components/dashboard/UserMoreMenu';
-import { fDateTimeNormal } from '../../../utils/formatTime';
+import ProposalStatusMenu from '../../../components/dashboard/ProposalStatusMenu';
+import { fDateTimeNormal } from '../../../utils/dateUtils';
 import { api } from "../../../config";
+import { currentlyInVotePeriod, getVotePeriodInfo, msTimestampIsMoreThanOneMonthBeforeVotePeriodStart } from '../../../utils/voteinfo';
+import ProposalGrantMenu from '../../../components/dashboard/ProposalGrantMenu';
 
 const TABLE_HEAD = [
   { id: 'title', label: 'Title', alignRight: false },
@@ -95,6 +97,27 @@ export default function Proposal() {
       })
   }
 
+  const handleGrant = (result, id) => {
+    setBackDropOpen(true)
+    fetch(`${api.url}/api/v1//proposal/grant/${id}?result=${result}`,
+      {
+        method: "GET",
+        headers: {
+          "token": localStorage.getItem('token')
+        }
+      }).then(response => response.json()).then(data => {
+        if (data.code === 200) {
+          getProposals()
+        } else {
+          console.log(data);
+        }
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        setBackDropOpen(false)
+      })
+  }
+
   const isUserNotFound = users.length === 0;
 
   return (
@@ -110,6 +133,12 @@ export default function Proposal() {
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Proposals
+          </Typography>
+          <Typography gutterBottom>
+            {currentlyInVotePeriod() ?
+              <div><b>Vote in progress</b> - Vote ends on {getVotePeriodInfo().displayableEndDate}</div> :
+              <div>Votes are <b>closed</b> - Next vote: {getVotePeriodInfo().displayableStartDate} - {getVotePeriodInfo().displayableEndDate}</div>
+            }
           </Typography>
         </Stack>
 
@@ -127,7 +156,7 @@ export default function Proposal() {
                 />
                 <TableBody>
                   {users.map((row) => {
-                    const { id, title, link, description, creator, creationTime, status } = row;
+                    const { id, title, link, description, creator, creationTime, status, grant } = row;
                     return (
                       <TableRow
                         hover
@@ -148,14 +177,30 @@ export default function Proposal() {
                         <TableCell align="left" size="small">{creator}</TableCell>
                         <TableCell align="left">{fDateTimeNormal(creationTime)}</TableCell>
                         <TableCell align="left" size="small">
+                          {/*Admin proposal approval status*/}
                           <Label
                             variant="ghost"
                             color={status === 'approved' ? 'success' : status === 'rejected' ? 'error' : 'warning'}>
                             {status}
                           </Label>
+
+                          {/*Admin proposal grant status*/}
+                          <Label
+                            variant="ghost"
+                            color={grant === 'granted' ? 'success' : grant === 'notgranted' ? 'error' : 'warning'}>
+                            {grant}
+                          </Label>
                         </TableCell>
                         <TableCell align="center">
-                          {status === 'new' ? (<UserMoreMenu proposalId={id} handleAction={handleAudit} />) : (<></>)}
+                          {status === 'new' ? (<ProposalStatusMenu proposalId={id} handleAction={handleAudit} />) : (<></>)}
+
+                          {
+                            status === 'approved' && grant === 'undecided' && msTimestampIsMoreThanOneMonthBeforeVotePeriodStart(creationTime)
+                              ?
+                              (<ProposalGrantMenu proposalId={id} handleAction={handleGrant} />)
+                              :
+                              (<></>)
+                          }
                         </TableCell>
                       </TableRow>
                     );
