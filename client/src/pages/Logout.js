@@ -39,7 +39,7 @@ export default function Logout() {
   });
 
   return (
-    <RootStyle title="Logout | CR-Voting">
+    <RootStyle title="Logout | ELAB">
       <Container maxWidth="sm">
         <ContentStyle>
           <Stack sx={{ mb: 5 }}>

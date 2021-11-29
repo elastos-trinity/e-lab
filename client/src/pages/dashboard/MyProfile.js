@@ -94,7 +94,7 @@ export default function MyProfile() {
   }
 
   return (
-    <Page title="My profile | CR-Voting">
+    <Page title="My profile | ELAB">
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={backDropOpen}

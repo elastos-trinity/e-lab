@@ -41,7 +41,7 @@ export default function DashboardHome() {
   }
 
   return (
-    <Page title="Dashboard | CR-Voting">
+    <Page title="Dashboard | ELAB">
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={backDropOpen}
@@ -51,7 +51,7 @@ export default function DashboardHome() {
 
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}>
-          <Typography variant="h4">Hi, Welcome to CR Community Voting</Typography>
+          <Typography variant="h4">Hi, Welcome to ELAB</Typography>
         </Box>
 
         {user.type === 'user' ? (<Box sx={{ pb: 5 }}>

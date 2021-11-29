@@ -1,6 +1,6 @@
 {
-  "name": "cr-community-voting",
-  "author": "Elastos Trinity Team",
+  "name": "elab",
+  "author": "Elastos Foundation",
   "licence": "MIT",
   "version": "0.0.1",
   "private": false,
@@ -36,9 +36,9 @@
     ]
   },
   "dependencies": {
-    "@elastosfoundation/did-js-sdk": "^2.1.3",
-    "@elastosfoundation/elastos-connectivity-sdk-js": "^1.0.11",
-    "@elastosfoundation/essentials-connector-client-browser": "^1.0.25",
+    "@elastosfoundation/did-js-sdk": "^2.2.0",
+    "@elastosfoundation/elastos-connectivity-sdk-js": "^1.0.12",
+    "@elastosfoundation/essentials-connector-client-browser": "^1.0.26",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@iconify/icons-ant-design": "^1.1.0",

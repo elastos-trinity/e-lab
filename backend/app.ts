@@ -29,7 +29,7 @@ DIDBackend.initialize(new MyDIDAdapter())
 
 runJobs();
 
-let dbg = debug('cr-community-voting-api:server');
+let dbg = debug('elab-api:server');
 
 /**
  * Get port from environment and store in Express.
@@ -85,7 +85,7 @@ server.on('listening', () => {
         : 'port ' + addr.port;
     dbg('Listening on ' + bind);
 
-    traceLogger.info(`========= CR community voting service started with ${bind} =============`);
+    traceLogger.info(`========= ELAB service started with ${bind} =============`);
 });
 
 

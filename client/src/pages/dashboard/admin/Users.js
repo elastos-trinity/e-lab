@@ -111,7 +111,7 @@ export default function Users() {
   }, [page, filterName])
 
   return (
-    <Page title="User | CR-Voting">
+    <Page title="User | ELAB">
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={backDropOpen}

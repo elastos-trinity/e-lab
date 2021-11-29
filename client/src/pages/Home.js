@@ -78,7 +78,7 @@ export default function Home() {
   };
 
   return (
-    <RootStyle title="Home | CR-Voting">
+    <RootStyle title="Home | ELAB">
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
@@ -92,7 +92,7 @@ export default function Home() {
         <ContentStyle>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h2" gutterBottom textAlign="center">
-              Welcome to CR Community Voting
+              Welcome to ELAB
             </Typography>
           </Stack>
 

@@ -121,7 +121,7 @@ export default function Proposal() {
   const isUserNotFound = users.length === 0;
 
   return (
-    <Page title="Proposal | CR-Voting">
+    <Page title="Proposal | ELAB">
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={backDropOpen}

@@ -193,7 +193,7 @@ export default function VoteForProposals() {
   }
 
   return (
-    <Page title="Proposals | CR-Voting">
+    <Page title="Proposals | ELAB">
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={backDropOpen}

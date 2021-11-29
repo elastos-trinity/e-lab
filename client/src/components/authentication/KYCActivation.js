@@ -36,15 +36,15 @@ export default function KYCActivation({ open, onClose }) {
           ConnDID.simpleTypeClaim("Your name", "NameCredential", true)
             .withIssuers(TrustedKYCProviders)
             .withNoMatchRecommendations([
-              { title: "Trinity-Tech KYC-Me", url: "https://kyc-me.trinity-tech.io", urlTarget: "internal" }
+              { title: "KYC-me.io", url: "https://kyc-me.io", urlTarget: "internal" }
             ]),
           /* ConnDID.simpleTypeClaim("Your nationality", "NationalityCredential", true).withNoMatchRecommendations([
-            { title: "Trinity-Tech KYC-Me", url: "https://kyc-me.trinity-tech.io", urlTarget: "internal" }
+            { title: "KYC-me.io", url: "https://kyc-me.io", urlTarget: "internal" }
           ]), */
           ConnDID.simpleTypeClaim("Your birth date", "BirthDateCredential", true)
             .withIssuers(TrustedKYCProviders)
             .withNoMatchRecommendations([
-              { title: "Trinity-Tech KYC-Me", url: "https://kyc-me.trinity-tech.io", urlTarget: "internal" }
+              { title: "KYC-me.io", url: "https://kyc-me.io", urlTarget: "internal" }
             ])
         ]
       });
@@ -104,7 +104,7 @@ export default function KYCActivation({ open, onClose }) {
             <div style={{ marginBottom: "10px" }}>
               Please provide proof of your real identity to get activated and be able to vote or create proposals.
               This proof is provided by specific DID credentials that you can acquire
-              from <Link href="https://kyc-me.trinity-tech.io" target="_system">the KYC-me App</Link>.
+              from <Link href="https://kyc-me.io" target="_system">the KYC-me App</Link>.
             </div>
           </div>
         </DialogContentText>
