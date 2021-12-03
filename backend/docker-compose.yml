@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+  elab-mongo:
+    image: mongo:latest
+    container_name: elab-mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=elab
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root-password
+    volumes:
+      - ./mongo-volume:/data/db
+    expose:
+      - "2017"
+    ports:
+      - "27017:27017"
+  elab-backend:
+    build:
+      context: .
+    ports:
+      - "3001:3001"
+    links:
+      - elab-mongo
