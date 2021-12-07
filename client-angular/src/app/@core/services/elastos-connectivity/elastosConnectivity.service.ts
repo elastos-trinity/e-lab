@@ -50,6 +50,13 @@ export class ElastosConnectivityService {
   }
 
   /**
+   * Disconnect the wallet session
+   */
+  public async disconnect():Promise<void> {
+    return this._connector.disconnectWalletConnect()
+  }
+
+  /**
    * Check if the user is already connected via essentials
    */
   public isAlreadyConnected(): boolean {

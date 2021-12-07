@@ -54,7 +54,13 @@ export class AuthService {
    * Sign out user
    */
   signOut(): void {
-    removeItem(StorageItem.AccessToken);
-    this.isLoggedIn$.next(false);
+    try {
+      this.elastosConnectivityService.disconnect().then(() => { console.debug("Wallet session disconnected") });
+      removeItem(StorageItem.AccessToken);
+      removeItem(StorageItem.DID);
+      this.isLoggedIn$.next(false);
+    } catch (e) {
+      console.error("Disconnect failed");
+    }
   }
 }
