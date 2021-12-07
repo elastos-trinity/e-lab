@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { getItem, removeItem, setItem, StorageItem } from '@core/utils';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { getItem, removeItem, setItem, StorageItem } from "@core/utils";
+import { BehaviorSubject } from "rxjs";
 import { EssentialsService } from "@core/services/essentials/essentials.service";
 import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastosConnectivity.service";
 import { VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
@@ -13,7 +13,7 @@ import { ElabAuthenticationService } from "@core/services/elab/elab-authenticati
   providedIn: 'root',
 })
 export class AuthService {
-  isLoggedIn$ = new BehaviorSubject<boolean>(!!getItem(StorageItem.AccessToken));
+  isLoggedIn$ = new BehaviorSubject<boolean>(!!getItem(StorageItem.AccessToken) && !!getItem(StorageItem.DID));
 
   constructor (private essentialsService: EssentialsService,
                private elastosConnectivityService: ElastosConnectivityService,
@@ -34,6 +34,7 @@ export class AuthService {
       const accessToken: string = await this.elabService.login(verifiablePresentation);
       console.debug(`Access token:  ${accessToken}`);
       setItem(StorageItem.AccessToken, accessToken);
+      setItem(StorageItem.DID, verifiablePresentation.getHolder().getMethodSpecificId());
       this.isLoggedIn$.next(true);
     } catch (e) {
       console.error("Error while getting credentials", e);
