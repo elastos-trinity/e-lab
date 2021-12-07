@@ -3,7 +3,7 @@ import {
   CredentialDisclosureRequest,
   DIDAccess
 } from "@elastosfoundation/elastos-connectivity-sdk-js/typings/did";
-import { connectivity, DID, Interfaces } from "@elastosfoundation/elastos-connectivity-sdk-js";
+import { connectivity, DID} from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
 import { Injectable } from "@angular/core";
 import { EssentialsConnector } from "@elastosfoundation/essentials-connector-client-browser";
@@ -44,19 +44,24 @@ export class ElastosConnectivityService {
    */
   public async registerConnector(): Promise<void> {
     console.debug("Preparing the Elastos connectivity SDK");
-
     await connectivity.registerConnector(this._connector)
     console.debug("essentialsConnector", this._connector)
     console.debug("Wallet connect provider", this._connector.getWalletConnectProvider());
+  }
 
-    const isUsingEssentialsConnector = connectivity.getActiveConnector() &&
-      connectivity.getActiveConnector()?.name === this._connector.name;
-    const hasLink = isUsingEssentialsConnector && this._connector.hasWalletConnectSession();
-    console.debug("Has link to essentials?", hasLink)
+  /**
+   * Check if the user is already connected via essentials
+   */
+  public isAlreadyConnected(): boolean {
+    const isUsingEssentialsConnector = connectivity.getActiveConnector() && connectivity.getActiveConnector()?.name === this._connector.name;
+    return <boolean>isUsingEssentialsConnector && this._connector.hasWalletConnectSession();
+  }
 
-    // Restore the wallet connect session - TODO: should be done by the connector itself?
-    if (hasLink && !this._connector.getWalletConnectProvider().connected)
-      this._connector.getWalletConnectProvider().enable().then(() => console.debug("Wallet session restored"))
+  /**
+   * Restore the wallet connect session - TODO: should be done by the connector itself?
+   */
+  public async restoreWalletSession(): Promise<string[]> {
+    return this._connector.getWalletConnectProvider().enable()
   }
 
   /**

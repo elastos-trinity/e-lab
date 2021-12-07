@@ -29,11 +29,12 @@ export class ElabAuthenticationService {
   async login(verifiablePresentation: VerifiablePresentation): Promise<string> {
     try {
       const body = JSON.stringify(verifiablePresentation);
-      const accessToken = await this.http.post<string>(ElabAuthenticationService.loginUrl, body, this.httpOptions).toPromise();
+      // todo: Create an access token dto ?
+      const accessToken = await this.http.post<any>(ElabAuthenticationService.loginUrl, body, this.httpOptions).toPromise();
       if (accessToken === undefined) {
         return Promise.reject("Returned token by ELAB backend service is null");
       }
-      return Promise.resolve(accessToken);
+      return Promise.resolve(accessToken.data);
     } catch (e) {
       return Promise.reject("Call to ELAB backend service failed.");
     }
