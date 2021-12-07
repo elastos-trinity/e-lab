@@ -19,7 +19,13 @@ Here are some nice-to-have prior knowledge for each part of the project
 #### The logic: Angular
 Basic usage of Angular including services, DI, guards and interceptor.
 #### The authentication: The authentication process
-Even if this is a frontend application it's good to have some understanding of the w3c Verifiable Credentials Data Model and the Elastos Connectivity SDK.
+Even if this is a frontend application it's good to have some understanding of the w3c Verifiable Credentials Data Model and the Elastos Connectivity SDK.  
+Some links:  
+https://www.w3.org/TR/vc-data-model/
+https://developer.elastos.org/services/connectivity/
+https://github.com/elastos/Elastos.Connectivity.Client.JS.SDK
+https://developer.elastos.org/services/did/guides/interactive_operations/
+https://github.com/elastos/Elastos.DID.Method/blob/master/VerifiableClaims/Elastos-Verifiable-Claims-Specification_en.md
 #### The design: TailwindCSS
 Basic understanding of TailwindCSS   
 
@@ -111,13 +117,3 @@ Types of pages
 
 - AuthService: Used for ELAB authentication 
 - ThemeService: Used for theme selection
-
-### 🌠 GitHub Actions workflows
-
-> A GitHub Action workflow is a configurable automated process made up of one or more jobs that will help us to validate if some actions pass before we integrate new code into the repository (E.g., run unit tests on pull-requests or branch pushes).
-
-- Remove CodeQL analysis:  
-  - Go to `angular-boilerplate\.github\workflows` and remove the file codeql-analysis.yml
-
-- Remove tests workflow:  
-  - Go to `angular-boilerplate\.github\workflows` and remove the file test.yml
