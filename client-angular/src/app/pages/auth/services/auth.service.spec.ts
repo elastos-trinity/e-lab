@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
 import { AuthService } from './auth.service';
-import { EssentialsService } from "@core/services/essentials/essentials.service";
 import { ElabAuthenticationService } from "@core/services/elab/elab-authentication.service";
 import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastosConnectivity.service";
 
@@ -11,7 +10,7 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AuthService, EssentialsService, ElastosConnectivityService, ElabAuthenticationService]
+      providers: [AuthService, ElastosConnectivityService, ElabAuthenticationService]
     });
     service = TestBed.inject(AuthService);
   });

@@ -33,7 +33,6 @@ export class SignInPage {
         }
       }
     })
-
   }
 
   onClickSignIn(): void {
