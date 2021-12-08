@@ -8,8 +8,8 @@ module.exports = {
   theme: {
 
     fontFamily: {
-      display: ['Oswald', 'sans-serif'],
-      body: ['Poppins', 'sans-serif'],
+      display: ['Bio Sans', 'Oswald', 'sans-serif'],
+      body: ['Bio Sans', 'Poppins', 'sans-serif'],
     },
     container: {
       center: true,

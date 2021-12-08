@@ -36,6 +36,7 @@ export class SignInPage {
   }
 
   onClickSignIn(): void {
+    this.elastosConnectivityService.disconnect()
     this.authService.signIn()
   }
 }
