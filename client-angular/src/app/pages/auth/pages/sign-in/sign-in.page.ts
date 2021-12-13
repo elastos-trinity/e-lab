@@ -14,29 +14,34 @@ import { Observable } from "rxjs";
  * The sign-in page.
  */
 export class SignInPage {
+  isLoggedIn!: boolean;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private elastosConnectivityService: ElastosConnectivityService
   ) {
-    if (this.elastosConnectivityService.isAlreadyConnected()) {
+    if (this.elastosConnectivityService.isAlreadyConnected() && this.authService.isLoggedIn$) {
       this.elastosConnectivityService.restoreWalletSession().then(() => {
         console.log("Wallet session restored")
       })
-    } // Else maybe show the sign in button which we hide by default ?
-    // redirect to home if already logged in
-    this.authService.isLoggedIn$.subscribe({
-      next(isLoggedIn) {
-        if (isLoggedIn) {
-          router.navigate([`/${ROUTER_UTILS.config.base.home}`])
-        }
-      }
+    }
+    this.authService.isLoggedIn$.subscribe((v) => {
+      this.isLoggedIn = v;
     })
   }
 
   onClickSignIn(): void {
-    this.elastosConnectivityService.disconnect()
-    this.authService.signIn()
+    // If the elastos connectivity session is already existing disconnecting first.
+    if (this.elastosConnectivityService.isAlreadyConnected()) {
+      this.elastosConnectivityService.disconnect().then(() => {
+        this.authService.signIn().then(() =>
+          this.router.navigate([`/${ROUTER_UTILS.config.base.home}`])
+        )
+      })
+    } else {
+      this.authService.signIn().then(() => this.router.navigate([`/${ROUTER_UTILS.config.base.home}`]))
+    }
   }
 }

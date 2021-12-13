@@ -15,9 +15,10 @@ export class HeaderComponent {
   constructor(private router: Router, private authService: AuthService) {}
 
   onClickSignOut(): void {
-    this.authService.signOut();
-
-    const { root, signIn } = ROUTER_UTILS.config.auth;
-    this.router.navigate(['/', root, signIn]);
+    this.authService.signOut().then(() => {
+      console.log("Logged out");
+      const { root, signIn } = ROUTER_UTILS.config.auth;
+      this.router.navigate(['/', root, signIn]);
+    })
   }
 }

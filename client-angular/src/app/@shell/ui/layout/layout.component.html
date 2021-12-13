@@ -1,7 +1,12 @@
-<app-header></app-header>
-
-<div class="container flex-1">
-  <ng-content></ng-content>
+<div class="relative min-h-screen md:flex w-full">
+  <!-- left menu -->
+  <app-menu></app-menu>
+  <div class="flex-col bg-blue-900 w-full p-5">
+    <!-- desktop header -->
+    <app-header></app-header>
+    <!-- page content -->
+    <ng-content></ng-content>
+    <!-- footer for future ref -->
+    <app-footer></app-footer>
+  </div>
 </div>
-
-<app-footer></app-footer>

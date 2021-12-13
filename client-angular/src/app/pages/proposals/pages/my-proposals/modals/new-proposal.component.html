@@ -1,0 +1,75 @@
+<app-modal #modalComponent>
+  <h4 class="font-bold text-transparent bg-clip-text bg-gradient-to-r
+  from-pink-450 to-orange-450 max-w-fit inline-flex">
+    New proposal
+  </h4>
+  <form [formGroup]="newProposalForm" (ngSubmit)="createRecord()">
+    <label
+      for="title"
+      class="block mt-2 font-bold text-pink-450"
+    >
+      Title
+    </label>
+    <input
+      id="title"
+      type="text"
+      name="title"
+      formControlName="title"
+      class="block w-full p-2 mt-2 text-white bg-blue-800 text-sm
+      appearance-none focus:outline-none focus:bg-blue-900 focus:border-pink-450 rounded-full focus:shadow-inner"
+      required
+    />
+
+    <label
+      for="link"
+      class="block mt-2 font-bold text-pink-450"
+    >CR Link</label>
+    <input
+      id="link"
+      type="text"
+      name="link"
+      formControlName="link"
+      class="block w-full p-2 mt-2 text-white bg-blue-800 text-sm
+      appearance-none focus:outline-none focus:bg-blue-900 rounded-full"
+      required
+    />
+
+
+    <label
+      for="description"
+      class="block mt-2 font-bold text-pink-450"
+    >Short Description </label
+    >
+    <textarea
+      id="description"
+      name="description"
+      formControlName="description"
+      class="block w-full p-2 mt-2 text-white bg-blue-800 text-sm
+      appearance-none focus:outline-none focus:bg-blue-900 rounded-xl focus:shadow-inner
+      h-20
+resize-none	"
+      required></textarea>
+
+    <ng-container *ngTemplateOutlet="toolbar"></ng-container>
+  </form>
+</app-modal>
+
+<ng-template #toolbar>
+  <div class="flex mt-10">
+    <button
+      (click)="close()"
+      type="button"
+      class="bg-transparent text-orange-450 pl-0 hover:text-pink-450 focus:outline-none text-sm
+      "
+    >
+      Cancel
+    </button>
+
+    <button
+      type="submit"
+      class="bg-green-100 ml-10 font-bold text-sm text-green rounded-full  px-4"
+      [disabled]="newProposalForm.invalid"
+    >Create</button
+    >
+  </div>
+</ng-template>
