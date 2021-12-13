@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   isLoggedIn$!: Observable<boolean>;
+  isLoading$!: Observable<boolean>;
 
   constructor(
     private themeService: ThemeService,

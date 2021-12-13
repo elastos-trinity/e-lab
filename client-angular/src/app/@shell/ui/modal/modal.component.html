@@ -1,0 +1,23 @@
+
+<section
+  [class.open]="display"
+  class="fixed z-10 inset-0 overflow-y-auto"
+  (click)="close()"
+>
+  <div
+    class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0 bg-blue-900 bg-opacity-40"
+  >
+    <div
+      (click)="$event.stopPropagation()"
+      class="modal inline-block align-bottom p-0.5 rounded-xl
+      bg-gradient-to-tr from-orange-450 to-pink-450 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-headline"
+    >
+      <div class="inner-modal bg-blue-900 px-4 pt-5 pb-4 sm:p-6 rounded-xl sm:pb-4">
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+</section>

@@ -60,7 +60,8 @@ export class ElastosConnectivityService {
    * Check if the user is already connected via essentials
    */
   public isAlreadyConnected(): boolean {
-    const isUsingEssentialsConnector = connectivity.getActiveConnector() && connectivity.getActiveConnector()?.name === this._connector.name;
+    const isUsingEssentialsConnector = connectivity.getActiveConnector()
+      && connectivity.getActiveConnector()?.name === this._connector.name;
     console.debug(`isUsingEssentialsConnector: ${isUsingEssentialsConnector}`)
     const isAlreadyConnected = <boolean>isUsingEssentialsConnector && this._connector.hasWalletConnectSession();
     console.debug(`isAlreadyConnected: ${isAlreadyConnected}`)

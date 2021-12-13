@@ -4,7 +4,7 @@ export enum StorageItem {
   Theme = 'App/theme',
 }
 
-export const getItem = (itemName: StorageItem): unknown | null => {
+export const getItem = (itemName: StorageItem): string | null => {
   const item = localStorage.getItem(itemName);
   return item ? JSON.parse(item) : null;
 };

@@ -284,6 +284,7 @@ router.get('/proposal/grant/:id', async (req, res) => {
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/proposal/add', async (req, res) => {
     if (!req.user.active) {
+        res.status(403)
         res.json({ code: 403, message: 'User is not yet active.' });
         return;
     }

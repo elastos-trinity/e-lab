@@ -11,6 +11,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             jwt.verify(token, SecretConfig.Auth.jwtSecret, async (error, decoded) => {
                 if (error || !decoded) {
+                    res.status(403)
                     res.json({ code: 403, message: 'Token verify failed' })
                 } else {
                     let user = await dbService.findUserByDID(decoded.did);
@@ -21,6 +22,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
                 }
             })
         } else {
+            res.status(403)
             res.json({ code: 403, message: 'Can not find the token' });
         }
     } else {

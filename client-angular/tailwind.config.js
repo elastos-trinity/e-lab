@@ -6,10 +6,9 @@ module.exports = {
   },
   darkMode: 'class',
   theme: {
-
     fontFamily: {
-      display: ['Oswald', 'sans-serif'],
-      body: ['Poppins', 'sans-serif'],
+      display: ['Bio Sans', 'Oswald', 'sans-serif'],
+      body: ['Bio Sans', 'Poppins', 'sans-serif'],
     },
     container: {
       center: true,
@@ -30,7 +29,12 @@ module.exports = {
           DEFAULT: '#7D7D7D'
         },
         green: {
+          100: '#AAFFEA',
           DEFAULT: '#05CC9A'
+        },
+        blue: {
+          800: '#101E42',
+          900: '#000B26'
         }
       },
       color: {

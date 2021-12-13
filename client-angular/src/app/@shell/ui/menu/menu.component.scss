@@ -1,0 +1,25 @@
+#sidebar {
+  background: linear-gradient(180deg, #101E42 0%, rgba(16, 30, 66, 0) 100%);
+
+  a {
+    @apply py-2.5 px-4 flex content-center;
+    svg {
+      @apply ml-auto;
+    }
+    span {
+      &.icon {
+        @apply w-6 mr-3;
+      }
+      @apply inline-flex;
+    }
+  }
+  a.is-active {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450;
+    svg {
+      @apply inline-flex;
+      path {
+        fill: url(#svg-gradient);
+      }
+    }
+  }
+}

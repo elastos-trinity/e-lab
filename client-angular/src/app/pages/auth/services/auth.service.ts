@@ -12,7 +12,7 @@ import { ElabAuthenticationService } from "@core/services/elab/elab-authenticati
   providedIn: 'root',
 })
 export class AuthService {
-  isLoggedIn$ = new BehaviorSubject<boolean>(!!getItem(StorageItem.AccessToken) && !!getItem(StorageItem.DID));
+  isLoggedIn$ = new BehaviorSubject<boolean>(!!getItem(StorageItem.AccessToken) );
 
   constructor (private elastosConnectivityService: ElastosConnectivityService,
                private elabService: ElabAuthenticationService) {}
@@ -32,11 +32,12 @@ export class AuthService {
       const accessToken: string = await this.elabService.login(verifiablePresentation);
       console.debug(`Access token:  ${accessToken}`);
       setItem(StorageItem.AccessToken, accessToken);
-      setItem(StorageItem.DID, verifiablePresentation.getHolder().getMethodSpecificId());
       this.isLoggedIn$.next(true);
+      return Promise.resolve()
     } catch (e) {
       console.error("Error while getting credentials", e);
       await this.elastosConnectivityService.disconnect();
+      return Promise.reject()
     }
   }
 
@@ -51,13 +52,16 @@ export class AuthService {
   /**
    * Sign out user
    */
-  signOut(): void {
+  async signOut(): Promise<void> {
+    removeItem(StorageItem.AccessToken);
     try {
-      this.elastosConnectivityService.disconnect().then(() => { console.debug("Wallet session disconnected") });
-      removeItem(StorageItem.AccessToken);
-      removeItem(StorageItem.DID);
-      this.isLoggedIn$.next(false);
+      this.elastosConnectivityService.disconnect().then(() => {
+        console.debug("Wallet session disconnected")
+        this.isLoggedIn$.next(false);
+        Promise.resolve()
+      });
     } catch (e) {
+      Promise.reject()
       console.error("Disconnect failed");
     }
   }

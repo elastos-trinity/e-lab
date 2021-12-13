@@ -1,16 +1,18 @@
 @font-face {
   font-family: Bio Sans;
+  src: url('/assets/fonts/biosans/biosans-light-webfont.woff2') format('woff2'),
+  url('/assets/fonts/biosans/biosans-light-webfont.woff') format('woff');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: Bio Sans;
   src: url('/assets/fonts/biosans/biosans-regular-webfont.woff2') format('woff2'),
   url('/assets/fonts/biosans/biosans-regular-webfont.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
+  font-weight: bold;
 }
 
 html {
   @apply font-body;
   @apply font-light;
-}
-
-.header {
-  font-family: "Bio Sans";
 }
