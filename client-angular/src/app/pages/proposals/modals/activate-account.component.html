@@ -1,0 +1,36 @@
+<app-modal #modalComponent>
+  <h4 class="font-bold text-transparent bg-clip-text bg-gradient-to-r
+  from-pink-450 to-orange-450 max-w-fit inline-flex">
+    Activate your account
+  </h4>
+
+  <div>
+    <p>Already have KYC credentials ?</p>
+
+    <button class="bg-green-100 font-bold h-9 px-10 text-green rounded-full" type="button">
+      Provide credentials
+    </button>
+  </div>
+
+  <div>
+    <p>No such credentials yet ?</p>
+    <p>Verify your identity on KYC-me now</p>
+
+    <button class="bg-green-100 font-bold h-9 px-10 text-green rounded-full" type="button">
+      KC
+    </button>
+  </div>
+
+  <div class="flex mt-10">
+    <button
+      (click)="close()"
+      type="button"
+      class="bg-transparent text-orange-450 pl-0 hover:text-pink-450 focus:outline-none text-sm
+      "
+    >
+      Cancel
+    </button>
+
+  </div>
+
+</app-modal>

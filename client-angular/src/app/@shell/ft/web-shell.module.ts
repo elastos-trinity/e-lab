@@ -8,8 +8,9 @@ import { HeaderModule } from '../ui/header/header.module';
 import { MenuModule } from '../ui/menu/menu.module';
 import { LayoutModule } from '../ui/layout/layout.module';
 import { NotFoundPage } from '../ui/not-found/not-found.page';
-import { AuthGuard, NoAuthGuard } from "@core/guards";
+import { AuthGuard, NoAuthGuard, RoleGuard } from "@core/guards";
 import { ModalModule } from "@shell/ui/modal/modal.module";
+import { CurrentUserResolver } from "@pages/user/resolvers/currentUser.resolver";
 
 const APP_ROUTES: Routes = [
   {
@@ -21,21 +22,35 @@ const APP_ROUTES: Routes = [
     path: ROUTER_UTILS.config.base.home,
     loadChildren: async () => (await import('@pages/home/home.module')).HomeModule,
     canLoad: [AuthGuard],
+    resolve: {
+      CurrentUserResolver
+    }
   },
   {
     path: ROUTER_UTILS.config.admin.root,
     loadChildren: async () => (await import('@pages/admin/admin.module')).AdminModule,
     canLoad: [AuthGuard],
+    canActivate: [RoleGuard],
+    data: { roles: ['admin'] },
+    resolve: {
+      currentUser: CurrentUserResolver
+    }
   },
   {
     path: ROUTER_UTILS.config.proposals.root,
     loadChildren: async () => (await import('@pages/proposals/proposals.module')).ProposalsModule,
     canLoad: [AuthGuard],
+    resolve: {
+      currentUser: CurrentUserResolver
+    }
   },
   {
     path: ROUTER_UTILS.config.user.root,
     loadChildren: async () => (await import('@pages/user/user.module')).UserModule,
     canLoad: [AuthGuard],
+    resolve: {
+      currentUser: CurrentUserResolver
+    }
   },
   {
     path: '**',

@@ -4,6 +4,8 @@ import { CommunityProposalsPage } from './pages/community-proposals/community-pr
 import { MyProposalsPage } from './pages/my-proposals/my-proposals.page';
 import { ProposalsRoutingModule } from "@pages/proposals/proposals-routing.module";
 import { NewProposalComponentModule } from "@pages/proposals/pages/my-proposals/modals/new-proposal-component";
+import { CoreModule } from "@core/core.module";
+import { ActivateAccountComponentModule } from "@pages/proposals/modals/activate-account.component";
 
 @NgModule({
   declarations: [
@@ -13,7 +15,9 @@ import { NewProposalComponentModule } from "@pages/proposals/pages/my-proposals/
   imports: [
     CommonModule,
     NewProposalComponentModule,
-    ProposalsRoutingModule
+    ActivateAccountComponentModule,
+    ProposalsRoutingModule,
+    CoreModule
   ]
 })
 export class ProposalsModule { }

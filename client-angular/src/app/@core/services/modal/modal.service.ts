@@ -20,9 +20,9 @@ export class ModalService<T> {
     private injector: Injector
   ) {}
 
-  async open(component: Type<T>): Promise<void> {
+  async open(component: Type<T>): Promise<ComponentRef<T>> {
     if (this.componentRef) {
-      return;
+      return Promise.resolve(this.componentRef);
     }
 
     this.componentRef = this.componentFactoryResolver
@@ -34,6 +34,8 @@ export class ModalService<T> {
       EmbeddedViewRef<any>)
       .rootNodes[0] as HTMLElement;
     document.body.appendChild(domElem);
+
+    return Promise.resolve(this.componentRef)
   }
 
   async close(): Promise<void> {
