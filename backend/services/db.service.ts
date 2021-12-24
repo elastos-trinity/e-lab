@@ -8,6 +8,8 @@ import { ProposalStatus } from "../model/proposalstatus";
 import { CommonResponse } from "../model/response";
 import { User, UserType } from "../model/user";
 import { Vote, VoteChoice } from "../model/vote";
+import moment from "moment";
+import dayjs from "dayjs";
 
 class DBService {
     private client: MongoClient;
@@ -301,12 +303,24 @@ class DBService {
         }
     }
 
+
     public async auditProposal(id: string, status: ProposalStatus, operator: string) {
         try {
             await this.client.connect();
             const collection = this.client.db().collection('proposals');
-            let result = await collection.updateOne({ id, status: 'new' },
-                { $set: { status, operator, operatedTime: Date.now() } });
+            // If we approve for the future check that we don't have any votes
+            if (status === 'new' && await this.isProposalInVotingPeriod(id)) {
+                return { code: 400, message: 'can not cancel a decision for a proposal already in a voting period' }
+            }
+            const votingPeriod = this.getVotingPeriod(true) // Always set the next voting period when approving a proposal
+            const result = await collection.updateOne({ id },
+              { $set: {
+                      status,
+                      operator,
+                      operatedTime: Date.now(),
+                      votingPeriodStartDate: status === 'new' ? null : votingPeriod.startDate, // reset the date if we cancel the decision
+                      votingPeriodEndDate: status === 'new' ? null : votingPeriod.endDate
+                  } });
             if (result.matchedCount === 1) {
                 return { code: 200, message: 'success' };
             } else {
@@ -359,9 +373,31 @@ class DBService {
             await this.client.connect();
             const collection = this.client.db().collection('proposals');
             let total = await collection.find({ creator }).count();
+            const totalActive = await this.getTotalActiveProposals();
+
             let result = await collection.find({ creator }, { sort: { creationTime: -1 } }).project({ '_id': 0 })
                 .limit(pageSize).skip((pageNum - 1) * pageSize).toArray();
-            return { code: 200, message: 'success', data: { total, result } };
+            const votesCollection = this.client.db().collection('votes');
+            for (let proposal of result) {
+                let proposalVotes = (await votesCollection.aggregate([
+                    { "$match": { proposalId: proposal.id } },
+                    { "$project": { proposalId: 1, voteFor: { $cond: [{ $eq: ["$vote", 'for'] }, 1, 0] }, voteAgainst: { $cond: [{ $eq: ["$vote", 'against'] }, 1, 0] } } },
+                    { "$group": { "_id": "$proposalId", "votesFor": { "$sum": "$voteFor" }, "votesAgainst": { "$sum": "$voteAgainst" } } }
+                ]).toArray())[0];
+
+                if (!proposalVotes) {
+                    // No vote yet
+                    proposal["votesFor"] = 0;
+                    proposal["votesAgainst"] = 0;
+                }
+                else {
+                    proposal["votesFor"] = proposalVotes["votesFor"];
+                    proposal["votesAgainst"] = proposalVotes["votesAgainst"];
+                }
+
+                proposal["votingStatus"] = this.getProposalVotingStatus(proposal)
+            }
+            return { code: 200, message: 'success', data: { total, result, totalActive } };
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
@@ -389,6 +425,7 @@ class DBService {
                 .limit(pageSize)
                 .skip((pageNum - 1) * pageSize)
                 .toArray();
+            const totalActive = await this.getTotalActiveProposals();
 
             // For each proposal, build its stats
             const votesCollection = this.client.db().collection('votes');
@@ -414,14 +451,17 @@ class DBService {
                     proposal["votedByUser"] = false;
                 }
                 else {
-                    let userVoteCount = await votesCollection.count({ voter: userId, proposalId: proposal.id });
-                    proposal["votedByUser"] = userVoteCount > 0 ? true : false;
+                    let userVote = await votesCollection.findOne({ voter: userId, proposalId: proposal.id });
+                    proposal["votedByUser"] = userVote != null;
+                    proposal["userVote"] = userVote?.['vote']
                 }
+
+                proposal["votingStatus"] = this.getProposalVotingStatus(proposal)
             }
 
             logger.info("Proposals", proposals);
 
-            return { code: 200, message: 'success', data: { total, result: proposals } };
+            return { code: 200, message: 'success', data: { total, result: proposals, totalActive } };
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
@@ -497,36 +537,24 @@ class DBService {
 
     // TODO: voter is really string?
     public async voteForProposal(proposalId: string, voter: string, voteChoice: string) {
-        let { start, end } = this.getValidVoteDate();
-
         try {
             await this.client.connect();
 
             // Make sure the proposal exists and is open for voting
-            const collectionProposal = this.client.db().collection('proposals');
-            const result = await collectionProposal.find({ id: proposalId, creationTime: { $gte: start.getTime() } }).limit(1).toArray();
-            if (result.length === 0) {
+            if (! await this.isProposalInVotingPeriod(proposalId)) {
                 return { code: 403, message: 'Proposal not found, or currently not open for votes' };
             }
-
-            // Make sure user is allowed to vote
-            const usersCollection = this.client.db().collection<User>('users');
-            let user = await usersCollection.findOne({
-                did: voter
-            });
-            if (!user || !user.active) {
+            if (!await this.isUserAllowedToVote(voter)) {
                 return { code: 403, message: 'Invalid user, or user not approved yet' };
             }
-
             // Make sure the vote choice is valid
             if (voteChoice != 'for' && voteChoice != 'against') {
                 return { code: 403, message: 'Invalid vote value' };
             }
 
             // Make sure user hasn't already voted for this proposal
-            const votesCollection = this.client.db().collection('votes');
-            const docs = await votesCollection.find({ voter, proposalId }).limit(1).toArray();
-            if (docs.length === 0) {
+            if (!await this.hasUserAlreadyVotedForProposal(voter, proposalId)) {
+                const votesCollection = this.client.db().collection('votes');
                 // Not voted yet, we can record the vote
                 let vote: Vote = {
                     voter,
@@ -546,6 +574,176 @@ class DBService {
             await this.client.close();
         }
     }
+    /**
+     * Return the current voting period by default.
+     * If the next param is set to true, will return the next voting period.
+     * A voting period is between the 15th and the 21st (both included).
+     * Both the start day and end day are inclusive
+     * @example:
+     * Start day = 15
+     * End day = 21
+     *
+     * The voting period will start on the 15 at 00:00:00am and end the 21st at 23:59:59pm
+     * todo: set voting period in the backend and configurable start/end days
+     */
+    public getVotingPeriod(next: boolean = false): { startDate: Date, endDate: Date, isTodayInVotingPeriod: boolean} {
+        let startDay = 15;
+        let endDay = 21;
+
+        const now = moment().utc(false);
+
+        let votingStartDate;
+        let votingEndDate;
+
+        // If we are between the start day and the end day of a month, this is a vote period. So we return the current period.
+        if (!next && now.date() >= startDay && now.date() <= endDay) {
+            votingStartDate = now.clone().set('date', startDay).startOf('day');
+        } else {
+            // We are outside of a vote period or we want to get the next voting period
+            votingStartDate = now.clone()
+              .startOf("month")
+              .add(1, "month")
+              .set('date', startDay);
+        }
+        votingEndDate = votingStartDate.clone().add((endDay - startDay), "days").endOf('day');
+
+        const todayCheck = moment().utc(false).toDate();
+        const isTodayInVotingPeriod = todayCheck.getTime() >= votingStartDate.toDate().getTime() && todayCheck.getTime() <= votingEndDate.toDate().getTime()
+
+        return { startDate: votingStartDate.toDate(), endDate: votingEndDate.toDate(), isTodayInVotingPeriod: isTodayInVotingPeriod};
+    }
+
+    /**
+     * Get the total count of active proposals
+     * @private
+     */
+    private async getTotalActiveProposals(): Promise<number> {
+        const collection = this.client.db().collection('proposals');
+        const votingPeriod = this.getVotingPeriod();
+        const startVotingPeriod = dayjs(votingPeriod.startDate).startOf('day').toDate()
+        const endVotingPeriod = dayjs(votingPeriod.endDate).endOf('day').toDate()
+        return await collection.countDocuments({
+            $and: [
+                { status: 'approved' },
+                { votingPeriodStartDate: { $gte: startVotingPeriod } },
+                { votingPeriodEndDate: { $lte: endVotingPeriod } },
+            ]
+        })
+    }
+
+    /**
+     * Cancel a vote
+     * todo: remove this
+     * @param proposalId The proposal ID to cancel the vote for
+     * @param userId The user ID to cancel the vote for
+     */
+    async deleteVote(proposalId: any, userId: string) {
+        try {
+            await this.client.connect();
+            if (!await this.isProposalInVotingPeriod(proposalId)) {
+                return { code: 403, message: 'Proposal not found, or currently not open for votes' };
+            }
+
+            if (!await this.isUserAllowedToVote(userId)) {
+                return { code: 403, message: 'Invalid user, or user not approved yet' };
+            }
+
+            if (!await this.hasUserAlreadyVotedForProposal(userId, proposalId)) {
+                return { code: 403, message: 'User has not yet voted for this proposal' };
+            }
+
+            const votesCollection = this.client.db().collection('votes');
+            try {
+                await votesCollection.deleteOne({ voter: userId, proposalId: proposalId })
+            } catch (ex) {
+                return { code: 403, message: 'Something went wrong when tying to cancel the vote' };
+            }
+
+            return { code: 200, message: 'success' };
+        } catch (err) {
+            logger.error(err);
+            return { code: 500, message: 'server error' };
+        }  finally {
+            await this.client.close();
+        }
+    }
+
+    /**
+     * Return an human readable representation of the proposal voting period
+     * @param proposal
+     * @private
+     */
+    private getProposalVotingStatus(proposal: any) {
+        // Check if the proposal has not yet any start date or end date
+        if (!proposal["votingPeriodStartDate"] || !proposal["votingPeriodEndDate"]) {
+            return "not_approved"
+        }
+
+        const proposalVotingStartDate = moment(proposal["votingPeriodStartDate"]).utc(false).toDate().getTime()
+        const proposalVotingEndDate = moment(proposal["votingPeriodEndDate"]).utc(false).toDate().getTime()
+        const now = moment().utc(false).toDate();
+
+        const currentVotingPeriod = this.getVotingPeriod();
+
+        // For a proposal to be active it need to be both in the currentVotingPeriod and
+        // today's date need to be superior to the current voting period start date
+        if (now.getTime() > proposalVotingStartDate && proposalVotingStartDate === currentVotingPeriod.startDate.getTime() && proposalVotingEndDate === currentVotingPeriod.endDate.getTime() ) {
+            return "active"
+        } else if (now.getTime() > proposalVotingEndDate || proposalVotingEndDate < currentVotingPeriod.endDate.getTime()) { // Already ended
+            return "ended"
+        } else if (now.getTime() < proposalVotingStartDate || proposalVotingStartDate > currentVotingPeriod.startDate.getTime()) { // not started
+            return "not_started"
+        }
+    }
+
+    /**
+     * Given a proposal ID, this function will return true if the proposal is currently in a voting period
+     * (meaning today is between the proposal start voting date and end voting date), false otherwise.
+     * Make sure that the mongo connection is initialize before calling this function.
+     * @param proposalId
+     * @private
+     */
+    private async isProposalInVotingPeriod(proposalId: string) {
+        const collectionProposal = this.client.db().collection('proposals');
+        const now = moment().utc(false).toDate();
+        const result = await collectionProposal.countDocuments({ $and: [
+                { id: proposalId },
+                { votingPeriodStartDate: { $lte: now } },
+                { votingPeriodEndDate: { $gte: now } },
+            ]}, {limit: 1});
+        return result > 0
+    }
+
+    /**
+     * Return true if the user is allowed to vote
+     * @param userId
+     * @private
+     */
+    private async isUserAllowedToVote(userId: string): Promise<boolean> {
+        // Make sure user is allowed to vote
+        const usersCollection = this.client.db().collection<User>('users');
+        const isUserAllowedToVote = await usersCollection.countDocuments({
+            did: userId,
+            active: true
+        }, {limit: 1});
+        return isUserAllowedToVote > 0;
+    }
+
+    /**
+     * Return true if the user has already voted for the given proposal
+     * @param userId
+     * @param proposalId
+     * @private
+     */
+    private async hasUserAlreadyVotedForProposal(userId: string, proposalId: string): Promise<boolean> {
+        const votesCollection = this.client.db().collection('votes');
+        const hasAlreadyVoted = await votesCollection.countDocuments({
+            voter: userId,
+            proposalId: proposalId
+        }, {limit: 1});
+        return hasAlreadyVoted > 0
+    }
+
 }
 
 export const dbService = new DBService();

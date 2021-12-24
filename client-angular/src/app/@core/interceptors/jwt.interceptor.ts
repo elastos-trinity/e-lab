@@ -15,15 +15,10 @@ export class JwtInterceptor implements HttpInterceptor {
     const token = getItem(StorageItem.AccessToken);
     const isApiUrl = request.url.startsWith(environment.elabApiUrl);
 
-
-
     if (isLoggedIn && isApiUrl) {
       // todo: maybe change the backend to use the common Auth Bearer header instead of token ?
-      const headers = new HttpHeaders({
-        'token': `${token}`,
-        'Authorization': `Bearer ${token}`,
-        'Content-Type':  'application/json'
-      });
+      let headers: HttpHeaders = request.headers.append("Content-Type", 'application/json')
+      headers = headers.append("token", `${token}`)
       request = request.clone({headers});
     }
 

@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, throwError } from 'rxjs';
+import { from, Observable, throwError } from "rxjs";
 import { catchError } from 'rxjs/operators';
 import { ROUTER_UTILS } from '../utils/router.utils';
 import { AuthService } from "@pages/auth/services/auth.service";
@@ -21,12 +21,11 @@ export class ServerErrorInterceptor implements HttpInterceptor {
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
+      // @ts-ignore
       catchError((error: HttpErrorResponse) => {
         console.log("ERROR catched")
         if ([401, 403].includes(error.status)) {
-          this.authService.signOut()
-          this.router.navigate([ROUTER_UTILS.config.auth.root, ROUTER_UTILS.config.auth.signIn])
-          return throwError(error)
+          from(this.handle401Error())
         } else if (error.status === 500) {
           console.error(error)
           return throwError(error)
@@ -35,5 +34,11 @@ export class ServerErrorInterceptor implements HttpInterceptor {
         }
       }),
     );
+  }
+
+  private async handle401Error() {
+    this.authService.signOut()
+    console.log("redirecting...")
+    this.router.navigate([ROUTER_UTILS.config.auth.root, ROUTER_UTILS.config.auth.signIn])
   }
 }

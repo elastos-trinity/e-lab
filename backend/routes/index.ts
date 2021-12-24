@@ -242,43 +242,42 @@ router.get('/users/list', async (req, res) => {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/proposal/audit/:id', async (req, res) => {
+router.put('/proposal/:id/audit', async (req, res) => {
     if (req.user.type !== 'admin') {
         res.json({ code: 403, message: 'forbidden' });
         return;
     }
 
     let proposalId = req.params.id as string;
-    let result = req.query.result as ProposalStatus;
-    if (!proposalId || !result) {
+    let status = req.body.result as ProposalStatus;
+
+    if (!proposalId || !status) {
         res.json({ code: 400, message: 'required parameter absence' });
         return;
     }
 
-    let status: ProposalStatus = result === "rejected" ? ProposalStatus.REJECTED : ProposalStatus.APPROVED;
     let operator = req.user.did;
 
     res.json(await dbService.auditProposal(proposalId, status, operator));
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/proposal/grant/:id', async (req, res) => {
+router.post('/proposal/:id/grant', async (req, res) => {
     if (req.user.type !== 'admin') {
         res.json({ code: 403, message: 'forbidden' });
         return;
     }
 
     let proposalId = req.params.id as string;
-    let result = req.query.result as ProposalGrant;
-    if (!proposalId || !result) {
+    let grantStatus = req.body.grantStatus as ProposalGrant;
+    if (!proposalId || !grantStatus) {
         res.json({ code: 400, message: 'required parameter absence' });
         return;
     }
 
-    let grant: ProposalGrant = result === "granted" ? ProposalGrant.GRANTED : ProposalGrant.NOT_GRANTED;
     let operator = req.user.did;
 
-    res.json(await dbService.grantProposal(proposalId, grant, operator));
+    res.json(await dbService.grantProposal(proposalId, grantStatus, operator));
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -306,6 +305,16 @@ router.post('/proposal/add', async (req, res) => {
         grant: 'undecided'
     };
     res.json(await dbService.addProposal(proposal));
+})
+
+router.get('/proposal/votingPeriod', async (req, res) => {
+    try {
+        const votingPeriod = dbService.getVotingPeriod()
+        return res.status(200).json(votingPeriod);
+    } catch (ex) {
+        console.error(`Error while trying to get current voting period: ${ex}`)
+        return res.status(500)
+    }
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -386,7 +395,7 @@ router.get('/proposals/active', async (req, res) => {
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/proposal/:id/vote', async (req, res) => {
     let id = req.params.id;
-    let voteChoice = req.query.vote as string;
+    let voteChoice = req.body.vote as string;
     let userId = req.user.did;
 
     if (!id || !voteChoice) {
@@ -395,6 +404,18 @@ router.post('/proposal/:id/vote', async (req, res) => {
     }
 
     res.json(await dbService.voteForProposal(id, userId, voteChoice));
+})
+
+router.delete('/proposal/:id/vote', async (req, res) => {
+    let proposalId = req.params.id;
+    let userId = req.user.did;
+
+    if (!proposalId) {
+        res.json({ code: 400, message: 'Missing proposal id' });
+        return;
+    }
+
+    res.json(await dbService.deleteVote(proposalId, userId));
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises

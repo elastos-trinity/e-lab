@@ -64,7 +64,7 @@ transition duration-200 md:relative md:translate-x-0 ease-in-out">
       </span>
       <span class="hover:text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 ml-0">Profile</span>
     </a>
-    <a [routerLink]="['/', adminPath.root, adminPath.proposals]" [routerLinkActive]="['is-active']"
+    <a *ngIf="currentUser.type === 'admin'" [routerLink]="['/', adminPath.root, adminPath.proposals]" [routerLinkActive]="['is-active']"
        class="block py-2.5 px-4" href="">
       <span class="icon">
         <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
