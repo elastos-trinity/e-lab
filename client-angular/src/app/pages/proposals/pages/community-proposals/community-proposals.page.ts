@@ -128,8 +128,4 @@ export class CommunityProposalsPage implements OnInit {
     const modalReference = await this.confirmVoteModal.open(ConfirmVoteComponent, {vote: 'against', proposalId: id})
     modalReference.instance.voteEvent.subscribe(() => { this.getActiveProposals() })
   }
-
-  onClickCancel(proposalId: string): void {
-    this.voteService.cancel(proposalId).then(() => this.getActiveProposals())
-  }
 }

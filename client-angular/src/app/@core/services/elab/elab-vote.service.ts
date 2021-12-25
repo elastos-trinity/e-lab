@@ -30,12 +30,4 @@ export class ElabVoteService {
   create(proposalId: string, vote: string): Promise<unknown> {
     return this.http.post<unknown>(`${ElabVoteService.voteUrl}/${proposalId}/vote`, { vote: vote }).toPromise()
   }
-
-  /**
-   * Delete a vote
-   * @param proposalId Proposal ID to delete the vote for
-   */
-  delete(proposalId: string): Promise<unknown> {
-    return this.http.delete<unknown>(`${ElabVoteService.voteUrl}/${proposalId}/vote`).toPromise()
-  }
 }
