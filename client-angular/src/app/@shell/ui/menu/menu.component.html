@@ -25,10 +25,10 @@
 transition duration-200 md:relative md:translate-x-0 ease-in-out">
   <!-- logo -->
   <a [routerLink]="['/']" class="flex content-center justify-center" href="">
-    <img src="/assets/img/logo.png" class="w-32" alt="elab-logo" />
+    <img src="/assets/img/logo.png" class="w-[129px] h-[56.2px]" alt="elab-logo" />
   </a>
 
-  <nav class="text-lg pt-20 min-w-fit pl-4">
+  <nav class="text-lg pt-20 min-w-fit pl-4 flex flex-col gap-5">
     <a [routerLink]="['/', proposalPath.root, proposalPath.communityProposals]" [routerLinkActive]="['is-active']" href="">
       <span class="icon">
         <svg width="27" height="23" viewBox="0 0 27 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -42,7 +42,7 @@ transition duration-200 md:relative md:translate-x-0 ease-in-out">
           </defs>
         </svg>
       </span>
-      <span class="hover:text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450">Community proposal</span>
+      <span>Community Proposals</span>
     </a>
 
     <a [routerLink]="['/', proposalPath.root, proposalPath.myProposals]" [routerLinkActive]="['is-active']" href="">
@@ -56,7 +56,7 @@ transition duration-200 md:relative md:translate-x-0 ease-in-out">
           <path d="M18.5049 0H14.0492V2.07595H18.5049V0Z" fill="white"/>
         </svg>
       </span>
-      <span class="hover:text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450">My proposal</span>
+      <span>My Proposals</span>
     </a>
 
     <a [routerLink]="['/', userPath.root, userPath.profile]" [routerLinkActive]="['is-active']"
@@ -67,7 +67,7 @@ transition duration-200 md:relative md:translate-x-0 ease-in-out">
           <path d="M13.1359 4.65233C13.1359 6.4001 12.1181 7.91526 10.6214 8.7137C9.90959 9.09091 9.08471 9.30467 8.21326 9.30467C7.33516 9.30467 6.51694 9.09091 5.80514 8.7137C4.30173 7.92154 3.28394 6.4001 3.28394 4.65233C3.28394 3.3195 3.87599 2.11241 4.83391 1.26367C5.38605 0.773293 6.05793 0.402364 6.80298 0.194895C7.24868 0.0691563 7.721 0 8.20661 0C8.69223 0 9.16454 0.0691563 9.61024 0.194895C10.3553 0.402364 11.0272 0.773293 11.5793 1.26367C12.5372 2.11241 13.1359 3.3195 13.1359 4.65233Z" fill="white"/>
         </svg>
       </span>
-      <span class="hover:text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 ml-0">Profile</span>
+      <span>My Profile</span>
     </a>
 
     <a *ngIf="currentUser && currentUser.type === 'admin'" [routerLink]="['/', adminPath.root, adminPath.proposals]"
@@ -77,7 +77,7 @@ transition duration-200 md:relative md:translate-x-0 ease-in-out">
           <path d="M20 8.89189C20 5.04505 16.8944 1.89189 13.1056 1.89189C12.4845 1.89189 11.9255 1.95496 11.3665 2.14414V0.882883H10.3727V0H8.32298V0.81982H7.32919V9.01802H8.32298V10.027H10.3727V9.01802H11.3665V4.54054C11.9255 4.28829 12.4845 4.22523 13.1056 4.22523C15.6522 4.22523 17.764 6.30631 17.764 8.89189C17.764 10.4685 17.0186 11.7928 15.9006 12.6757L15.0932 11.6036C14.7826 11.1622 14.1615 11.1622 13.8509 11.6036L12.5466 13.4324H3.04348C2.67081 13.4324 2.42236 13.7477 2.42236 14.0631C2.42236 14.3784 2.73292 14.6937 3.04348 14.6937H11.5528L8.88199 18.4144H0V21H20V18.4144L17.205 14.5045C18.882 13.2432 20 11.2252 20 8.89189Z" fill="white"/>
         </svg>
       </span>
-      <span class="hover:text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 ml-0">Admin</span>
+      <span>Admin</span>
     </a>
     <a [routerLink]="['/', adminPath.root, adminPath.proposals]" #adminProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
     <a [routerLink]="['/', adminPath.root, adminPath.users]" #userProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
