@@ -17,9 +17,11 @@ module.exports = {
     extend: {
       colors: {
         pink: {
+          elab: '#FF66DD',
           450: '#FF66DD'
         },
         orange: {
+          elab: '#FF9838',
           450: '#FF9838'
         },
         red: {
