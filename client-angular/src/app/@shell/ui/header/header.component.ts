@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from '@angular/router';
 import { ROUTER_UTILS } from '@core/utils/router.utils';
 import { AuthService } from '@pages/auth/services/auth.service';
@@ -14,7 +14,7 @@ export class HeaderComponent implements OnInit {
   path = ROUTER_UTILS.config.base;
   currentUser!: User
 
-  constructor(private router: Router, private authService: AuthService, private userService: UserService) {}
+  constructor(private router: Router, private authService: AuthService, private userService: UserService) { }
 
   onClickSignOut(): void {
     this.authService.signOut().then(() => {
@@ -24,8 +24,10 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.currentUser$.subscribe((v) => {
-      this.currentUser = v
+    this.userService.loggedInUser$.subscribe((v) => {
+      if (v.name) {
+        this.currentUser = v
+      }
     })
   }
 }

@@ -17,6 +17,8 @@ export class ElabVoteService {
    * Get the current voting period
    */
   getVotingPeriod(): Promise<{startDate: Date, endDate: Date, isTodayInVotingPeriod: boolean}> {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return this.http.get<{startDate: Date, endDate: Date, isTodayInVotingPeriod: boolean}>(`${ElabVoteService.voteUrl}/votingPeriod`).toPromise()
   }
 

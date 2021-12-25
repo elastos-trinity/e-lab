@@ -29,8 +29,10 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.currentUser$.subscribe((v) => {
-      this.currentUser = v
+    this.userService.loggedInUser$.subscribe((v) => {
+      if (v.type) {
+        this.currentUser = v
+      }
     })
   }
 }

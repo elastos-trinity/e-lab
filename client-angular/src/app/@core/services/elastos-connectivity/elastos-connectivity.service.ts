@@ -3,7 +3,7 @@ import {
   CredentialDisclosureRequest,
   DIDAccess
 } from "@elastosfoundation/elastos-connectivity-sdk-js/typings/did";
-import { connectivity, DID} from "@elastosfoundation/elastos-connectivity-sdk-js";
+import { connectivity, DID as ConnDID, DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
 import { Injectable } from "@angular/core";
 import { EssentialsConnector } from "@elastosfoundation/essentials-connector-client-browser";
@@ -82,13 +82,33 @@ export class ElastosConnectivityService {
   public async getVerifiablePresentation() : Promise<VerifiablePresentation>  {
     const didAccess: DIDAccess = new DID.DIDAccess();
     const nameClaim: Claim = DID.simpleIdClaim("Your name", "name", false)
-    console.log(`nameClaim: ${JSON.stringify(nameClaim)}`)
     const credentialRequest: CredentialDisclosureRequest = { claims: [nameClaim] }
-    console.log(`credentialRequest: ${JSON.stringify(credentialRequest)}`)
     return didAccess.requestCredentials(credentialRequest);
   }
 
+  /**
+   * Get the connector
+   */
   get connector(): EssentialsConnector {
     return this._connector
+  }
+
+  async requestKYCCredentials(): Promise<VerifiablePresentation> {
+    const TrustedKYCProviders = ["did:elastos:iqjN4CLRjd7a4jGCZe6B3isXyeLy7KKDuK"]
+    const didAccess = new ConnDID.DIDAccess();
+    return await didAccess.requestCredentials({
+      claims: [
+        ConnDID.simpleTypeClaim("Your name", "NameCredential", true)
+          .withIssuers(TrustedKYCProviders)
+          .withNoMatchRecommendations([
+            { title: "KYC-me.io", url: "https://kyc-me.io", urlTarget: "internal" }
+          ]),
+        ConnDID.simpleTypeClaim("Your birth date", "BirthDateCredential", true)
+          .withIssuers(TrustedKYCProviders)
+          .withNoMatchRecommendations([
+            { title: "KYC-me.io", url: "https://kyc-me.io", urlTarget: "internal" }
+          ])
+      ]
+    });
   }
 }

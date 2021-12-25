@@ -1,4 +1,4 @@
-import { ElabBackendProposalResult } from "@core/dtos/proposals/ElabBackendProposalResponseDTO";
+import { ElabBackendProposalResult } from "@core/dtos/proposals/elab-backend-proposals-response.dto";
 
 export class Proposal {
   private _id: string

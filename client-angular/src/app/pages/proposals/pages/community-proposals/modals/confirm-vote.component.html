@@ -1,0 +1,39 @@
+<app-modal #modalComponent>
+  <h4 class="font-bold text-transparent bg-clip-text bg-gradient-to-r
+  from-pink-450 to-orange-450 max-w-fit inline-flex">
+    Confirm your vote
+  </h4>
+  <div *ngIf="proposal && proposal.title">
+    <p>Please confirm that you want to vote <span [ngClass]="{'text-green': vote === 'for', 'text-red-500': vote === 'against'}">{{ vote | uppercase }}</span>
+      the following proposal:<p>
+    <div class="grid grid-cols-2 grid-cols grid-cols-[20%_80%] gap-y-1 mt-2">
+      <span class="bg-blue-800 text-pink-450 font-bold px-2">Title</span>
+      <span class="bg-blue-800" >{{ proposal.title }}</span>
+      <span class="bg-blue-800 text-pink-450 font-bold px-2">Link</span>
+      <span class="bg-blue-800">{{ proposal.link }}</span>
+    </div>
+    <p class="mt-4">Votes are not cancellable.</p>
+  </div>
+  <div class="flex mt-10">
+    <button (click)="close()" type="button" class="bg-transparent text-orange-450 pl-0 hover:text-pink-450 focus:outline-none text-sm">
+      Cancel
+    </button>
+
+    <button
+      (click)="confirmVote()"
+      *ngIf="proposal && proposal.title"
+      [ngClass]="{'cursor-not-allowed': loading, 'bg-green-100': vote === 'for', 'bg-red-100 text-red': vote === 'against'}" [attr.disabled]="loading ? 'disabled' : null"
+      type="submit"
+      class="ml-10 font-bold text-sm text-green rounded-full px-4 py-1"
+    >
+      <div class="flex flex-row">
+        <svg *ngIf="loading === true" class="animate-spin -ml-1 mr-3 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-95" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p *ngIf="loading === false">Vote</p>
+        <p *ngIf="loading === true">Voting...</p>
+      </div>
+    </button>
+  </div>
+</app-modal>

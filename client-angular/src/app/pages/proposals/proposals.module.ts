@@ -6,6 +6,7 @@ import { ProposalsRoutingModule } from "@pages/proposals/proposals-routing.modul
 import { NewProposalComponentModule } from "@pages/proposals/pages/my-proposals/modals/new-proposal-component";
 import { CoreModule } from "@core/core.module";
 import { ActivateAccountComponentModule } from "@pages/proposals/modals/activate-account.component";
+import { ConfirmVoteComponentModule } from "@pages/proposals/pages/community-proposals/modals/confirm-vote-component";
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ActivateAccountComponentModule } from "@pages/proposals/modals/activate
     NewProposalComponentModule,
     ActivateAccountComponentModule,
     ProposalsRoutingModule,
+    ConfirmVoteComponentModule,
     CoreModule
   ]
 })

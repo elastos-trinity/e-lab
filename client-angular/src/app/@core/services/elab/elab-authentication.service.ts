@@ -35,7 +35,7 @@ export class ElabAuthenticationService {
         return Promise.reject("Returned token by ELAB backend service is null");
       }
       return Promise.resolve(accessToken.data);
-    } catch (e) {
+    } catch {
       return Promise.reject("Call to ELAB backend service failed.");
     }
   }

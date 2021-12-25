@@ -22,7 +22,7 @@ interface ElabBackendProposalResults {
   result: ElabBackendProposalResult[]
 }
 
-export default interface ElabBackendProposalResponseDTO {
+export default interface ElabBackendProposalsResponseDto {
   code: string
   message: string
   data:  ElabBackendProposalResults

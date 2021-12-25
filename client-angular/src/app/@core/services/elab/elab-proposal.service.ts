@@ -2,7 +2,10 @@ import { environment } from "@env/environment";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import ElabBackendProposalResponseDTO from "@core/dtos/proposals/ElabBackendProposalResponseDTO";
+import ElabBackendProposalsResponseDto, {
+  ElabBackendProposalResult
+} from "@core/dtos/proposals/elab-backend-proposals-response.dto";
+import { map } from "rxjs/operators";
 
 export enum GetProposalQueryType {
   ALL = 'all',
@@ -37,32 +40,45 @@ export class ElabProposalService {
         return Promise.reject("Returned proposal response by ELAB backend service is null");
       }
       return Promise.resolve(response);
-    } catch (e) {
+    } catch {
       return Promise.reject("Call to ELAB backend service failed.");
     }
+  }
+
+  find(proposalId: string): Observable<ElabBackendProposalResult> {
+    return this.http
+      .get<{code: number, message: string, data: ElabBackendProposalResult}>(`${ElabProposalService.proposalsUrl}/${proposalId}`)
+      .pipe(map(result => { console.log(result); return result.data }))
   }
 
   /**
    * Get proposals.
    *
-   * @param pageNum Page number
+   * @param pageNumber
    * @param pageSize Page size
    * @param type Type of proposal ALL by default
    * @return Observable<ElabGetMineResponseDTO> Observable of ElabGetMineResponseDTO
    */
-  get(pageNum = 1, pageSize = 10, type: GetProposalQueryType = GetProposalQueryType.ACTIVE): Observable<ElabBackendProposalResponseDTO> {
+  get(pageNumber = 1, pageSize = 10, type: GetProposalQueryType = GetProposalQueryType.ACTIVE): Observable<ElabBackendProposalsResponseDto> {
     let url = ElabProposalService.proposalsUrl;
-    if (type === GetProposalQueryType.MINE) {
-      url += '/mine'
-    } else if (type === GetProposalQueryType.ACTIVE) {
-      url += '/active'
-    } else if (type === GetProposalQueryType.ALL) {
-      url += '/all'
+    switch (type) {
+      case GetProposalQueryType.MINE: {
+        url += '/mine'
+        break;
+      }
+      case GetProposalQueryType.ACTIVE: {
+        url += '/active'
+        break;
+      }
+      case GetProposalQueryType.ALL: {
+        url += '/all'
+        break;
+      }
     }
 
-    return this.http.get<ElabBackendProposalResponseDTO>(url, {
+    return this.http.get<ElabBackendProposalsResponseDto>(url, {
       params: {
-        'pageNum':  pageNum.toString(),
+        'pageNum':  pageNumber.toString(),
         'pageSize':  pageSize.toString()
       }
     })
@@ -73,7 +89,6 @@ export class ElabProposalService {
    * Should change the backend to a put to match it.
    * @param proposalId
    * @param status
-   * @param period
    */
   put(proposalId: string, status: string): Promise<unknown> {
     return this.http.put<unknown>(`${ElabProposalService.proposalUrl}/${proposalId}/audit`, {

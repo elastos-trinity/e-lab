@@ -2,8 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ROUTER_UTILS } from '@core/utils/router.utils';
 import { AuthService } from '../../services/auth.service';
-import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastosConnectivity.service";
-import { UserService } from "@pages/user/services/user.service";
+import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastos-connectivity.service";
 
 @Component({
   templateUrl: './sign-in.page.html',
@@ -20,9 +19,8 @@ export class SignInPage {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private authService: AuthService,
     private elastosConnectivityService: ElastosConnectivityService,
-    private userService: UserService
+    private authService: AuthService
   ) {
     if (this.elastosConnectivityService.isAlreadyConnected() && this.authService.isLoggedIn$) {
       this.elastosConnectivityService.restoreWalletSession().then(() => {

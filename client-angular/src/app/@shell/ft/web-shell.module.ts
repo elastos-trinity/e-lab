@@ -10,24 +10,27 @@ import { LayoutModule } from '../ui/layout/layout.module';
 import { NotFoundPage } from '../ui/not-found/not-found.page';
 import { AuthGuard, NoAuthGuard, RoleGuard } from "@core/guards";
 import { ModalModule } from "@shell/ui/modal/modal.module";
-import { CurrentUserResolver } from "@pages/user/resolvers/currentUser.resolver";
+import { CurrentUserResolver } from "@pages/user/resolvers/current-user.resolver";
 
 const APP_ROUTES: Routes = [
   {
     path: ROUTER_UTILS.config.auth.root,
+    // eslint-disable-next-line unicorn/no-await-expression-member
     loadChildren: async () => (await import('@pages/auth/auth.module')).AuthModule,
     canLoad: [NoAuthGuard],
   },
   {
     path: ROUTER_UTILS.config.base.home,
+    // eslint-disable-next-line unicorn/no-await-expression-member
     loadChildren: async () => (await import('@pages/home/home.module')).HomeModule,
     canLoad: [AuthGuard],
     resolve: {
-      CurrentUserResolver
+      currentUser: CurrentUserResolver
     }
   },
   {
     path: ROUTER_UTILS.config.admin.root,
+    // eslint-disable-next-line unicorn/no-await-expression-member
     loadChildren: async () => (await import('@pages/admin/admin.module')).AdminModule,
     canLoad: [AuthGuard],
     canActivate: [RoleGuard],
@@ -38,6 +41,7 @@ const APP_ROUTES: Routes = [
   },
   {
     path: ROUTER_UTILS.config.proposals.root,
+    // eslint-disable-next-line unicorn/no-await-expression-member
     loadChildren: async () => (await import('@pages/proposals/proposals.module')).ProposalsModule,
     canLoad: [AuthGuard],
     resolve: {
@@ -46,6 +50,7 @@ const APP_ROUTES: Routes = [
   },
   {
     path: ROUTER_UTILS.config.user.root,
+    // eslint-disable-next-line unicorn/no-await-expression-member
     loadChildren: async () => (await import('@pages/user/user.module')).UserModule,
     canLoad: [AuthGuard],
     resolve: {
@@ -54,6 +59,7 @@ const APP_ROUTES: Routes = [
   },
   {
     path: '**',
+    // eslint-disable-next-line unicorn/no-await-expression-member
     loadChildren: async () => (await import('@shell/ui/not-found/not-found.module')).NotFoundModule,
     component: NotFoundPage,
   },

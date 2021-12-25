@@ -419,6 +419,17 @@ router.delete('/proposal/:id/vote', async (req, res) => {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/proposals/:id', async (req, res) => {
+    try {
+        res.json(await dbService.findProposalById(req.params.id));
+    } catch (e) {
+        console.log(e);
+        res.json({ code: 400, message: 'bad request' });
+        return;
+    }
+})
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 /* router.get('/proposal/userHaveVoted', async (req, res) => {
     let userId = req.user.did;
     res.json(await dbService.userHaveVoted(userId));

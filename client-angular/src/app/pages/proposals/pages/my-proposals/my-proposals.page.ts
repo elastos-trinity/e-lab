@@ -27,7 +27,7 @@ export class MyProposalsPage implements OnInit {
   pageNum!: number;
   isLoading!: boolean;
 
-  constructor (private newProposalModalService: ModalService<NewProposalComponentType>,
+  constructor (private createProposalModalService: ModalService<NewProposalComponentType>,
                private voteService: VoteService,
                private activateAccountProposalModalService: ModalService<ActivateAccountComponent>,
                private proposalService: ProposalsService, private userService: UserService, private route: ActivatedRoute) {
@@ -43,9 +43,11 @@ export class MyProposalsPage implements OnInit {
    */
   ngOnInit(): void {
     this.isLoading = true
-    this.getMyProposals();
     this.route.data.subscribe(({currentUser: user}) => {
       this.currentUser = user
+      if (this.currentUser.isActive) {
+        this.getMyProposals();
+      }
     });
   }
 
@@ -56,10 +58,8 @@ export class MyProposalsPage implements OnInit {
    */
   async showNewProposal(): Promise<void> {
     const { NewProposalComponent } = await import('./modals/new-proposal-component')
-    const modalRef = await this.newProposalModalService.open(NewProposalComponent) as ComponentRef<NewProposalComponentType>
-    modalRef.instance.newProposalEvent.subscribe(event => {
-      this.getMyProposals()
-    })
+    const modalReference = await this.createProposalModalService.open(NewProposalComponent) as ComponentRef<NewProposalComponentType>
+    modalReference.instance.proposalEvent.subscribe(() => { this.getMyProposals() })
   }
 
 

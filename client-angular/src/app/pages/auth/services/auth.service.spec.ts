@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AuthService } from './auth.service';
 import { ElabAuthenticationService } from "@core/services/elab/elab-authentication.service";
-import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastosConnectivity.service";
+import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastos-connectivity.service";
 
 
 describe('AuthService', () => {
