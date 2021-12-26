@@ -10,7 +10,9 @@
       <p *ngIf="!isActivationInProcess">Already have KYC credentials ?</p>
       <p *ngIf="isActivationInProcess">Please check your wallet</p>
 
-      <button (click)=onClickProvideCredentials() class="bg-green-100 font-bold h-9 px-10 text-green rounded-full w-[170px] px-[10px] ml-auto" type="button">
+      <button (click)=onClickProvideCredentials() class="bg-green-100 font-bold h-9 px-10 text-green rounded-full w-[170px] px-[10px] ml-auto
+      transition ease-in-out delay-50 hover:scale-110 hover:bg-green-elab duration-200 hover:text-white
+" type="button">
         <div *ngIf="isActivationInProcess" class="flex items-center justify-center ">
           <div class="w-6 h-6 border-l-2 border-pink-450 rounded-full animate-spin mr-2"></div>
         </div>
