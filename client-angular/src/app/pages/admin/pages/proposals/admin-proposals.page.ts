@@ -9,7 +9,7 @@ import { ROUTER_UTILS } from "@core/utils/router.utils";
 
 @Component({
   templateUrl: './admin-proposals.page.html',
-  styleUrls: ['../admin.page.scss', 'admin-proposals.page.scss']
+  styleUrls: ['../../../../app.component.scss','../admin.page.scss', 'admin-proposals.page.scss']
 })
 /**
  * The admin proposals.

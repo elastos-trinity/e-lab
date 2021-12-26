@@ -5,7 +5,7 @@ import { AdminService } from "@pages/admin/services/admin.service";
 
 @Component({
   templateUrl: './admin-users.page.html',
-  styleUrls: ['../admin.page.scss', 'admin-users.page.scss'],
+  styleUrls: ['../../../../app.component.scss', '../admin.page.scss', 'admin-users.page.scss'],
   encapsulation: ViewEncapsulation.None
 })
 /**

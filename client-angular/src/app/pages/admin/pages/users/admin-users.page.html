@@ -1,48 +1,35 @@
-<div class="sm:pt-24 flex flex-row">
-  <svg width="32" height="27" viewBox="0 0 32 27" fill="none" xmlns="http://www.w3.org/2000/svg" class="mt-2 mr-3">
-    <path d="M31.834 27H7.83398L8.66877 25.7459L17.5731 12.8361V3.02459H15.2775V0H24.3905V3.02459H22.0949V12.8361L28.9122 22.7213L31.834 27Z" fill="url(#paint0_linear_3809_1476)"/>
-    <path d="M24.3335 27H0.333496L1.16828 25.7459L10.0726 12.8361V3.02459H7.77697V0H16.89V3.02459H14.5944V12.8361L21.4118 22.7213L24.3335 27Z" fill="url(#paint1_linear_3809_1476)" fill-opacity="0.4"/>
-    <defs>
-      <linearGradient id="paint0_linear_3809_1476" x1="19.834" y1="0" x2="19.834" y2="27" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#FF9838"/>
-        <stop offset="1" stop-color="#FF66DD"/>
-      </linearGradient>
-      <linearGradient id="paint1_linear_3809_1476" x1="12.3335" y1="0" x2="12.3335" y2="27" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#FF9838"/>
-        <stop offset="1" stop-color="#FF66DD"/>
-      </linearGradient>
-    </defs>
-  </svg>
-  <h1 class="font-bold text-transparent bg-clip-text bg-gradient-to-r
-  from-pink-450 to-orange-450 max-w-fit">
-    Admin
-  </h1>
+<div class="md:pt-24 flex flex-col lg:flex-row align-bottom">
+  <div class="inline-flex md:flex-row title-with-svg w-1/2">
+    <svg viewBox="0 0 32 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M31.834 27H7.83398L8.66877 25.7459L17.5731 12.8361V3.02459H15.2775V0H24.3905V3.02459H22.0949V12.8361L28.9122 22.7213L31.834 27Z" fill="url(#paint0_linear_3809_1476)"/>
+      <path d="M24.3335 27H0.333496L1.16828 25.7459L10.0726 12.8361V3.02459H7.77697V0H16.89V3.02459H14.5944V12.8361L21.4118 22.7213L24.3335 27Z" fill="url(#paint1_linear_3809_1476)" fill-opacity="0.4"/>
+      <defs>
+        <linearGradient id="paint0_linear_3809_1476" x1="19.834" y1="0" x2="19.834" y2="27" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FF9838"/>
+          <stop offset="1" stop-color="#FF66DD"/>
+        </linearGradient>
+        <linearGradient id="paint1_linear_3809_1476" x1="12.3335" y1="0" x2="12.3335" y2="27" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FF9838"/>
+          <stop offset="1" stop-color="#FF66DD"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <h1>
+      Admin
+    </h1>
+  </div>
 </div>
 
 <div class="w-full flex flex-row admin-menu">
   <a href="" [routerLink]="['/', adminPath.root, adminPath.proposals]" [routerLinkActive]="['is-active']">
-    <svg width="21" height="18" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g opacity="0.5">
-        <path d="M21 18H5L5.55652 17.1639L11.4928 8.55738V2.01639H9.96232V0H16.0377V2.01639H14.5072V8.55738L19.0522 15.1475L21 18Z" fill="white"/>
-        <path d="M16 18H0L0.556522 17.1639L6.49275 8.55738V2.01639H4.96232V0H11.0377V2.01639H9.50725V8.55738L14.0522 15.1475L16 18Z" fill="white" fill-opacity="0.4"/>
-      </g>
-    </svg>
     <span>Manage Proposals</span>
   </a>
   <a href="" [routerLink]="['/', adminPath.root, adminPath.users]" [routerLinkActive]="['is-active']">
-    <svg width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g opacity="0.5">
-        <path d="M17.5168 14.4738H6.64254C6.22837 14.4738 5.99367 13.9896 6.23297 13.6478L8.98031 9.73133C9.69361 8.71542 10.8441 8.13151 12.059 8.13626C12.0636 8.13626 12.0728 8.13626 12.0774 8.13626C12.082 8.13626 12.0912 8.13626 12.0958 8.13626C13.3107 8.13151 14.4612 8.71067 15.1745 9.73133L17.9218 13.6478C18.1657 13.9943 17.9264 14.4738 17.5168 14.4738Z" fill="white"/>
-        <path d="M15.6436 3.36684C15.6436 4.63168 14.907 5.72818 13.8238 6.306C13.3087 6.57899 12.7117 6.73368 12.0811 6.73368C11.4456 6.73368 10.8535 6.57899 10.3384 6.306C9.25036 5.73273 8.51379 4.63168 8.51379 3.36684C8.51379 2.40229 8.94225 1.52873 9.63549 0.914506C10.0351 0.559623 10.5213 0.291186 11.0605 0.141043C11.383 0.0500476 11.7248 0 12.0763 0C12.4277 0 12.7695 0.0500476 13.0921 0.141043C13.6312 0.291186 14.1175 0.559623 14.5171 0.914506C15.2103 1.52873 15.6436 2.40229 15.6436 3.36684Z" fill="white"/>
-        <path opacity="0.4" d="M11.3799 14.4738H0.50558C0.0914086 14.4738 -0.143289 13.9896 0.0960104 13.6478L2.84335 9.73133C3.55664 8.71542 4.70712 8.13151 5.92202 8.13626C5.92662 8.13626 5.93583 8.13626 5.94043 8.13626C5.94503 8.13626 5.95424 8.13626 5.95884 8.13626C7.17374 8.13151 8.32422 8.71067 9.03751 9.73133L11.7849 13.6478C12.0288 13.9943 11.7895 14.4738 11.3799 14.4738Z" fill="white"/>
-        <path opacity="0.4" d="M9.50624 3.36684C9.50624 4.63168 8.76967 5.72818 7.68649 6.306C7.17137 6.57899 6.57442 6.73368 5.94376 6.73368C5.30829 6.73368 4.71615 6.57899 4.20103 6.306C3.11303 5.73273 2.37646 4.63168 2.37646 3.36684C2.37646 2.40229 2.80493 1.52873 3.49817 0.914506C3.89774 0.559623 4.38397 0.291186 4.92316 0.141043C5.24571 0.0500476 5.58751 0 5.93895 0C6.29038 0 6.63219 0.0500476 6.95473 0.141043C7.49392 0.291186 7.98015 0.559623 8.37973 0.914506C9.07297 1.52873 9.50624 2.40229 9.50624 3.36684Z" fill="white"/>
-      </g>
-    </svg>
     <span>Manage Users</span>
   </a>
 </div>
 
-<div class="grid grid-cols-4 gap-4 bg-blue-800 rounded-full px-5 py-2">
+<div class="grid grid-cols-4 gap-4 bg-blue-800 rounded-xl px-5 py-2 mt-5">
   <span class="font-bold text-pink-450">Name</span>
   <span class="font-bold text-pink-450">Email</span>
   <span class="font-bold text-pink-450">DID</span>
@@ -50,9 +37,9 @@
 </div>
 
 
-<div class="grid grid-cols-4 gap-4 bg-blue-800 rounded-full px-5 py-2 mt-4 break-all" *ngFor="let user of userList">
+<div class="grid grid-cols-4 gap-4 bg-blue-800 rounded-xl px-5 py-2 mt-4 break-all" *ngFor="let user of userList">
   <span class="">{{ user.name }}</span>
   <span class="">{{ user.email }}</span>
   <span class="">{{ user.did }}</span>
-  <span class="">{{ user.active }}</span>
+  <span class="">{{ user.active ? 'active' : 'inactive' }}</span>
 </div>

@@ -29,8 +29,8 @@
           <span>Your account is not active.</span>&nbsp;
           <span class="inline lg:block xl:inline">You need to activate to vote.</span>
         </p>
-        <span *ngIf="currentVotingPeriod && currentVotingPeriod.isTodayInVotingPeriod" class="text-green-elabLight">Current voting period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
-        <span *ngIf="currentVotingPeriod && !currentVotingPeriod.isTodayInVotingPeriod" class="text-gray-400">Next voting period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
+        <span *ngIf="currentVotingPeriod && currentVotingPeriod.isTodayInVotingPeriod" class="text-green-elabLight">Current vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
+        <span *ngIf="currentVotingPeriod && !currentVotingPeriod.isTodayInVotingPeriod" class="text-gray-400">Next vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
       </div>
       <button *ngIf="!currentUser.isActive" class="bg-green-100 font-bold h-9 px-4 text-green rounded-full" type="button" (click)="showActivateAccount()">
         Activate
@@ -39,8 +39,8 @@
 
     <div *ngIf="currentUser.isActive && currentVotingPeriod && currentVotingPeriod.startDate && currentVotingPeriod.endDate"
          class="md:ml-10 justify-center flex flex-row align-bottom items-center h-100 text-gray-400 text-[16px]">
-      <span *ngIf="currentVotingPeriod && currentVotingPeriod.isTodayInVotingPeriod" class="text-green-elabLight">Current voting period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
-      <span *ngIf="currentVotingPeriod && !currentVotingPeriod.isTodayInVotingPeriod">Next voting period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
+      <span *ngIf="currentVotingPeriod && currentVotingPeriod.isTodayInVotingPeriod" class="text-green-elabLight">Current vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
+      <span *ngIf="currentVotingPeriod && !currentVotingPeriod.isTodayInVotingPeriod">Next vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
     </div>
   </div>
 </div>
