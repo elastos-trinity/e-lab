@@ -15,13 +15,15 @@ export class AdminUsersPage implements OnInit {
   adminPath = ROUTER_UTILS.config.admin
   totalUsers!: number;
   userList!: ElabUser[];
+  isLoading = true;
 
   constructor(private adminService: AdminService) {}
 
   ngOnInit(): void {
     this.adminService.getAllUsers().subscribe((elabUserList) => {
       this.totalUsers = elabUserList.total;
-      this.userList = elabUserList.result
+      this.userList = elabUserList.result;
+      this.isLoading = false;
     })
   }
 }

@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ROUTER_UTILS } from '@core/utils/router.utils';
 import { AuthService } from '../../services/auth.service';
 import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastos-connectivity.service";
+import { Container, GradientType, Main } from "tsparticles";
+import { loadGradientUpdater } from "tsparticles-updater-gradient";
 
 @Component({
   templateUrl: './sign-in.page.html',
@@ -50,4 +52,95 @@ export class SignInPage implements OnInit {
       this.isLoading = false;
     }
   }
+
+
+
+  //  ======= PARTICLES
+  id = "tsparticles";
+  particlesOptions = {
+    fpsLimit: 60,
+    interactivity: {
+      events: {
+        onHover: {
+          enable: true,
+          mode: "repulse"
+        },
+        resize: true
+      },
+      modes: {
+        bubble: {
+          distance: 400,
+          duration: 2,
+          opacity: 0.8,
+          size: 40
+        },
+        push: {
+          quantity: 4
+        },
+        repulse: {
+          distance: 200,
+          duration: 0.4
+        }
+      }
+    },
+    particles: {
+      collisions: {
+        enable: true
+      },
+      move: {
+        direction: "top" as const,
+        enable: true,
+        random: false,
+        speed: 4,
+        straight: false
+      },
+      number: {
+        density: {
+          enable: true,
+          area: 800
+        },
+        value: 1
+      },
+      opacity: {
+        value: 1,
+        random: true
+      },
+      shape: {
+        type: "circle" as const
+      },
+      size: {
+        random: true,
+        value: 100
+      },
+      gradient: [
+        {
+          "type": GradientType.linear,
+          "colors": [
+            {
+              "stop":0,
+              "value": {
+                value: "#FF66DD"
+              }
+            },
+            {
+              "stop": 1,
+              "value": {
+                value: "#FF9838" as const
+              }
+            }
+          ]
+        }
+      ],
+    },
+    detectRetina: true
+  };
+
+  particlesLoaded(container: Container): void {
+    console.log(container);
+  }
+
+  particlesInit(main: Main): void {
+    console.log(main);
+    loadGradientUpdater(main);
+  };
 }

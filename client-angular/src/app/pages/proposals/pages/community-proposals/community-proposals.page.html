@@ -26,11 +26,11 @@
   <div class="flex flex-col justify-end md:ml-0.5 lg:ml-2 xl:ml-3">
 
     <!-- ACCOUNT CHECK / ACTIVATE ACCOUNT -->
-    <div class="flex flex-row align-middle items-center justify-center min-h-min">
+    <div class="flex flex-row align-middle items-center justify-center min-h-min text-sm md:text-base">
       <div *ngIf="!currentUser.isActive" class="flex flex-col align-middle items-center justify-center font-bold mr-10  text-center">
         <p class="text-red">
           <span>Your account is not active.</span>&nbsp;
-          <span class="inline lg:block xl:inline">You need to activate to vote.</span>
+          <span class="block md:inline lg:block xl:inline">You need to activate to vote.</span>
         </p>
         <span *ngIf="currentVotingPeriod && currentVotingPeriod.isTodayInVotingPeriod" class="text-green-elabLight">Current vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
         <span *ngIf="currentVotingPeriod && !currentVotingPeriod.isTodayInVotingPeriod" class="text-gray-400">Next vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>

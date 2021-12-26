@@ -36,6 +36,9 @@
   <span class="font-bold text-pink-450">Status</span>
 </div>
 
+<div *ngIf="isLoading" class="flex items-center align-middle justify-center mt-5">>
+  <div class="w-40 h-40 border-t-4 border-b-4 border-pink-450 rounded-full animate-spin"></div>
+</div>
 
 <div class="grid grid-cols-4 gap-4 bg-blue-800 rounded-xl px-5 py-2 mt-4 break-all" *ngFor="let user of userList">
   <span class="">{{ user.name }}</span>
