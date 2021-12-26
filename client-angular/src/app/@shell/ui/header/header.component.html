@@ -42,19 +42,17 @@
 
       <div class="relative">
         <!-- Dropdown toggle button -->
-        <button>
+        <button (click)="showMiniMenu()">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
 
-        <div
-          class="bg-blue-900 bg-opacity-40 absolute right-0 w-auto py-2 mt-2"
-        >
-          <div
+        <div class="absolute right-0 w-auto py-2 mt-2">
+          <div  [ngClass]="{'visible': miniMenuEnabled, 'hidden': !miniMenuEnabled}"
             class="modal inline-block align-bottom p-0.5 rounded-xl
       bg-gradient-to-tr from-orange-450 to-pink-450 text-left overflow-hidden
-      shadow-xl transform transition-all md:align-middle md:max-w-lg md:w-full"
+      shadow-xl transform transition-all duration-200 ease-in-out md:align-middle md:max-w-lg md:w-full"
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-headline"
