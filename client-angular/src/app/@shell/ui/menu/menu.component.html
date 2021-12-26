@@ -52,7 +52,7 @@
           </defs>
         </svg>
 
-        <div class="p-4 flex flex-col w-full">
+        <div class="p-4 flex flex-col w-full" *ngIf="currentUser">
           <span class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450">{{ currentUser.name }}</span>
           <span class="text-sm text-gray-400 break-all w-4/5">{{ currentUser.did }}</span>
           <div class="flex flex-row mt-2 text-sm">
