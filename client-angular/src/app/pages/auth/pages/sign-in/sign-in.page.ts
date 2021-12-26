@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastos-connectivity.service";
 import { Container, GradientType, Main } from "tsparticles";
 import { loadGradientUpdater } from "tsparticles-updater-gradient";
+import { loadLightInteraction } from "tsparticles-interaction-light";
 
 @Component({
   templateUrl: './sign-in.page.html',
@@ -59,11 +60,20 @@ export class SignInPage implements OnInit {
   id = "tsparticles";
   particlesOptions = {
     fpsLimit: 60,
+    background: {
+      color: '#000B26' as const
+    },
+    fullScreen: {
+      enabled: true,
+      zIndex: -1
+    },
     interactivity: {
+      detect_on: 'window' as const,
       events: {
         onHover: {
           enable: true,
-          mode: "repulse"
+          mode: "repulse",
+          parallax: { enable: false, force: 60, smooth: 10 }
         },
         resize: true
       },
@@ -80,12 +90,22 @@ export class SignInPage implements OnInit {
         repulse: {
           distance: 200,
           duration: 0.4
+        },
+        light: {
+          shadow: {
+            enabled: true,
+            color: {
+              value: "#FF66DD"
+            },
+            length: 5000
+          }
         }
       }
     },
     particles: {
       collisions: {
-        enable: true
+        enable: true,
+        mode: "bounce" as const
       },
       move: {
         direction: "top" as const,
@@ -103,7 +123,13 @@ export class SignInPage implements OnInit {
       },
       opacity: {
         value: 1,
-        random: true
+        random: true,
+        anim: {
+          enable: false,
+          speed: 3,
+          opacity_min: 0.1,
+          sync: false
+        }
       },
       shape: {
         type: "circle" as const
@@ -142,5 +168,6 @@ export class SignInPage implements OnInit {
   particlesInit(main: Main): void {
     console.log(main);
     loadGradientUpdater(main);
+    loadLightInteraction(main);
   };
 }
