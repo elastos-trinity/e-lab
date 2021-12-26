@@ -13,7 +13,7 @@ import { VoteService } from "@pages/proposals/services/vote.service";
 
 @Component({
   templateUrl: './my-proposals.page.html',
-  styleUrls: ['my-proposals.page.scss']
+  styleUrls: ['../../../../app.component.scss', 'my-proposals.page.scss']
 })
 /**
  * The my proposals page.

@@ -21,16 +21,16 @@
 
 <div class="grid grid-cols-[15%_85%] gap-4 rounded-lg bg-blue-800 p-8 sm:p-16">
   <div class="text-pink-450 font-bold">DID</div>
-  <div>{{ currentUser.did }}</div>
+  <div class="break-all">{{ currentUser.did }}</div>
 
   <div class="text-pink-450 font-bold">Name</div>
-  <div>{{ currentUser.name | titlecase }}</div>
+  <div class="break-all">{{ currentUser.name | titlecase }}</div>
 
   <div class="text-pink-450 font-bold">Email</div>
-  <div>{{ currentUser.name }}</div>
+  <div> class="break-all"{{ currentUser.name }}</div>
 
   <div class="text-pink-450 font-bold">Type</div>
-  <div class="font-bold">{{ currentUser.type | titlecase }}</div>
+  <div class="font-bold break-all">{{ currentUser.type | titlecase }}</div>
 
   <div class="text-pink-450 font-bold">Wallets</div>
   <div class="break-words max-w-[600px]">

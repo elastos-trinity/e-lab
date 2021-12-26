@@ -18,6 +18,8 @@ export class MenuComponent implements OnInit {
   userPath = ROUTER_UTILS.config.user
   currentUser!: User;
 
+  menuOpened = false;
+
   constructor(private router: Router, private authService: AuthService, private userService: UserService) {}
 
   onClickSignOut(): void {
@@ -34,5 +36,13 @@ export class MenuComponent implements OnInit {
         this.currentUser = v
       }
     })
+  }
+
+  openMenu() {
+    this.menuOpened = !this.menuOpened;
+  }
+
+  closeMenu() {
+    this.menuOpened = false;
   }
 }

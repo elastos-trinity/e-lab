@@ -11,7 +11,7 @@ import { ConfirmVoteComponent } from "@pages/proposals/pages/community-proposals
 
 @Component({
   templateUrl: './community-proposals.page.html',
-  styleUrls: ['community-proposals.page.scss']
+  styleUrls: ['../../../../app.component.scss', 'community-proposals.page.scss']
 })
 /**
  * The community proposals page.

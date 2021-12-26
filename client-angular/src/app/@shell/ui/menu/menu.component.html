@@ -1,12 +1,8 @@
 <!-- mobile menu bar -->
-<div id="left-menu" class="flex justify-between md:hidden">
-  <!-- logo -->
-  <a [routerLink]="['/']" href="">
-    <img src="/assets/img/logo.png" alt="elab-logo" />
-  </a>
-
+<div id="left-menu" class="flex flex-row md:hidden p-7 py-4 sticky top-0 z-10 bg-blue-900">
   <!-- mobile menu button -->
-  <button class="mobile-menu-button p-4 focus:outline-none text-transparent bg-clip-text bg-gradient-to-tr from-pink-450 to-orange-450">
+  <button (click)=openMenu() class="mobile-menu-button p-4 focus:outline-none
+  text-transparent bg-clip-text bg-gradient-to-tr from-pink-450 to-orange-450">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
          viewBox="0 0 24 24" stroke="url(#mobile-menu-button-gradient)">
       <defs>
@@ -18,31 +14,144 @@
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
     </svg>
   </button>
-</div>
 
-<!-- sidebar -->
-<div id="sidebar" class="lg:w-80 md:w-60 min-h-full space-y-10 px-4 py-14 absolute inset-y-0 left-0 transform -translate-x-full
-transition duration-200 md:relative md:translate-x-0 ease-in-out">
-  <!-- logo -->
-  <a [routerLink]="['/']" class="flex content-center justify-center" href="">
-    <img src="/assets/img/logo.png" class="w-[129px] h-[56.2px]" alt="elab-logo" />
+  <!-- mobile logo -->
+  <a [routerLink]="['/']" href="" class="w-[91px] justify-items-center mx-auto">
+    <img src="/assets/img/logo.png" alt="elab-logo" />
   </a>
 
-  <nav class="text-lg pt-20 min-w-fit pl-4 flex flex-col gap-5">
-    <a [routerLink]="['/', proposalPath.root, proposalPath.communityProposals]" [routerLinkActive]="['is-active']" href="">
+  <!-- mobile logo -->
+  <button class="text-blue-900">DARK</button>
+
+  <!-- mobile menu -->
+  <div id="mobile-menu"
+       [ngClass]="{'-translate-x-full': !menuOpened }"
+       class="w-full min-h-full absolute inset-y-0 left-0 transform top-20
+            transition duration-200 md:relative
+            md:translate-x-0 ease-in-out bg-blue-900
+            h-full break-words max-h-full">
+    <div class="text-lg min-w-fit pl-4 flex flex-col bg-blue-900 min-h-screen">
+      <div class="flex flex-row">
+        <svg class="my-auto" width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="25" cy="25" r="24" stroke="url(#paint0_linear_4808_57)" stroke-width="2"/>
+          <path d="M33.2906 36.531H16.4098C15.7669 36.531 15.4026 35.7794 15.774 35.2488L20.0389 29.169C21.1462 27.592 22.9321 26.6855 24.8181 26.6929C24.8252 26.6929 24.8395 26.6929 24.8466 26.6929C24.8538 26.6929 24.8681 26.6929 24.8752 26.6929C26.7612 26.6855 28.5471 27.5846 29.6544 29.169L33.9192 35.2488C34.2979 35.7867 33.9264 36.531 33.2906 36.531Z" fill="url(#paint1_linear_4808_57)"/>
+          <path d="M30.3824 19.289C30.3824 21.2525 29.239 22.9547 27.5575 23.8516C26.7578 24.2754 25.8312 24.5155 24.8522 24.5155C23.8657 24.5155 22.9465 24.2754 22.1468 23.8516C20.4579 22.9617 19.3145 21.2525 19.3145 19.289C19.3145 17.7917 19.9796 16.4356 21.0557 15.4821C21.676 14.9312 22.4308 14.5145 23.2678 14.2814C23.7685 14.1402 24.2991 14.0625 24.8447 14.0625C25.3902 14.0625 25.9208 14.1402 26.4215 14.2814C27.2585 14.5145 28.0134 14.9312 28.6336 15.4821C29.7098 16.4356 30.3824 17.7917 30.3824 19.289Z" fill="url(#paint2_linear_4808_57)"/>
+          <defs>
+            <linearGradient id="paint0_linear_4808_57" x1="25" y1="0" x2="25" y2="50" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FF9838"/>
+              <stop offset="1" stop-color="#FF66DD"/>
+            </linearGradient>
+            <linearGradient id="paint1_linear_4808_57" x1="24.8483" y1="26.6929" x2="24.8483" y2="36.531" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FF9838"/>
+              <stop offset="1" stop-color="#FF66DD"/>
+            </linearGradient>
+            <linearGradient id="paint2_linear_4808_57" x1="24.8484" y1="14.0625" x2="24.8484" y2="24.5155" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FF9838"/>
+              <stop offset="1" stop-color="#FF66DD"/>
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <div class="p-4 flex flex-col w-full">
+          <span class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450">{{ currentUser.name }}</span>
+          <span class="text-sm text-gray-400 break-all w-4/5">{{ currentUser.did }}</span>
+          <div class="flex flex-row mt-2 text-sm">
+                <span class="inline-block px-2 font-bold text-black bg-gradient-to-r py-auto
+                justify-between align-middle from-pink-450 to-orange-450 rounded-full">{{currentUser.type.toUpperCase()}}</span>
+            <button class="ml-auto bg-transparent text-orange-450 pl-0 hover:text-pink-450 font-bold" (click)="onClickSignOut()">Sign out</button>
+          </div>
+        </div>
+      </div>
+
+      <nav class="min-w-fit mx-auto pt-10 flex flex-col gap-y-8">
+        <a (click)="closeMenu()"
+           [routerLink]="['/', proposalPath.root, proposalPath.communityProposals]" [routerLinkActive]="['is-active']" href="" class="flex flex-row">
+            <span class="icon">
+            <svg width="26" height="23" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M26.9996 23H6.55518L7.26629 21.9317L14.8515 10.9344V2.5765H12.8959V0H20.6589V2.5765H18.7033V10.9344L24.5107 19.3552L26.9996 23Z" fill="white"/>
+              <path d="M20.6109 23H0.166504L0.877615 21.9317L8.4628 10.9344V2.5765H6.50724V0H14.2702V2.5765H12.3147V10.9344L18.1221 19.3552L20.6109 23Z" fill="white" fill-opacity="0.4"/>
+              <defs>
+                <linearGradient id="grad1" x1="16.7774" y1="0" x2="16.7774" y2="23" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#FF9838"/>
+                  <stop offset="1" stop-color="#FF66DD"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+          <span class="menu-text">Community Proposals</span>
+        </a>
+
+        <a (click)="closeMenu()"
+           [routerLink]="['/', proposalPath.root, proposalPath.myProposals]" [routerLinkActive]="['is-active']" href="" class="flex flex-row">
+        <span class="icon">
+          <svg width="21" height="22" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.4557 0H0V2.07595H4.4557V0Z" fill="white"/>
+            <path d="M3.89857 2.07568H0.607422V18.3795C0.607422 19.2909 1.36692 19.9998 2.22768 19.9998C3.13907 19.9998 3.84793 19.2403 3.84793 18.3795L3.89857 2.07568Z" fill="white"/>
+            <path d="M10.898 2.07568H7.60681V18.3795C7.60681 19.2909 8.36631 19.9998 9.22707 19.9998C10.1385 19.9998 10.8473 19.2403 10.8473 18.3795L10.898 2.07568Z" fill="white"/>
+            <path d="M17.948 2.07568H14.6569V18.3795C14.6569 19.2909 15.4164 19.9998 16.2771 19.9998C17.1885 19.9998 17.8974 19.2403 17.8974 18.3795L17.948 2.07568Z" fill="white"/>
+            <path d="M11.5056 0H7.04993V2.07595H11.5056V0Z" fill="white"/>
+            <path d="M18.5049 0H14.0492V2.07595H18.5049V0Z" fill="white"/>
+          </svg>
+        </span>
+          <span class="menu-text">My Proposals</span>
+        </a>
+
+        <a (click)="closeMenu()"
+           [routerLink]="['/', userPath.root, userPath.profile]" [routerLinkActive]="['is-active']" href="" class="flex flex-row">
+        <span class="icon">
+          <svg width="17" height="20" viewBox="0 0 17 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.7248 19.9998H0.698616C0.126309 19.9998 -0.197998 19.3307 0.132668 18.8584L3.92897 13.4466C4.91461 12.0428 6.50435 11.2359 8.18312 11.2425C8.18948 11.2425 8.20219 11.2425 8.20855 11.2425C8.21491 11.2425 8.22763 11.2425 8.23399 11.2425C9.91275 11.2359 11.5025 12.0362 12.4881 13.4466L16.2844 18.8584C16.6215 19.3372 16.2908 19.9998 15.7248 19.9998Z" fill="white"/>
+            <path d="M13.1359 4.65233C13.1359 6.4001 12.1181 7.91526 10.6214 8.7137C9.90959 9.09091 9.08471 9.30467 8.21326 9.30467C7.33516 9.30467 6.51694 9.09091 5.80514 8.7137C4.30173 7.92154 3.28394 6.4001 3.28394 4.65233C3.28394 3.3195 3.87599 2.11241 4.83391 1.26367C5.38605 0.773293 6.05793 0.402364 6.80298 0.194895C7.24868 0.0691563 7.721 0 8.20661 0C8.69223 0 9.16454 0.0691563 9.61024 0.194895C10.3553 0.402364 11.0272 0.773293 11.5793 1.26367C12.5372 2.11241 13.1359 3.3195 13.1359 4.65233Z" fill="white"/>
+          </svg>
+        </span>
+          <span class="menu-text">My Profile</span>
+        </a>
+
+        <a (click)="closeMenu()"
+           *ngIf="currentUser && currentUser.type === 'admin'" [routerLink]="['/', adminPath.root, adminPath.proposals]"
+           [ngClass]="{'is-active': userProposalActive.isActive || adminProposalActive.isActive }" href="" class="flex flex-row">
+        <span class="icon">
+          <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 8.89189C20 5.04505 16.8944 1.89189 13.1056 1.89189C12.4845 1.89189 11.9255 1.95496 11.3665 2.14414V0.882883H10.3727V0H8.32298V0.81982H7.32919V9.01802H8.32298V10.027H10.3727V9.01802H11.3665V4.54054C11.9255 4.28829 12.4845 4.22523 13.1056 4.22523C15.6522 4.22523 17.764 6.30631 17.764 8.89189C17.764 10.4685 17.0186 11.7928 15.9006 12.6757L15.0932 11.6036C14.7826 11.1622 14.1615 11.1622 13.8509 11.6036L12.5466 13.4324H3.04348C2.67081 13.4324 2.42236 13.7477 2.42236 14.0631C2.42236 14.3784 2.73292 14.6937 3.04348 14.6937H11.5528L8.88199 18.4144H0V21H20V18.4144L17.205 14.5045C18.882 13.2432 20 11.2252 20 8.89189Z" fill="white"/>
+          </svg>
+        </span>
+          <span class="menu-text">Admin</span>
+        </a>
+        <a [routerLink]="['/', adminPath.root, adminPath.proposals]" #adminProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
+        <a [routerLink]="['/', adminPath.root, adminPath.users]" #userProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
+      </nav>
+
+    </div>
+  </div>
+</div>
+<!-- end mobile menu bar -->
+
+<!-- start sidebar -->
+<div id="sidebar"
+     class="hidden md:block md:w-56 lg:w-64 xl:w-80 md:max-w-60
+            md:px-0.5 lg:px-1 xl:px-4
+            md:py-10 lg:py-12 xl:py-14
+            md:mt-0 min-h-full space-y-10">
+  <!-- logo -->
+  <a [routerLink]="['/']" class="flex content-center justify-center" href="">
+    <img src="/assets/img/logo.png" class="md:w-[100px] lg:w-[110px] xl:w-[129px]" alt="elab-logo" />
+  </a>
+
+  <nav class="text-lg pt-20 min-w-fit md:pl-2 lg:pl-3 xl:pl-4 flex flex-col md:gap-3 lg:gap-4 xl:gap-5">
+    <a [routerLink]="['/', proposalPath.root, proposalPath.communityProposals]" [routerLinkActive]="['is-active']" href="" class="flex flex-row">
       <span class="icon">
-        <svg width="27" height="23" viewBox="0 0 27 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="21" height="22" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M26.9996 23H6.55518L7.26629 21.9317L14.8515 10.9344V2.5765H12.8959V0H20.6589V2.5765H18.7033V10.9344L24.5107 19.3552L26.9996 23Z" fill="white"/>
           <path d="M20.6109 23H0.166504L0.877615 21.9317L8.4628 10.9344V2.5765H6.50724V0H14.2702V2.5765H12.3147V10.9344L18.1221 19.3552L20.6109 23Z" fill="white" fill-opacity="0.4"/>
           <defs>
-            <linearGradient id="svg-gradient" x1="16.7774" y1="0" x2="16.7774" y2="23" gradientUnits="userSpaceOnUse">
+            <linearGradient id="grad2" x1="16.7774" y1="0" x2="16.7774" y2="23" gradientUnits="userSpaceOnUse">
               <stop stop-color="#FF9838"/>
               <stop offset="1" stop-color="#FF66DD"/>
             </linearGradient>
           </defs>
         </svg>
       </span>
-      <span>Community Proposals</span>
+      <span class="menu-text">Community Proposals</span>
     </a>
 
     <a [routerLink]="['/', proposalPath.root, proposalPath.myProposals]" [routerLinkActive]="['is-active']" href="">
@@ -56,31 +165,31 @@ transition duration-200 md:relative md:translate-x-0 ease-in-out">
           <path d="M18.5049 0H14.0492V2.07595H18.5049V0Z" fill="white"/>
         </svg>
       </span>
-      <span>My Proposals</span>
+      <span class="menu-text">My Proposals</span>
     </a>
 
-    <a [routerLink]="['/', userPath.root, userPath.profile]" [routerLinkActive]="['is-active']"
-       class="block py-2.5 px-4" href="">
+    <a [routerLink]="['/', userPath.root, userPath.profile]" [routerLinkActive]="['is-active']">
       <span class="icon">
         <svg width="17" height="20" viewBox="0 0 17 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M15.7248 19.9998H0.698616C0.126309 19.9998 -0.197998 19.3307 0.132668 18.8584L3.92897 13.4466C4.91461 12.0428 6.50435 11.2359 8.18312 11.2425C8.18948 11.2425 8.20219 11.2425 8.20855 11.2425C8.21491 11.2425 8.22763 11.2425 8.23399 11.2425C9.91275 11.2359 11.5025 12.0362 12.4881 13.4466L16.2844 18.8584C16.6215 19.3372 16.2908 19.9998 15.7248 19.9998Z" fill="white"/>
           <path d="M13.1359 4.65233C13.1359 6.4001 12.1181 7.91526 10.6214 8.7137C9.90959 9.09091 9.08471 9.30467 8.21326 9.30467C7.33516 9.30467 6.51694 9.09091 5.80514 8.7137C4.30173 7.92154 3.28394 6.4001 3.28394 4.65233C3.28394 3.3195 3.87599 2.11241 4.83391 1.26367C5.38605 0.773293 6.05793 0.402364 6.80298 0.194895C7.24868 0.0691563 7.721 0 8.20661 0C8.69223 0 9.16454 0.0691563 9.61024 0.194895C10.3553 0.402364 11.0272 0.773293 11.5793 1.26367C12.5372 2.11241 13.1359 3.3195 13.1359 4.65233Z" fill="white"/>
         </svg>
       </span>
-      <span>My Profile</span>
+      <span class="menu-text">My Profile</span>
     </a>
 
     <a *ngIf="currentUser && currentUser.type === 'admin'" [routerLink]="['/', adminPath.root, adminPath.proposals]"
-    [ngClass]="{'is-active': userProposalActive.isActive || adminProposalActive.isActive }" class="block py-2.5 px-4" href="">
+       [ngClass]="{'is-active': userProposalActive.isActive || adminProposalActive.isActive }" href="">
       <span class="icon">
         <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M20 8.89189C20 5.04505 16.8944 1.89189 13.1056 1.89189C12.4845 1.89189 11.9255 1.95496 11.3665 2.14414V0.882883H10.3727V0H8.32298V0.81982H7.32919V9.01802H8.32298V10.027H10.3727V9.01802H11.3665V4.54054C11.9255 4.28829 12.4845 4.22523 13.1056 4.22523C15.6522 4.22523 17.764 6.30631 17.764 8.89189C17.764 10.4685 17.0186 11.7928 15.9006 12.6757L15.0932 11.6036C14.7826 11.1622 14.1615 11.1622 13.8509 11.6036L12.5466 13.4324H3.04348C2.67081 13.4324 2.42236 13.7477 2.42236 14.0631C2.42236 14.3784 2.73292 14.6937 3.04348 14.6937H11.5528L8.88199 18.4144H0V21H20V18.4144L17.205 14.5045C18.882 13.2432 20 11.2252 20 8.89189Z" fill="white"/>
         </svg>
       </span>
-      <span>Admin</span>
+      <span class="menu-text">Admin</span>
     </a>
     <a [routerLink]="['/', adminPath.root, adminPath.proposals]" #adminProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
     <a [routerLink]="['/', adminPath.root, adminPath.users]" #userProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
 
   </nav>
 </div>
+<!-- end sidebar -->
