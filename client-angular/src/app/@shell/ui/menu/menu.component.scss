@@ -1,3 +1,10 @@
+/*! purgecss start ignore */
+::ng-deep #tsparticles-menu {
+  @apply absolute top-0 left-0 w-full h-full;
+}
+/*! purgecss end ignore */
+
+
 #sidebar, #mobile-menu {
   @apply z-10 bg-blue-900 md:bg-gradient-to-b from-blue-800 to-blue-elabLightGradient;
 

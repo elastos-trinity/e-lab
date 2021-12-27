@@ -4,6 +4,8 @@ import { ROUTER_UTILS } from '@core/utils/router.utils';
 import { AuthService } from '@pages/auth/services/auth.service';
 import { UserService } from "@pages/user/services/user.service";
 import User from "@core/models/user.model";
+import { Container, GradientType, Main } from "tsparticles";
+import { loadGradientUpdater } from "tsparticles-updater-gradient";
 
 @Component({
   selector: 'app-menu',
@@ -45,4 +47,106 @@ export class MenuComponent implements OnInit {
   closeMenu() {
     this.menuOpened = false;
   }
+
+
+  //  ======= PARTICLES
+  id = "tsparticles-menu";
+  particlesOptions = {
+    fpsLimit: 60,
+    background: {
+      color: '#000B26' as const
+    },
+    fullScreen: false,
+    interactivity: {
+      detect_on: "canvas" as const,
+      events: {
+        onclick: { enable: false, mode: "push" },
+        onhover: {
+          enable: true,
+          mode: "attract",
+          parallax: { enable: false, force: 15, smooth: 10 }
+        },
+        resize: true
+      },
+      modes: {
+        bubble: {
+          distance: 400,
+          duration: 2,
+          opacity: 0.8,
+          size: 50,
+          speed: 3
+        },
+        grab: { distance: 200, line_linked: { opacity: 1 } },
+        push: { particles_nb: 4 },
+        remove: { particles_nb: 2 },
+        repulse: { distance: 100, duration: 0.4 }
+      }
+    },
+    particles: {
+      collisions: {
+        enable: true,
+        mode: "bounce" as const
+      },
+      move: {
+        direction: "top" as const,
+        enable: true,
+        out_mode: "bounce" as const,
+        random: false,
+        speed: 4,
+        straight: false
+      },
+      number: {
+        density: {
+          enable: true,
+          area: 800
+        },
+        value: 15
+      },
+      opacity: {
+        value: 1,
+        random: true,
+        anim: {
+          enable: false,
+          speed: 3,
+          opacity_min: 0.1,
+          sync: false
+        }
+      },
+      shape: {
+        type: "circle" as const
+      },
+      size: {
+        random: true,
+        value: 100
+      },
+      gradient: [
+        {
+          "type": GradientType.linear,
+          "colors": [
+            {
+              "stop":0,
+              "value": {
+                value: "#FF66DD"
+              }
+            },
+            {
+              "stop": 1,
+              "value": {
+                value: "#FF9838" as const
+              }
+            }
+          ]
+        }
+      ],
+    },
+    detectRetina: true
+  };
+
+  particlesLoaded(container: Container): void {
+    console.log(container)
+  }
+
+  particlesInit(main: Main): void {
+    loadGradientUpdater(main);
+  };
 }
