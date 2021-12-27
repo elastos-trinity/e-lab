@@ -406,6 +406,29 @@ class DBService {
         }
     }
 
+    /**
+     * Find a proposal by ID
+     * @param id
+     */
+    public async findProposalById(id: string) {
+        if (!id) {
+            return { code: 500, message: 'Proposal ID required' };
+        }
+        let query: JSONObject = { id: id };
+        try {
+            await this.client.connect();
+            const collection = this.client.db().collection('proposals');
+            let proposal = await collection.findOne(query);
+            logger.info("Proposal", proposal);
+            return { code: 200, message: 'success', data: proposal };
+        } catch (err) {
+            logger.error(err);
+            return { code: 500, message: 'server error' };
+        } finally {
+            await this.client.close();
+        }
+    }
+
     public async listProposals(title: string, activeOnly: boolean, userId: string, pageNum: number, pageSize: number) {
         let query: JSONObject;
         if (activeOnly)
@@ -587,8 +610,8 @@ class DBService {
      * todo: set voting period in the backend and configurable start/end days
      */
     public getVotingPeriod(next: boolean = false): { startDate: Date, endDate: Date, isTodayInVotingPeriod: boolean} {
-        let startDay = 15;
-        let endDay = 21;
+        let startDay = 20;
+        let endDay = 27;
 
         const now = moment().utc(false);
 

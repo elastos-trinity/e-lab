@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { getItem, removeItem, setItem, StorageItem } from "@core/utils";
 import { BehaviorSubject } from "rxjs";
-import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastosConnectivity.service";
+import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastos-connectivity.service";
 import { VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
 import { ElabAuthenticationService } from "@core/services/elab/elab-authentication.service";
 
@@ -36,8 +36,8 @@ export class AuthService {
       setItem(StorageItem.DID, verifiablePresentation.getHolder().getMethodSpecificId());
       await this.isLoggedIn$.next(true);
       return Promise.resolve()
-    } catch (e) {
-      console.error("Error while getting credentials", e);
+    } catch (error) {
+      console.error("Error while getting credentials", error);
       await this.elastosConnectivityService.disconnect();
       return Promise.reject()
     }
@@ -58,14 +58,14 @@ export class AuthService {
     console.debug("Signing out...");
     removeItem(StorageItem.AccessToken);
     try {
-      this.elastosConnectivityService.disconnect().then(() => {
+      return this.elastosConnectivityService.disconnect().then(() => {
         console.debug("Wallet session disconnected");
         this.isLoggedIn$.next(false);
-        Promise.resolve();
+        return Promise.resolve();
       });
-    } catch (e) {
-      console.error(`Disconnect failed: ${e}`);
-      Promise.reject(e);
+    } catch (error) {
+      console.error(`Disconnect failed: ${error}`);
+      return Promise.reject(error);
     }
   }
 }

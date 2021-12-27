@@ -33,12 +33,4 @@ export class VoteService {
   voteAgainst(proposalId: string): Promise<unknown> {
     return this.elabVotingService.create(proposalId, 'against')
   }
-
-  /**
-   * Cancel a vote
-   * @param proposalId Proposal ID to cancel the vote for
-   */
-  cancel(proposalId: string): Promise<unknown> {
-    return this.elabVotingService.delete(proposalId)
-  }
 }

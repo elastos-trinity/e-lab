@@ -21,6 +21,7 @@ export class ServerErrorInterceptor implements HttpInterceptor {
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       catchError((error: HttpErrorResponse) => {
         console.log("ERROR catched")

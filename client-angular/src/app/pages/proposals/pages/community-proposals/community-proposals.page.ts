@@ -7,6 +7,7 @@ import { ProposalsService } from "@pages/proposals/services/proposals.service";
 import { UserService } from "@pages/user/services/user.service";
 import { ActivatedRoute } from "@angular/router";
 import { VoteService } from "@pages/proposals/services/vote.service";
+import { ConfirmVoteComponent } from "@pages/proposals/pages/community-proposals/modals/confirm-vote-component";
 
 @Component({
   templateUrl: './community-proposals.page.html',
@@ -26,6 +27,7 @@ export class CommunityProposalsPage implements OnInit {
   isLoading: boolean;
 
   constructor (private activateAccountProposalModalService: ModalService<ActivateAccountComponent>,
+               private confirmVoteModal: ModalService<ConfirmVoteComponent>,
                private proposalService: ProposalsService,
                private voteService: VoteService,
                private userService: UserService,
@@ -42,8 +44,8 @@ export class CommunityProposalsPage implements OnInit {
    * - Initialize the current user
    */
   ngOnInit(): void {
-    this.voteService.getVotingPeriod().then((res) => {
-      this.currentVotingPeriod = res
+    this.voteService.getVotingPeriod().then((response) => {
+      this.currentVotingPeriod = response
       this.getActiveProposals();
     });
     this.route.data.subscribe(({currentUser: user}) => {
@@ -111,19 +113,19 @@ export class CommunityProposalsPage implements OnInit {
    * Vote for a proposal.
    * @param id proposal ID to vote for.
    */
-  onClickVoteFor(id: string): void {
-    this.voteService.voteFor(id).then(() => this.getActiveProposals())
+  async onClickVoteFor(id: string): Promise<void> {
+    const { ConfirmVoteComponent } = await import('./modals/confirm-vote-component')
+    const modalReference = await this.confirmVoteModal.open(ConfirmVoteComponent, {vote: 'for', proposalId: id})
+    modalReference.instance.voteEvent.subscribe(() => { this.getActiveProposals() })
   }
 
   /**
    * Vote against a proposal.
    * @param id proposal ID to vote against.
    */
-  onClickVoteAgainst(id: string): void {
-    this.voteService.voteAgainst(id).then(() => this.getActiveProposals())
-  }
-
-  onClickCancel(proposalId: string): void {
-    this.voteService.cancel(proposalId).then(() => this.getActiveProposals())
+  async onClickVoteAgainst(id: string): Promise<void> {
+    const { ConfirmVoteComponent } = await import('./modals/confirm-vote-component')
+    const modalReference = await this.confirmVoteModal.open(ConfirmVoteComponent, {vote: 'against', proposalId: id})
+    modalReference.instance.voteEvent.subscribe(() => { this.getActiveProposals() })
   }
 }

@@ -1,8 +1,7 @@
 export const ROUTER_UTILS = {
   config: {
     base: {
-      home: '',
-      dashboard: 'dashboard',
+      home: ''
     },
     auth: {
       root: 'auth',

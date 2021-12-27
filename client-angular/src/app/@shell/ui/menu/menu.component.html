@@ -1,7 +1,9 @@
 <!-- mobile menu bar -->
 <div id="left-menu" class="flex justify-between md:hidden">
   <!-- logo -->
-  <a class="flex h-10 justify-center" href="#"> <img src="/assets/img/logo.png" alt="elab-logo" /> </a>
+  <a [routerLink]="['/']" href="">
+    <img src="/assets/img/logo.png" alt="elab-logo" />
+  </a>
 
   <!-- mobile menu button -->
   <button class="mobile-menu-button p-4 focus:outline-none text-transparent bg-clip-text bg-gradient-to-tr from-pink-450 to-orange-450">
@@ -22,7 +24,9 @@
 <div id="sidebar" class="lg:w-80 md:w-60 min-h-full space-y-10 px-4 py-14 absolute inset-y-0 left-0 transform -translate-x-full
 transition duration-200 md:relative md:translate-x-0 ease-in-out">
   <!-- logo -->
-  <a class="flex content-center justify-center" href="#"> <img src="/assets/img/logo.png" class="w-32" alt="elab-logo" /> </a>
+  <a [routerLink]="['/']" class="flex content-center justify-center" href="">
+    <img src="/assets/img/logo.png" class="w-32" alt="elab-logo" />
+  </a>
 
   <nav class="text-lg pt-20 min-w-fit pl-4">
     <a [routerLink]="['/', proposalPath.root, proposalPath.communityProposals]" [routerLinkActive]="['is-active']" href="">
@@ -54,6 +58,7 @@ transition duration-200 md:relative md:translate-x-0 ease-in-out">
       </span>
       <span class="hover:text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450">My proposal</span>
     </a>
+
     <a [routerLink]="['/', userPath.root, userPath.profile]" [routerLinkActive]="['is-active']"
        class="block py-2.5 px-4" href="">
       <span class="icon">
@@ -64,8 +69,9 @@ transition duration-200 md:relative md:translate-x-0 ease-in-out">
       </span>
       <span class="hover:text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 ml-0">Profile</span>
     </a>
-    <a *ngIf="currentUser.type === 'admin'" [routerLink]="['/', adminPath.root, adminPath.proposals]" [routerLinkActive]="['is-active']"
-       class="block py-2.5 px-4" href="">
+
+    <a *ngIf="currentUser && currentUser.type === 'admin'" [routerLink]="['/', adminPath.root, adminPath.proposals]"
+    [ngClass]="{'is-active': userProposalActive.isActive || adminProposalActive.isActive }" class="block py-2.5 px-4" href="">
       <span class="icon">
         <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M20 8.89189C20 5.04505 16.8944 1.89189 13.1056 1.89189C12.4845 1.89189 11.9255 1.95496 11.3665 2.14414V0.882883H10.3727V0H8.32298V0.81982H7.32919V9.01802H8.32298V10.027H10.3727V9.01802H11.3665V4.54054C11.9255 4.28829 12.4845 4.22523 13.1056 4.22523C15.6522 4.22523 17.764 6.30631 17.764 8.89189C17.764 10.4685 17.0186 11.7928 15.9006 12.6757L15.0932 11.6036C14.7826 11.1622 14.1615 11.1622 13.8509 11.6036L12.5466 13.4324H3.04348C2.67081 13.4324 2.42236 13.7477 2.42236 14.0631C2.42236 14.3784 2.73292 14.6937 3.04348 14.6937H11.5528L8.88199 18.4144H0V21H20V18.4144L17.205 14.5045C18.882 13.2432 20 11.2252 20 8.89189Z" fill="white"/>
@@ -73,5 +79,8 @@ transition duration-200 md:relative md:translate-x-0 ease-in-out">
       </span>
       <span class="hover:text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 ml-0">Admin</span>
     </a>
+    <a [routerLink]="['/', adminPath.root, adminPath.proposals]" #adminProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
+    <a [routerLink]="['/', adminPath.root, adminPath.users]" #userProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
+
   </nav>
 </div>

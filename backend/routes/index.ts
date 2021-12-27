@@ -406,16 +406,15 @@ router.post('/proposal/:id/vote', async (req, res) => {
     res.json(await dbService.voteForProposal(id, userId, voteChoice));
 })
 
-router.delete('/proposal/:id/vote', async (req, res) => {
-    let proposalId = req.params.id;
-    let userId = req.user.did;
-
-    if (!proposalId) {
-        res.json({ code: 400, message: 'Missing proposal id' });
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/proposals/:id', async (req, res) => {
+    try {
+        res.json(await dbService.findProposalById(req.params.id));
+    } catch (e) {
+        console.log(e);
+        res.json({ code: 400, message: 'bad request' });
         return;
     }
-
-    res.json(await dbService.deleteVote(proposalId, userId));
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises

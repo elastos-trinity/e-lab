@@ -8,6 +8,7 @@ import {
 import { map } from "rxjs/operators";
 import GetProposalResponse from "@core/types/GetProposalResponse";
 import { ElabVoteService } from "@core/services/elab/elab-vote.service";
+import { ElabBackendProposalResult } from "@core/dtos/proposals/elab-backend-proposals-response.dto";
 
 /**
  * ELAB frontend proposal service.
@@ -21,16 +22,17 @@ export class ProposalsService {
 
   /**
    * Mapper from the ElabBackendGetMineResponseDTO to GetMineResponseDTO
-   * @param pageNum the page number
+   * @param pageNumber
    * @param pageSize length of the page
+   * @param type
    */
-  public getActiveProposals(pageNum = 1, pageSize = 10): Observable<GetProposalResponse> {
-    return this.elabProposalService.get(pageNum, pageSize, GetProposalQueryType.ACTIVE).pipe(
-      map(getProposalResponseDTO => {
+  private getProposals(pageNumber = 1, pageSize = 10, type: GetProposalQueryType): Observable<GetProposalResponse> {
+    return this.elabProposalService.get(pageNumber, pageSize, type).pipe(
+      map(elabBackendProposalResult => {
         return <GetProposalResponse>{
-          proposals: getProposalResponseDTO.data.result.map(Proposal.fromGetProposal),
-          total: getProposalResponseDTO.data.total,
-          totalActive: getProposalResponseDTO.data.totalActive
+          proposals: elabBackendProposalResult.data.result.map((element: ElabBackendProposalResult) => Proposal.fromGetProposal(element)),
+          total: elabBackendProposalResult.data.total,
+          totalActive: elabBackendProposalResult.data.totalActive
         }
       })
     )
@@ -38,35 +40,29 @@ export class ProposalsService {
 
   /**
    * Mapper from the ElabBackendGetMineResponseDTO to GetMineResponseDTO
-   * @param pageNum the page number
+   * @param pageNumber
    * @param pageSize length of the page
    */
-  public getMyProposals(pageNum = 1, pageSize = 10): Observable<GetProposalResponse> {
-    return this.elabProposalService.get(pageNum, pageSize, GetProposalQueryType.MINE).pipe(
-      map(getMineResponseDTO => {
-        return <GetProposalResponse>{
-          proposals: getMineResponseDTO.data.result.map(Proposal.fromGetProposal),
-          total: getMineResponseDTO.data.total,
-          totalActive: getMineResponseDTO.data.totalActive
-        }
-      })
-    )
+  public getActiveProposals(pageNumber = 1, pageSize = 10): Observable<GetProposalResponse> {
+    return this.getProposals(pageNumber, pageSize, GetProposalQueryType.ACTIVE)
   }
 
   /**
    * Mapper from the ElabBackendGetMineResponseDTO to GetMineResponseDTO
-   * @param pageNum the page number
+   * @param pageNumber
    * @param pageSize length of the page
    */
-  public getAdminProposals(pageNum = 1, pageSize = 10): Observable<GetProposalResponse> {
-    return this.elabProposalService.get(pageNum, pageSize, GetProposalQueryType.ALL).pipe(
-      map(getMineResponseDTO => {
-        return <GetProposalResponse>{
-          proposals: getMineResponseDTO.data.result.map(Proposal.fromGetProposal),
-          total: getMineResponseDTO.data.total
-        }
-      })
-    )
+  public getMyProposals(pageNumber = 1, pageSize = 10): Observable<GetProposalResponse> {
+    return this.getProposals(pageNumber, pageSize, GetProposalQueryType.MINE)
+  }
+
+  /**
+   * Mapper from the ElabBackendGetMineResponseDTO to GetMineResponseDTO
+   * @param pageNumber
+   * @param pageSize length of the page
+   */
+  public getAllProposals(pageNumber = 1, pageSize = 10): Observable<GetProposalResponse> {
+    return this.getProposals(pageNumber, pageSize, GetProposalQueryType.ALL)
   }
 
   /**

@@ -3,7 +3,7 @@
   from-pink-450 to-orange-450 max-w-fit inline-flex">
     New proposal
   </h4>
-  <form [formGroup]="newProposalForm" (ngSubmit)="createRecord()">
+  <form [formGroup]="proposalForm" (ngSubmit)="createRecord()">
     <label
       for="title"
       class="block mt-2 font-bold text-pink-450"
@@ -65,7 +65,7 @@ resize-none	"
     </button>
 
     <button
-      [ngClass]="{'cursor-not-allowed': loading || newProposalForm.invalid }" [attr.disabled]="loading || newProposalForm.invalid ? 'disabled' : null"
+      [ngClass]="{'cursor-not-allowed': loading || proposalForm.invalid }" [attr.disabled]="loading || proposalForm.invalid ? 'disabled' : null"
       type="submit"
       class="bg-green-100 ml-10 font-bold text-sm text-green rounded-full px-4 py-1"
     >

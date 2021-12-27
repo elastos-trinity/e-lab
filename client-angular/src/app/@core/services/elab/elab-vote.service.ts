@@ -17,6 +17,8 @@ export class ElabVoteService {
    * Get the current voting period
    */
   getVotingPeriod(): Promise<{startDate: Date, endDate: Date, isTodayInVotingPeriod: boolean}> {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return this.http.get<{startDate: Date, endDate: Date, isTodayInVotingPeriod: boolean}>(`${ElabVoteService.voteUrl}/votingPeriod`).toPromise()
   }
 
@@ -27,13 +29,5 @@ export class ElabVoteService {
    */
   create(proposalId: string, vote: string): Promise<unknown> {
     return this.http.post<unknown>(`${ElabVoteService.voteUrl}/${proposalId}/vote`, { vote: vote }).toPromise()
-  }
-
-  /**
-   * Delete a vote
-   * @param proposalId Proposal ID to delete the vote for
-   */
-  delete(proposalId: string): Promise<unknown> {
-    return this.http.delete<unknown>(`${ElabVoteService.voteUrl}/${proposalId}/vote`).toPromise()
   }
 }

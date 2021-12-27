@@ -16,11 +16,11 @@ export class ModalService<T> {
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
-    private appRef: ApplicationRef,
+    private appReference: ApplicationRef,
     private injector: Injector
   ) {}
 
-  async open(component: Type<T>): Promise<ComponentRef<T>> {
+  async open(component: Type<T>, parameters?:any): Promise<ComponentRef<T>> {
     if (this.componentRef) {
       return Promise.resolve(this.componentRef);
     }
@@ -28,12 +28,13 @@ export class ModalService<T> {
     this.componentRef = this.componentFactoryResolver
       .resolveComponentFactory<T>(component)
       .create(this.injector);
-    this.appRef.attachView(this.componentRef.hostView);
+    if (parameters) {
+      Object.assign(this.componentRef.instance, parameters)
+    }
+    this.appReference.attachView(this.componentRef.hostView);
 
-    const domElem = (this.componentRef.hostView as
-      EmbeddedViewRef<any>)
-      .rootNodes[0] as HTMLElement;
-    document.body.appendChild(domElem);
+    const domElement = (this.componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
+    document.body.append(domElement);
 
     return Promise.resolve(this.componentRef)
   }
@@ -43,7 +44,7 @@ export class ModalService<T> {
       return;
     }
 
-    this.appRef.detachView(this.componentRef.hostView);
+    this.appReference.detachView(this.componentRef.hostView);
     this.componentRef.destroy();
 
     this.componentRef = undefined;
