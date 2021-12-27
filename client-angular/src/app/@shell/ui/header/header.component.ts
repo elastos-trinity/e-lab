@@ -13,6 +13,7 @@ import User from "@core/models/user.model";
 export class HeaderComponent implements OnInit {
   path = ROUTER_UTILS.config.base;
   currentUser!: User
+  miniMenuEnabled = false;
 
   constructor(private router: Router, private authService: AuthService, private userService: UserService) { }
 
@@ -29,5 +30,9 @@ export class HeaderComponent implements OnInit {
         this.currentUser = v
       }
     })
+  }
+
+  showMiniMenu() {
+    this.miniMenuEnabled = !this.miniMenuEnabled;
   }
 }

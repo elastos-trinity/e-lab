@@ -1,4 +1,4 @@
-<header class="flex justify-between sticky top-0 h-16 bg-blue-900 z-50" *ngIf="currentUser.name">
+<header class="hidden md:flex justify-between sticky top-0 h-16 bg-blue-900 z-50" *ngIf="currentUser && currentUser.name">
   <nav class="flex h-full w-full py-3">
     <div class="h-10 bg-blue-800 rounded-2xl flex justify-between items-center relative text-black w-1/2 bg-blue-800">
       <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" class="m-2">
@@ -42,19 +42,20 @@
 
       <div class="relative">
         <!-- Dropdown toggle button -->
-        <button>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <button (click)="showMiniMenu()">
+          <svg *ngIf="! miniMenuEnabled" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+          <svg *ngIf="miniMenuEnabled" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
           </svg>
         </button>
 
-        <div
-          class="bg-blue-900 bg-opacity-40 absolute right-0 w-auto py-2 mt-2"
-        >
-          <div
+        <div class="absolute right-0 w-auto py-2 mt-2">
+          <div  [ngClass]="{'visible': miniMenuEnabled, 'hidden': !miniMenuEnabled}"
             class="modal inline-block align-bottom p-0.5 rounded-xl
       bg-gradient-to-tr from-orange-450 to-pink-450 text-left overflow-hidden
-      shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full"
+      shadow-xl transform transition-all duration-200 ease-in-out md:align-middle md:max-w-lg md:w-full"
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-headline"

@@ -1,34 +1,41 @@
 <app-modal #modalComponent>
   <h4 class="font-bold text-transparent bg-clip-text bg-gradient-to-r
-  from-pink-450 to-orange-450 max-w-fit inline-flex">
+  from-pink-450 to-orange-450 min-w-fit inline-flex">
     Activate your account
   </h4>
+  <div class="max-w-[85%]">
+    <p>Activate your account by providing verified identity credentials</p>
 
-  <div>
-    <p *ngIf="!isActivationInProcess">Already have KYC credentials ?</p>
-    <p *ngIf="isActivationInProcess">Please check your wallet</p>
+    <div class="flex flex-row gap-x-3 mt-5 ">
+      <p *ngIf="!isActivationInProcess">Already have KYC credentials ?</p>
+      <p *ngIf="isActivationInProcess">Please check your wallet</p>
 
-    <button (click)=onClickProvideCredentials() class="bg-green-100 font-bold h-9 px-10 text-green rounded-full" type="button">
-      <div *ngIf="isActivationInProcess" class="flex items-center justify-center ">
-        <div class="w-6 h-6 border-l-2 border-pink-450 rounded-full animate-spin mr-2"></div>
+      <button (click)=onClickProvideCredentials() class="bg-green-100 font-bold h-9 px-10 text-green rounded-full w-[170px] px-[10px] ml-auto
+      transition ease-in-out delay-50 hover:scale-110 hover:bg-green-elab duration-200 hover:text-white
+" type="button">
+        <div *ngIf="isActivationInProcess" class="flex items-center justify-center ">
+          <div class="w-6 h-6 border-l-2 border-pink-450 rounded-full animate-spin mr-2"></div>
+        </div>
+        <div *ngIf="!isActivationInProcess" class="flex items-center justify-center">
+          Provide credentials
+        </div>
+      </button>
+    </div>
+
+    <div class="flex flex-row gap-x-3 mt-5 ">
+      <div class="flex-inline">
+        <p>No such credentials yet ?</p>
+        <p>Verify your identity on KYC-me now</p>
       </div>
-      <div *ngIf="!isActivationInProcess" class="flex items-center justify-center ">
-        Provide credentials
-      </div>
-    </button>
-  </div>
 
-  <div>
-    <p>No such credentials yet ?</p>
-    <p>Verify your identity on KYC-me now</p>
-
-    <button (click)=goToKycMe() class="bg-green-100 font-bold h-9 px-10 text-green rounded-full" type="button">
-      <svg width="22" height="15" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10.761 0C10.1321 0 9.61816 0.510053 9.61816 1.14283V13.246C9.61816 13.875 10.1282 14.3889 10.761 14.3889C11.3899 14.3889 11.9038 13.8788 11.9038 13.246V1.14283C11.9038 0.510053 11.3938 0 10.761 0Z" fill="#4AB4F0"/>
-        <path d="M15.7041 7.19443L20.9466 1.94817C21.3914 1.50331 21.3914 0.778502 20.9466 0.333644C20.5017 -0.111215 19.7769 -0.111215 19.332 0.333644L13.2804 6.38525C12.8356 6.83011 12.8356 7.55492 13.2804 7.99978L19.332 14.0514C19.5545 14.2738 19.8459 14.385 20.1412 14.385C20.4365 14.385 20.7241 14.2738 20.9504 14.0514C21.3952 13.6065 21.3952 12.8817 20.9504 12.4369L15.7041 7.19443Z" fill="#4AB4F0"/>
-        <path d="M1.14283 0C0.510053 0 0 0.510053 0 1.14283C0 1.7756 0.510053 2.28565 1.14283 2.28565C3.85032 2.28565 6.05544 4.48693 6.05544 7.19443C6.05544 9.90193 3.85032 12.107 1.14283 12.107C0.510053 12.1032 0 12.6133 0 13.246C0 13.8788 0.510053 14.3889 1.14283 14.3889C5.11203 14.3889 8.33726 11.1598 8.33726 7.19443C8.33726 3.22522 5.1082 0 1.14283 0Z" fill="#4AB4F0"/>
-      </svg>
-    </button>
+      <button (click)=goToKycMe() class="bg-green-100 font-bold h-9 px-10 text-green rounded-full w-[170px] ml-auto mt-auto  kyc-button" type="button">
+        <svg width="22" height="15" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto">
+          <path d="M10.761 0C10.1321 0 9.61816 0.510053 9.61816 1.14283V13.246C9.61816 13.875 10.1282 14.3889 10.761 14.3889C11.3899 14.3889 11.9038 13.8788 11.9038 13.246V1.14283C11.9038 0.510053 11.3938 0 10.761 0Z" fill="#4AB4F0"/>
+          <path d="M15.7041 7.19443L20.9466 1.94817C21.3914 1.50331 21.3914 0.778502 20.9466 0.333644C20.5017 -0.111215 19.7769 -0.111215 19.332 0.333644L13.2804 6.38525C12.8356 6.83011 12.8356 7.55492 13.2804 7.99978L19.332 14.0514C19.5545 14.2738 19.8459 14.385 20.1412 14.385C20.4365 14.385 20.7241 14.2738 20.9504 14.0514C21.3952 13.6065 21.3952 12.8817 20.9504 12.4369L15.7041 7.19443Z" fill="#4AB4F0"/>
+          <path d="M1.14283 0C0.510053 0 0 0.510053 0 1.14283C0 1.7756 0.510053 2.28565 1.14283 2.28565C3.85032 2.28565 6.05544 4.48693 6.05544 7.19443C6.05544 9.90193 3.85032 12.107 1.14283 12.107C0.510053 12.1032 0 12.6133 0 13.246C0 13.8788 0.510053 14.3889 1.14283 14.3889C5.11203 14.3889 8.33726 11.1598 8.33726 7.19443C8.33726 3.22522 5.1082 0 1.14283 0Z" fill="#4AB4F0"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <div class="flex mt-10">

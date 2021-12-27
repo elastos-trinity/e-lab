@@ -4,7 +4,7 @@ import User from "@core/models/user.model";
 
 @Component({
   templateUrl: './profile.page.html',
-  styleUrls: ['profile.page.scss']
+  styleUrls: ['../../../../app.component.scss', 'profile.page.scss']
 })
 /**
  * The profile page.

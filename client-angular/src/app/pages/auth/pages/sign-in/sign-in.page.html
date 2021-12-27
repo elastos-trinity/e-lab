@@ -1,46 +1,54 @@
-<div class="container flex flex-col h-full justify-center relative w-full
-sm:mx-10">
-  <div class="flex-row">
-    <div>
-      <div class="flex items-center justify-center absolute inset-x-0 top-14
-sm:left-10 sm:items-start sm:left-0 sm:w-auto sm:inset-x-auto">
-        <img src="/assets/img/logo.png" alt="elab-logo" />
-      </div>
-      <div class="mx-2 px-1.5 sm:max-w-lg">
-        <p class="text-3xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r
-  from-pink-450 to-orange-450">Welcome,</p>
-        <p class="text-3xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r
-  from-pink-450 to-orange-450">CR Community app</p>
+<div class="h-full px-5 sm:px-0">
+
+  <div class="flex flex-col h-full relative w-full sm:w-fit sm:px-20 bg-blue-900 ">
+    <div class="mx-auto pt-[30%] sm:py-0 sm:mx-0 sm:pt-10 lg:pt-20">
+      <img class="w-[161px]" src="/assets/img/logo.png" alt="elab-logo" />
+    </div>
+    <div class="pt-[40%] sm:pt-0 lg:mt-[30%] sm:mt-[25%] sm:max-w-lg">
+      <div class="px-5 sm:px-0 ">
+        <p class="text-[30px] sm:text-[43px] sm:leading-[51.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r
+  from-pink-elab to-orange-elab">Welcome,</p>
+        <p class="text-[30px] sm:text-[43px] sm:leading-[51.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r
+  from-pink-elab to-orange-elab">CR Community app</p>
         <button
           [ngClass]="{'cursor-not-allowed': isLoading}"
           [attr.disabled]="isLoading ? 'disabled' : null"
-          class="inline-block h-12 my-10 py-2 font-bold text-black
-    bg-gradient-to-r from-pink-450 to-orange-450
-    rounded-full hover:from-orange-450 hover:to-pink-450
-    focus:ring-4 focus:ring-orange-450
-    focus:outline-none w-full sm:w-96 sm:min-w-min sm:mt-20"
+          class="inline-block h-12
+        mt-12
+        py-2 w-full
+        sm:my-10 sm:mt-20 sm:min-w-min sm:w-96
+        lg:my-16
+        font-bold text-black bg-gradient-to-r from-pink-elab to-orange-elab rounded-full
+        focus:outline-none transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105
+        hover:from-orange-elab hover:to-pink-elab
+        focus:ring-4 focus:ring-orange-elab
+        hover:transition-all
+        duration-400"
           (click)="onClickSignIn()"
         >
           <div *ngIf="isLoading" class="flex items-center justify-center ">
             <div class="w-8 h-8 border-l-2 border-gray-900 rounded-full animate-spin mr-2"></div>
           </div>
-          <div *ngIf="!isLoading" class="flex items-center justify-center ">
+          <div *ngIf="!isLoading" class="flex items-center justify-center font-bold">
             Sign in with your DID
           </div>
         </button>
       </div>
 
-      <div class="mt-10 sm:max-w-lg">
-        <p class="text-orange-450 font-bold">How to sign in ?</p>
+      <div class="mt-10 sm:max-w-lg text-[15px]">
+        <p class="text-orange-elab font-bold">How to sign in ?</p>
         <p class="text-white opacity-50 mt-3 sm:ml-2">1. Either by opening this dApp from Elastos Essentials dApp browser. </p>
         <p class="mt-2 text-white opacity-50 sm:ml-2">2. Or by scanning the Wallet Connect QR code using the Elastos Essentials scanner.</p>
       </div>
     </div>
 
+    <div class="opacity-50 justify-end text-center sm:text-left align-bottom mt-auto mb-8">
+      &copy; 2021 Elastos. All rights reserved.
+    </div>
   </div>
 
-  <div class="absolute inset-x-0 bottom-0 h-16 text-white opacity-50 flex
-  items-center justify-center rounded-md sm:items-start sm:inset-x-auto">
-    &copy; 2021 Elastos. All rights reserved.
-  </div>
+
 </div>
+
+<ng-particles [id]="id" [options]="particlesOptions" (particlesLoaded)="particlesLoaded($event)"
+              (particlesInit)="particlesInit($event)"></ng-particles>

@@ -1,42 +1,58 @@
-<div class="sm:pt-24 flex flex-row">
-  <svg width="32" height="27" viewBox="0 0 32 27" fill="none" xmlns="http://www.w3.org/2000/svg" class="mt-2 mr-3">
-    <path d="M31.834 27H7.83398L8.66877 25.7459L17.5731 12.8361V3.02459H15.2775V0H24.3905V3.02459H22.0949V12.8361L28.9122 22.7213L31.834 27Z" fill="url(#paint0_linear_3809_1476)"/>
-    <path d="M24.3335 27H0.333496L1.16828 25.7459L10.0726 12.8361V3.02459H7.77697V0H16.89V3.02459H14.5944V12.8361L21.4118 22.7213L24.3335 27Z" fill="url(#paint1_linear_3809_1476)" fill-opacity="0.4"/>
-    <defs>
-      <linearGradient id="paint0_linear_3809_1476" x1="19.834" y1="0" x2="19.834" y2="27" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#FF9838"/>
-        <stop offset="1" stop-color="#FF66DD"/>
-      </linearGradient>
-      <linearGradient id="paint1_linear_3809_1476" x1="12.3335" y1="0" x2="12.3335" y2="27" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#FF9838"/>
-        <stop offset="1" stop-color="#FF66DD"/>
-      </linearGradient>
-    </defs>
-  </svg>
-  <h1 class="font-bold text-transparent bg-clip-text bg-gradient-to-r
-  from-pink-450 to-orange-450 max-w-fit">
-    Community Proposals
-  </h1>
-  <div class="flex flex-col justify-center">
-    <div class="ml-10 justify-center flex flex-row align-middle items-center justify-center h-10">
-      <div *ngIf="!currentUser.isActive" class="flex flex-col align-middle items-center justify-center font-bold mr-10">
-        <p class="text-red">Your account is not active. You need to activate to vote.</p>
-        <span *ngIf="currentVotingPeriod && currentVotingPeriod.isTodayInVotingPeriod" class="text-green-500">Current voting period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
-        <span *ngIf="currentVotingPeriod && !currentVotingPeriod.isTodayInVotingPeriod" class="text-gray-400">Next voting period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
+<!-- TABLE HEADING -->
+<div class="md:pt-24 flex flex-col lg:flex-row align-bottom">
+  <!-- TITLE -->
+  <div class="inline-flex md:flex-row title-with-svg w-1/2">
+    <svg viewBox="0 0 32 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M31.834 27H7.83398L8.66877 25.7459L17.5731 12.8361V3.02459H15.2775V0H24.3905V3.02459H22.0949V12.8361L28.9122 22.7213L31.834 27Z" fill="url(#paint0_linear_3809_1476)"/>
+      <path d="M24.3335 27H0.333496L1.16828 25.7459L10.0726 12.8361V3.02459H7.77697V0H16.89V3.02459H14.5944V12.8361L21.4118 22.7213L24.3335 27Z" fill="url(#paint1_linear_3809_1476)" fill-opacity="0.4"/>
+      <defs>
+        <linearGradient id="paint0_linear_3809_1476" x1="19.834" y1="0" x2="19.834" y2="27" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FF9838"/>
+          <stop offset="1" stop-color="#FF66DD"/>
+        </linearGradient>
+        <linearGradient id="paint1_linear_3809_1476" x1="12.3335" y1="0" x2="12.3335" y2="27" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FF9838"/>
+          <stop offset="1" stop-color="#FF66DD"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <h1>
+      Community Proposals
+    </h1>
+  </div>
+  <!-- TITLE -->
+
+  <!-- ACTIVATE / CURRENT VOTING PERIOD -->
+  <div class="flex flex-col justify-end md:ml-0.5 lg:ml-2 xl:ml-3">
+
+    <!-- ACCOUNT CHECK / ACTIVATE ACCOUNT -->
+    <div class="flex flex-row align-middle items-center justify-center min-h-min text-sm md:text-base">
+      <div *ngIf="!currentUser.isActive" class="flex flex-col align-middle items-center justify-center font-bold mr-10  text-center">
+        <p class="text-red">
+          <span>Your account is not active.</span>&nbsp;
+          <span class="block md:inline lg:block xl:inline">You need to activate to vote.</span>
+        </p>
+        <span *ngIf="currentVotingPeriod && currentVotingPeriod.isTodayInVotingPeriod" class="text-green-elabLight">Current vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
+        <span *ngIf="currentVotingPeriod && !currentVotingPeriod.isTodayInVotingPeriod" class="text-gray-400">Next vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
       </div>
-      <button *ngIf="!currentUser.isActive" class="bg-green-100 font-bold h-9 px-10 text-green rounded-full" type="button" (click)="showActivateAccount()">
+      <button *ngIf="!currentUser.isActive" class="bg-green-100 font-bold h-9 px-4 text-green rounded-full" type="button" (click)="showActivateAccount()">
         Activate
       </button>
     </div>
 
-    <div *ngIf="currentUser.isActive && currentVotingPeriod && currentVotingPeriod.startDate && currentVotingPeriod.endDate" class="ml-10 justify-center flex flex-row align-bottom items-center h-100 text-gray-400">
-      <span *ngIf="currentVotingPeriod && currentVotingPeriod.isTodayInVotingPeriod" class="text-green-500">Current voting period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
-      <span *ngIf="currentVotingPeriod && !currentVotingPeriod.isTodayInVotingPeriod">Next voting period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
+    <!-- CURRENT VOTE PERIOD -->
+    <div *ngIf="currentUser.isActive && currentVotingPeriod && currentVotingPeriod.startDate && currentVotingPeriod.endDate"
+         class="md:ml-10 justify-center flex flex-row align-bottom items-center h-100 text-gray-400 text-[16px]">
+      <span *ngIf="currentVotingPeriod && currentVotingPeriod.isTodayInVotingPeriod" class="text-green-elabLight">Current vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
+      <span *ngIf="currentVotingPeriod && !currentVotingPeriod.isTodayInVotingPeriod">Next vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
     </div>
+
   </div>
+
 </div>
 
-<div class="flex-row sm:flex-col" *ngIf="pageSize && pageNum" >
+<!-- TABLE -->
+<div class="flex-row md:flex-col" *ngIf="pageSize && pageNum" >
   <div *ngIf="isLoading" class="flex items-center align-middle justify-center mt-5">
     <div class="w-40 h-40 border-t-4 border-b-4 border-pink-450 rounded-full animate-spin"></div>
   </div>
@@ -46,57 +62,114 @@
   </div>
 
   <div *ngFor="let proposal of proposals; let first = first; let last = last; let indexOfElement = index">
-    <div [ngClass]="{'mt-10': !first, 'opacity-50': proposal.grant.toLowerCase() === 'notgranted'}"
-         class="flex flex-col sm:flex-row h-auto sm:h-44 rounded-xl bg-blue-800 p-3">
+    <div [ngClass]="{'opacity-50': proposal.grant.toLowerCase() === 'notgranted',
+    'opacity-90': proposal.votedByUser && proposal.grant.toLowerCase() !== 'notgranted'}"
+         class="flex flex-row h-auto
+         md:flex-row md:h-auto lg:h-48
+         md:rounded-xl md:bg-blue-800 md:mt-10 mt-6
+         md:p-3">
 
-      <div class="pt-5 pl-5 pr-8 min-w-[30px] w-[30px] items-end">#{{ pageSize * (pageNum - 1) + (indexOfElement + 1) }}</div>
+      <!-- PROPOSAL NUMBER -->
+      <div class="my-auto pr-4 md:my-0 md:pr-2 lg:pr-6 lg:pl-4 pt-0.5">#{{ pageSize * (pageNum - 1) + (indexOfElement + 1) }}</div>
 
-      <div class="flex flex-col sm:w-1/3">
+      <!-- PROPOSAL CONTENT -->
+      <div class="flex flex-col bg-blue-800 p-3 rounded-xl md:rounded-none md:p-0 md:bg-transparent w-full md:w-1/3 ">
         <div>
-          <h4 class="sm:hidden text-pink-450">Title</h4>
           <h4 class="inline mr-2">{{proposal.title}}</h4>
 
-          <!-- START STATUS -->
-          <span class="font-bold" *ngIf="proposal.votingStatus === 'not_started'">
+          <!-- STATUS -->
+          <span class="font-bold text-[12px]" *ngIf="proposal.votingStatus === 'not_started'">
             NOT STARTED
           </span>
-
-          <span class="text-green-500 font-bold" *ngIf="proposal.votingStatus === 'active'">
+          <span class="text-green-500 font-bold text-[12px]" *ngIf="proposal.votingStatus === 'active' && !proposal.votedByUser">
             VOTE ACTIVE
           </span>
-
           <span [ngClass]="{'text-green-500': proposal.userVote === 'for', 'text-red-500': proposal.userVote === 'against'}"
-                class="font-bold text-xs align-text-top" *ngIf="proposal.votingStatus === 'active' && proposal.votedByUser">
-            *{{ proposal.userVote.toUpperCase() }}
+                *ngIf="proposal.votingStatus === 'active' && proposal.votedByUser" class="font-bold  text-[12px]">
+            ALREADY VOTED {{ proposal.userVote.toUpperCase() }}
           </span>
-
-          <span *ngIf="proposal.votingStatus === 'ended' && proposal.grant === 'undecided'" class="text-green-500 font-bold" >
+          <span *ngIf="proposal.votingStatus === 'ended' && proposal.grant === 'undecided'" class="text-green-500 font-bold text-[12px]" >
             VOTE ENDED
           </span>
-
           <span *ngIf="proposal.votingStatus === 'ended' && proposal.grant.toLowerCase() === 'granted'"
-                class="text-green-500 font-bold sm:inline-block uppercase text-sm">
+                class="text-green-500 font-bold md:inline-block uppercase text-[12px]">
             GRANTED
           </span>
-
           <span *ngIf="proposal.votingStatus === 'ended' && proposal.grant.toLowerCase() === 'notgranted'"
-                class="text-red-500 font-bold sm:inline-block uppercase text-sm">
+                class="text-red-500 font-bold md:inline-block uppercase text-[12px]">
             NOT GRANTED
           </span>
-          <!-- END STATUS -->
 
-          <div>{{proposal.description}}</div>
+          <div class="break-words md:pr-2">{{proposal.description}}</div>
         </div>
-        <div class="mt-auto">
-          <span class="text-pink-450 font-bold">Proposer</span>
-          <span class="block break-words">{{ proposal.creator }}</span>
+
+        <!-- MOBILE - PROPOSAL LINK -->
+        <div class="mt-4 md:hidden text-green-elab">
+          {{ proposal.link }}
         </div>
+
+        <!-- DESKTOP - PROPOSER -->
+        <div class="hidden md:block md:mt-auto mt-4 ">
+          <span class="opacity-50 md:opacity-100 md:text-pink-elab font-bold">Proposer</span>
+          <span class="opacity-50 md:opacity-100 block break-all pr-2">{{ proposal.creator }}</span>
+        </div>
+
+        <!-- MOBILE - PROPOSER / CREATED / VOTE -->
+        <div class="md:hidden flex flex-row text-sm">
+          <div class="flex-col w-4/5">
+            <div class="mt-4">
+              <span class="opacity-50 font-bold">Proposer</span>
+              <span class="opacity-50 block break-all pr-2">{{ proposal.creator }}</span>
+            </div>
+            <div class="mt-4">
+              <span class="opacity-50 font-bold">Created</span>
+              <span class="opacity-50 block">{{proposal.createdAt | dateAgo}}</span>
+            </div>
+          </div>
+
+          <!-- MOBILE - VOTES BUTTON -->
+          <div class="w-[150px] mt-auto">
+            <div *ngIf="proposal.status === 'approved' && proposal.votingStatus === 'active' && currentUser.isActive && !proposal.votedByUser"
+                 class="flex flex-col justify-end">
+              <div class="flex flex-row">
+                <span class="text-green-elab font-bold justify-between my-auto ml-4 mr-2">{{ proposal.votesFor }}</span>
+                <button class="bg-green-elabLight w-[110px] font-bold h-9 px-2 text-green-elab rounded-full min-w-max
+         transition ease-in-out delay-50 hover:scale-102 hover:bg-green-elab duration-200 hover:text-white"
+                        (click)="onClickVoteFor(proposal.id)">Up Vote</button>
+              </div>
+
+              <div class="flex flex-row mt-4">
+                <span class="text-red-elab font-bold justify-between my-auto ml-4 mr-2">{{ proposal.votesAgainst }}</span>
+                <button class="bg-red-elabLight w-[110px] font-bold h-9 px-4 text-red-elab rounded-full min-w-max
+           transition ease-in-out delay-50 hover:scale-102 hover:bg-red-elab duration-200 hover:text-white"
+                        (click)="onClickVoteAgainst(proposal.id)">Down Vote</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VOTES COUNTS -->
+        <div *ngIf="proposal.status === 'approved' && proposal.votedByUser" class="flex flex-row mt-4 text-sm md:hidden">
+          <span class="block text-green-elab"><span class="font-bold">{{ proposal.votesFor }}</span>
+            Vote<span *ngIf="proposal.votesFor > 1">s</span> Up
+          </span>
+          <span class="block text-red-elab ml-auto"><span class="font-bold">{{ proposal.votesAgainst }}</span>
+            Vote<span *ngIf="proposal.votesAgainst > 1">s</span> Down
+          </span>
+        </div>
+
+        <!-- VOTE NOT STARTED -->
+        <div *ngIf="proposal.status === 'approved' && proposal.votingStatus === 'not_started'" class="flex mt-4 text-[14px] md:hidden">
+          <span class="align-middle my-auto block font-bold text-pink-450">Vote starting on {{ proposal.votingPeriodStartDate | date:'MMM d' }} </span>
+        </div>
+
       </div>
 
-      <div class="flex flex-col w-1/5">
+      <!-- DESKTOP - 2ND COLUMN -->
+      <div class="hidden md:flex flex-col w-1/5">
         <div class="pt-4">
           <span class="text-pink-450 font-bold">Link</span>
-          <span class="block">{{proposal.link}}</span>
+          <span class="block break-words">{{proposal.link}}</span>
         </div>
 
         <div class="mt-auto">
@@ -105,52 +178,54 @@
         </div>
       </div>
 
-      <!-- START VOTING STATUS -->
-      <div *ngIf="proposal.status === 'approved' && proposal.votingStatus === 'active'" class="flex flex-row ml-auto mr-10">
-        <div class="align-middle m-auto justify-center">
-          <span class="block text-pink-450 font-bold">Vote Result</span>
-          <span class="block text-green-500">{{ proposal.votesFor }} Votes up</span>
-          <span class="block text-red-500">{{ proposal.votesAgainst }} Votes down</span>
+      <!-- DESKTOP - VOTING STATUS  -->
+      <div *ngIf="proposal.status === 'approved' && proposal.votingStatus === 'active'"
+           class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 md:w-[320px] px-3 lg:px-0">
+        <div class="align-middle my-auto opacity-100">
+          <span class="block text-pink-elab font-bold">Vote Result</span>
+          <span class="block text-green-elab"><span class="font-bold">{{ proposal.votesFor }}</span> Votes Up</span>
+          <span class="block text-red-elab"><span class="font-bold">{{ proposal.votesAgainst }}</span> Votes Down</span>
         </div>
 
-        <!-- START VOTING BUTTONS -->
-        <div *ngIf="currentUser.isActive && !proposal.votedByUser" class="flex flex-col px-12 justify-center">
-          <button class="bg-green-100 font-bold h-9 px-4 text-green rounded-full min-w-max" (click)="onClickVoteFor(proposal.id)">UP VOTE</button>
-          <button class="mt-4 bg-red-300 font-bold h-9 px-4 text-red rounded-full min-w-max" (click)="onClickVoteAgainst(proposal.id)">DOWN VOTE</button>
+        <!-- VOTING BUTTONS -->
+        <div *ngIf="currentUser.isActive && !proposal.votedByUser" class="flex flex-col px-3 lg:px-12 justify-center">
+          <button class="bg-green-elabLight font-bold h-9 px-4 text-green-elab rounded-full min-w-max
+         transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-110 hover:bg-green-elab duration-200 hover:text-white
+          " (click)="onClickVoteFor(proposal.id)">Up Vote</button>
+          <button class="mt-4 bg-red-elabLight font-bold h-9 px-4 text-red-elab rounded-full min-w-max
+          transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-110 hover:bg-red-elab duration-200 hover:text-white"
+                  (click)="onClickVoteAgainst(proposal.id)">Down Vote</button>
         </div>
-        <!-- END VOTING BUTTONS -->
       </div>
 
-      <div *ngIf="proposal.status === 'approved' && proposal.votingStatus === 'not_started'" class="flex flex-row ml-auto mr-10">
-        <span class="block font-bold text-pink-450">Vote starting on {{ proposal.votingPeriodStartDate | date:'MMM d' }} </span>
+      <!-- DESKTOP - VOTE STARTING ON -->
+      <div *ngIf="proposal.status === 'approved' && proposal.votingStatus === 'not_started'"
+           class="hidden md:flex md:flex-row md:ml-auto md:mr-0 lg:mr-5 md:w-[320px]">
+        <span class="align-middle my-auto block font-bold text-pink-450">Vote starting on {{ proposal.votingPeriodStartDate | date:'MMM d' }} </span>
       </div>
 
-      <div *ngIf="proposal.status === 'approved' && proposal.votingStatus === 'ended'" class="flex flex-col ml-auto mr-10">
+      <!-- DESKTOP - APPROVE -->
+      <div *ngIf="proposal.status === 'approved' && proposal.votingStatus === 'ended'"
+           class="hidden md:flex md:flex-row md:ml-auto md:mr-5 md:w-[320px]">
         <span class="block font-bold text-pink-450">Vote Result: ended on {{ proposal.votingPeriodEndDate | date:'MMM d' }} </span>
         <div class="justify-start">
-          <span class="block text-green-500">{{ proposal.votesFor }} Votes up</span>
-          <span class="block text-red-500">{{ proposal.votesAgainst }} Votes down</span>
+          <span class="block text-green-elab">{{ proposal.votesFor }} Votes up</span>
+          <span class="block text-red-elab">{{ proposal.votesAgainst }} Votes down</span>
         </div>
       </div>
-      <!-- END VOTING STATUS -->
 
     </div>
 
   </div>
 
-  <div *ngIf="!isLoading && totalProposals" class="flex flex-row text-gray-400 py-10 sm:pl-24">
-    <div *ngIf="totalProposals">
-      Active proposals: {{totalActiveProposals}} / {{ totalProposals }}
+  <!-- PAGINATION -->
+  <div *ngIf="!isLoading && totalProposals" class="flex flex-row text-gray-400 py-5 lg:py-10 lg:pl-24 text-sm md:text-base">
+    <div *ngIf="totalProposals">Active proposals: {{totalActiveProposals}} / {{ totalProposals }}</div>
+    <div class="ml-auto inline-flex">Row per page: 10</div>
+    <div class="ml-auto md:ml-24 md:w-36">
+      <p *ngIf="pageSize && pageNum && totalProposals">{{ pageSize * (pageNum - 1) + 1 }} - {{pageSize * pageNum}} OF {{ totalProposals }}</p>
     </div>
-    <div class="ml-auto inline-flex">
-      Row per page: 10
-    </div>
-    <div class="ml-24 w-36">
-      <p *ngIf="pageSize && pageNum && totalProposals">
-        {{ pageSize * (pageNum - 1) + 1 }} - {{pageSize * pageNum}} OF {{ totalProposals }}
-      </p>
-    </div>
-    <div class="ml-16">
+    <div class="md:ml-16 inline-flex">
       <button type="button" [ngClass]="{'cursor-not-allowed': !canDoPreviousPage()}" [attr.disabled]="!canDoPreviousPage() ? 'disabled' : null" (click)="decrementCurrentPage()">
         <svg xmlns="http://www.w3.org/2000/svg" [ngClass]="{'opacity-50': !canDoPreviousPage()}" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -163,4 +238,5 @@
       </button>
     </div>
   </div>
+
 </div>
