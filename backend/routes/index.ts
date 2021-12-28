@@ -104,7 +104,7 @@ router.get('/currentUser', (req, res) => {
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/user/remove/:did', async (req, res) => {
-    if (req.user.type !== 'admin') {
+    if (req.user.type !== 'superadmin') {
         res.json({ code: 403, message: 'forbidden' });
         return;
     }
@@ -119,7 +119,7 @@ router.get('/user/remove/:did', async (req, res) => {
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/user/setTelegramUserInfo', async (req, res) => {
-    if (req.user.type !== 'admin') {
+    if (req.user.type !== 'admin' && req.user.type !== 'superadmin') {
         res.json({ code: 403, message: 'Admin only' });
         return;
     }
@@ -145,7 +145,7 @@ router.post('/user/setTelegramVerificationCode', async (req, res) => {
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/user/setUserType', async (req, res) => {
-    if (req.user.type !== 'admin' || !req.user.canManageAdmins) {
+    if (req.user.type !== 'superadmin') {
         res.json({ code: 403, message: 'Admin with canManageAdmins permission only' });
         return;
     }
@@ -250,9 +250,28 @@ router.get('/users/list', async (req, res) => {
     }
 })
 
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.patch('/proposals/:id', async (req, res) => {
+    if (req.user.type !== 'superadmin') {
+        res.json({ code: 403, message: 'forbidden' });
+        return;
+    }
+
+    let proposalId = req.params.id as string;
+    let proposal = req.body;
+
+    if (!proposalId || !proposal) {
+        res.json({ code: 400, message: 'required parameter absence' });
+        return;
+    }
+
+    res.sendStatus(await dbService.patchProposal(proposalId, proposal));
+})
+
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.put('/proposal/:id/audit', async (req, res) => {
-    if (req.user.type !== 'admin') {
+    if (req.user.type !== 'admin' && req.user.type !== 'superadmin') {
         res.json({ code: 403, message: 'forbidden' });
         return;
     }
@@ -272,7 +291,7 @@ router.put('/proposal/:id/audit', async (req, res) => {
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/proposal/:id/grant', async (req, res) => {
-    if (req.user.type !== 'admin') {
+    if (req.user.type !== 'admin' && req.user.type !== 'superadmin') {
         res.json({ code: 403, message: 'forbidden' });
         return;
     }
