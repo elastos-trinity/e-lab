@@ -34,7 +34,7 @@ const APP_ROUTES: Routes = [
     loadChildren: async () => (await import('@pages/admin/admin.module')).AdminModule,
     canLoad: [AuthGuard],
     canActivate: [RoleGuard],
-    data: { roles: ['admin'] },
+    data: { roles: ['admin', 'superadmin'] },
     resolve: {
       currentUser: CurrentUserResolver
     }

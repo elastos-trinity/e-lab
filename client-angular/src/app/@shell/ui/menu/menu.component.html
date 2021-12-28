@@ -108,7 +108,7 @@
         </a>
 
         <a (click)="closeMenu()"
-           *ngIf="currentUser && currentUser.type === 'admin'" [routerLink]="['/', adminPath.root, adminPath.proposals]"
+           *ngIf="currentUser && (currentUser.type === 'admin' || currentUser.type === 'superadmin')" [routerLink]="['/', adminPath.root, adminPath.proposals]"
            [ngClass]="{'is-active': userProposalActive.isActive || adminProposalActive.isActive }" href="" class="flex flex-row">
         <span class="icon">
           <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -179,7 +179,7 @@
         <span class="menu-text">My Profile</span>
       </a>
 
-      <a *ngIf="currentUser && currentUser.type === 'admin'" [routerLink]="['/', adminPath.root, adminPath.proposals]"
+      <a *ngIf="currentUser && (currentUser.type === 'admin' || currentUser.type === 'superadmin')" [routerLink]="['/', adminPath.root, adminPath.proposals]"
          [ngClass]="{'is-active': userProposalActive.isActive || adminProposalActive.isActive }" href="">
       <span class="icon">
         <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">

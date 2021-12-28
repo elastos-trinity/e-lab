@@ -765,6 +765,26 @@ class DBService {
             return Promise.reject(e);
         }
     }
+
+    async patchProposal(proposalId: string, proposal: {votingPeriodStartDate: string, votingPeriodEndDate: string}) {
+        try {
+            const collection = this.client.db().collection('proposals');
+
+            const result = await collection.updateOne({ id: proposalId },
+              { $set: {
+                      votingPeriodStartDate: moment(proposal.votingPeriodStartDate).utc(false).toDate(),
+                      votingPeriodEndDate: moment(proposal.votingPeriodEndDate).utc(false).toDate()
+                  } });
+            if (result.matchedCount === 1) {
+                return 200;
+            } else {
+                return 404;
+            }
+        } catch (err) {
+            logger.error(err);
+            return 500;
+        }
+    }
 }
 
 export const dbService = new DBService();

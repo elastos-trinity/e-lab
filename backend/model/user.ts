@@ -1,4 +1,4 @@
-export type UserType = 'admin' | 'user';
+export type UserType = 'superadmin' | 'admin' | 'user';
 
 export type User = {
   did: string;
