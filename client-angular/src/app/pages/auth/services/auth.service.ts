@@ -27,13 +27,6 @@ export class AuthService {
    */
   async signIn(): Promise<void> {
     try {
-      // debug mode
-      setItem(StorageItem.AccessToken, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkaWQiOiJkaWQ6ZWxhc3RvczppWkQzenpCQWZtcTZtdDZtdEJEZ0EzdUVuaGJqbVR2NGZ4IiwidHlwZSI6ImFkbWluIiwibmFtZSI6IlNvZmlhbmUiLCJlbWFpbCI6IiIsImNhbk1hbmFnZUFkbWlucyI6ZmFsc2UsImFjdGl2ZSI6dHJ1ZSwia3ljSWRlbnRpdHlIYXNoIjoiY2RlNzc2ODZmMzgzMWU4YzVmZTk1MDMwMWY0ZTRjYmMiLCJpYXQiOjE2NDA2MzMxNDYsImV4cCI6MTY0MTIzNzk0Nn0.LzatnxwDPC5xGh8k9n5PonN7qqaWkWfTlwjnRcOy1AU');
-      setItem(StorageItem.DID, 'did:elastos:iZD3zzBAfmq6mt6mtBDgA3uEnhbjmTv4fx');
-      await this.isLoggedIn$.next(true);
-      return Promise.resolve();
-
-      // debug mode end
       const verifiablePresentation: VerifiablePresentation = await this.elastosConnectivityService.getVerifiablePresentation();
       const accessToken: string = await this.elabService.login(verifiablePresentation);
       // todo: return this in the promise and dont set it here
