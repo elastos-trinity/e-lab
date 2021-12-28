@@ -21,3 +21,12 @@
     }
   }
 }
+
+.title-with-svg {
+  svg {
+    @apply w-[1.6em] h-[2.5em];
+    @apply lg:w-[1.5em] lg:h-[2.5em];
+    @apply xl:w-[1.6em] xl:h-[1.4em] xl:mt-3;
+    @apply 2xl:w-[2.3em] 2xl:h-[2em] 2xl:mt-2 2xl:min-w-[48px] justify-end;
+  }
+}

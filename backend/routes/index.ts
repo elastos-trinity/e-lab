@@ -183,15 +183,24 @@ router.post('/user/kycactivation', async (req, res) => {
         return res.json({ code: 400, message: "User already activated, cannot activate by KYC again" });
     }
 
-    let presentationStr = req.body;
-    let vp = VerifiablePresentation.parse(presentationStr);
+    let presentation = req.body;
+    let vp;
+    let response;
+    try {
+        console.log(presentation)
+        vp = VerifiablePresentation.parse(presentation)
+        console.log(vp)
+        response = await credentialsService.prepareKycActivationFromPresentation(did, vp);
 
-    let response = await credentialsService.prepareKycActivationFromPresentation(did, vp);
+        if (response.error) {
+            apiError(res, response);
+        }
+    } catch (parseError) {
+        console.error(parseError);
+        return res.json({ code: 500, message: 'error while parsing presentation' });
+    }
 
-    if (response.error)
-        apiError(res, response);
-    else
-        res.json({ code: 200, message: 'success' });
+    return res.json({ code: 200, message: 'success' });
 });
 
 /**
@@ -309,7 +318,21 @@ router.post('/proposal/add', async (req, res) => {
 
 router.get('/proposal/votingPeriod', async (req, res) => {
     try {
-        const votingPeriod = dbService.getVotingPeriod()
+        const votingPeriod = await dbService.getVotingPeriod()
+        return res.status(200).json(votingPeriod);
+    } catch (ex) {
+        console.error(`Error while trying to get current voting period: ${ex}`)
+        return res.status(500)
+    }
+})
+
+router.put('/proposal/votingPeriod', async (req, res) => {
+    try {
+        if (!req.body.startDay || !req.body.endDay) {
+            console.error('Error while trying to update the voting period starDay or endDay null')
+            return res.status(500)
+        }
+        const votingPeriod = await dbService.setVotingPeriod(req.body.startDay, req.body.endDay)
         return res.status(200).json(votingPeriod);
     } catch (ex) {
         console.error(`Error while trying to get current voting period: ${ex}`)
