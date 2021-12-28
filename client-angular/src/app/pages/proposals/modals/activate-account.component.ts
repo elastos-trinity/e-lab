@@ -8,6 +8,7 @@ import { ModalComponent } from "@shell/ui/modal/modal.component";
 import { ModalModule } from "@shell/ui/modal/modal.module";
 import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastos-connectivity.service";
 import { KycService } from "@core/services/kyc/kyc.service";
+import { timer } from "rxjs";
 
 @Component({
   selector: 'app-activate-account',
@@ -20,8 +21,14 @@ export class ActivateAccountComponent {
     | undefined;
 
   isActivationInProcess = false;
+  isActivationSuccessful = false;
+  timeleft = 5;
 
-  constructor (private elastosConnectivityService: ElastosConnectivityService, private kycService: KycService) {}
+  @Output()
+  accountNewlyActivatedEvent = new EventEmitter()
+
+  constructor (private elastosConnectivityService: ElastosConnectivityService, private kycService: KycService) { }
+
 
   async close(): Promise<void> {
     await this.modal?.close();
@@ -29,24 +36,40 @@ export class ActivateAccountComponent {
 
   async onClickProvideCredentials(): Promise<void> {
     this.isActivationInProcess = true
+
+    let kycVerifiablePresentation
     try {
-      const kycVerifiablePresentation = await this.elastosConnectivityService.requestKYCCredentials();
+      kycVerifiablePresentation = await this.elastosConnectivityService.requestKYCCredentials();
+
       if (!kycVerifiablePresentation) {
         this.isActivationInProcess = false
-        return Promise.reject("Error while trying to get the presentation")
+        throw new Error("Error while trying to get the presentation")
       }
-
-      await this.kycService.activate(kycVerifiablePresentation)
-      this.isActivationInProcess = false
-      return Promise.resolve()
     } catch (error) {
-      this.isActivationInProcess = false
       try {
         await this.elastosConnectivityService.disconnect();
       } catch (disconnectError) {
         return Promise.reject(`Error while trying to disconnect wallet connect session ${JSON.stringify(disconnectError)}`);
       }
       return Promise.reject(`Error while requesting credentials ${JSON.stringify(error)}`);
+    }
+
+    try {
+      await this.kycService.activate(kycVerifiablePresentation)
+      this.isActivationInProcess = false
+      this.isActivationSuccessful = true
+      this.accountNewlyActivatedEvent.emit()
+      const timeSubscription = timer(0, 1000).subscribe(value => {
+        this.timeleft = 5 - value
+        if (this.timeleft === 0 ) {
+          timeSubscription.unsubscribe()
+          this.close()
+        }
+      })
+      return Promise.resolve();
+    } catch (error) {
+      this.isActivationInProcess = false
+      return Promise.reject(`Error while activating account ${error}`);
     }
   }
 

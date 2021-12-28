@@ -68,7 +68,14 @@ export class MyProposalsPage implements OnInit {
    */
   async showActivateAccount(): Promise<void> {
     const { ActivateAccountComponent } = await import('../../modals/activate-account.component')
-    await this.activateAccountProposalModalService.open(ActivateAccountComponent)
+    const modalReference = await this.activateAccountProposalModalService.open(ActivateAccountComponent)
+    modalReference.instance.accountNewlyActivatedEvent.subscribe(() => {
+      const newUserInfos = this.userService.getLoggedInUser().subscribe((currentUser) => {
+        this.currentUser = currentUser;
+        this.getMyProposals();
+        newUserInfos.unsubscribe();
+      });
+    })
   }
 
   /**

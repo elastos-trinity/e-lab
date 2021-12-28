@@ -12,46 +12,52 @@ import moment from "moment";
 import dayjs from "dayjs";
 
 class DBService {
-    private client: MongoClient;
+    private client!: MongoClient;
 
-    constructor() {
+    async connect(): Promise<void> {
         let mongoConnectionUrl;
         if (SecretConfig.Mongo.user)
             mongoConnectionUrl = `mongodb://${SecretConfig.Mongo.user}:${SecretConfig.Mongo.password}@${SecretConfig.Mongo.host}:${SecretConfig.Mongo.port}/${SecretConfig.Mongo.dbName}?authSource=admin`;
         else
             mongoConnectionUrl = `mongodb://${SecretConfig.Mongo.host}:${SecretConfig.Mongo.port}/${SecretConfig.Mongo.dbName}`;
 
-        console.log("mongoConnectionUrl", mongoConnectionUrl);
-
-        this.client = new MongoClient(mongoConnectionUrl, {
-            //useNewUrlParser: true, useUnifiedTopology: true
-        });
+        try {
+            this.client = new MongoClient(mongoConnectionUrl,
+              {
+                  //useNewUrlParser: true,
+                  //useUnifiedTopology: true,
+                  minPoolSize: 10,
+                  maxPoolSize: 50
+              }
+            )
+            await this.client.connect();
+            return Promise.resolve();
+        } catch (ex) {
+            console.error(ex);
+            return Promise.reject();
+        }
     }
+
+    constructor() { }
 
     public async checkConnect(): Promise<CommonResponse<void>> {
         try {
-            await this.client.connect();
             await this.client.db().collection('users').find({}).limit(1);
             return { code: 200, message: 'success' };
         } catch (err) {
             logger.error(err);
             return { code: 200, message: 'mongodb connect failed' };
-        } finally {
-            await this.client.close();
         }
     }
 
     public async updateUser(did: string, name: string, email: string): Promise<number> {
         try {
-            await this.client.connect();
             const collection = this.client.db().collection('users');
             let result = await collection.updateOne({ did }, { $set: { name, email } });
             return result.matchedCount;
         } catch (err) {
             logger.error(err);
             return -1;
-        } finally {
-            await this.client.close();
         }
     }
 
@@ -62,7 +68,6 @@ class DBService {
      */
     public async setTelegramUserInfo(did: string, telegramUserName: string, telegramUserId: string): Promise<CommonResponse<string | null>> {
         try {
-            await this.client.connect();
             const usersCollection = this.client.db().collection('users');
 
             // Make sure the telegram user ID format is right
@@ -116,8 +121,6 @@ class DBService {
                 message: "Server error",
                 data: null
             };
-        } finally {
-            await this.client.close();
         }
     }
 
@@ -148,14 +151,11 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
 
     public async setUserType(targetDid: string, type: UserType) {
         try {
-            await this.client.connect();
             const collection = this.client.db().collection('users');
 
             let user = await collection.findOne({ did: targetDid });
@@ -169,8 +169,6 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
 
@@ -178,7 +176,6 @@ class DBService {
         console.log(`Activating user ${targetDid} with identity hash ${kycIdentityHash}`);
 
         try {
-            await this.client.connect();
             const collection = this.client.db().collection('users');
 
             await collection.updateOne({ did: targetDid }, { $set: { kycIdentityHash, active: true } });
@@ -187,41 +184,32 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
 
     public async findUserByDID(did: string): Promise<User | null> {
         try {
-            await this.client.connect();
             const collection = this.client.db().collection<User>('users');
             return (await collection.find({ did }).project<User>({ '_id': 0 }).limit(1).toArray())[0];
         } catch (err) {
             logger.error(err);
             return null;
-        } finally {
-            await this.client.close();
         }
     }
 
     public async findUserByKYCIdentityHash(kycIdentityHash: string): Promise<User | null> {
         try {
-            await this.client.connect();
             const collection = this.client.db().collection<User>('users');
             let user = await collection.findOne({ kycIdentityHash }) || null;
             return user;
         } catch (err) {
             logger.error(err);
             return null;
-        } finally {
-            await this.client.close();
         }
     }
 
     public async addUser(user: User): Promise<CommonResponse<void>> {
         try {
-            await this.client.connect();
             const collection = this.client.db().collection('users');
             const docs = await collection.find({ did: user.did }).toArray();
             if (docs.length === 0) {
@@ -233,14 +221,11 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
 
     public async removeUser(did: string) {
         try {
-            await this.client.connect();
             const collection = this.client.db().collection('users');
             let result = await collection.deleteOne({ did });
             if (result.deletedCount === 1) {
@@ -251,8 +236,6 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
 
@@ -270,7 +253,6 @@ class DBService {
         }
 
         try {
-            await this.client.connect();
             const collection = this.client.db().collection('users');
             let total = await collection.find(query).count();
             logger.info("Getting list of users with query", query);
@@ -280,8 +262,6 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
 
@@ -289,7 +269,6 @@ class DBService {
         console.log(`Binding wallet address ${walletAddress} to user ${targetDid}`);
 
         try {
-            await this.client.connect();
             const collection = this.client.db().collection('users');
 
             await collection.updateOne({ did: targetDid }, { $push: { wallets: walletAddress } });
@@ -298,21 +277,18 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
 
 
     public async auditProposal(id: string, status: ProposalStatus, operator: string) {
         try {
-            await this.client.connect();
             const collection = this.client.db().collection('proposals');
             // If we approve for the future check that we don't have any votes
             if (status === 'new' && await this.isProposalInVotingPeriod(id)) {
                 return { code: 400, message: 'can not cancel a decision for a proposal already in a voting period' }
             }
-            const votingPeriod = this.getVotingPeriod(true) // Always set the next voting period when approving a proposal
+            const votingPeriod = await this.getVotingPeriod(true) // Always set the next voting period when approving a proposal
             const result = await collection.updateOne({ id },
               { $set: {
                       status,
@@ -329,14 +305,11 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
 
     public async grantProposal(id: string, grant: ProposalGrant, operator: string) {
         try {
-            await this.client.connect();
             const collection = this.client.db().collection('proposals');
             let result = await collection.updateOne({ id },
                 { $set: { grant, operator, operatedTime: Date.now() } });
@@ -348,29 +321,23 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
 
     public async addProposal(proposal: Proposal) {
         try {
-            await this.client.connect();
             const collection = this.client.db().collection('proposals');
             await collection.insertOne(proposal);
             return { code: 200, message: 'success' };
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
 
     // TODO: creator is really string?
     public async listUsersProposal(creator: string, pageNum: number, pageSize: number) {
         try {
-            await this.client.connect();
             const collection = this.client.db().collection('proposals');
             let total = await collection.find({ creator }).count();
             const totalActive = await this.getTotalActiveProposals();
@@ -395,14 +362,12 @@ class DBService {
                     proposal["votesAgainst"] = proposalVotes["votesAgainst"];
                 }
 
-                proposal["votingStatus"] = this.getProposalVotingStatus(proposal)
+                proposal["votingStatus"] = await this.getProposalVotingStatus(proposal)
             }
             return { code: 200, message: 'success', data: { total, result, totalActive } };
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
 
@@ -416,7 +381,6 @@ class DBService {
         }
         let query: JSONObject = { id: id };
         try {
-            await this.client.connect();
             const collection = this.client.db().collection('proposals');
             let proposal = await collection.findOne(query);
             logger.info("Proposal", proposal);
@@ -424,8 +388,6 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
 
@@ -440,7 +402,7 @@ class DBService {
             query['title'] = title;
 
         try {
-            await this.client.connect();
+            console.log(this.client);
             const collection = this.client.db().collection('proposals');
             let total = await collection.find(query).count();
             let proposals = await collection.find(query, { sort: { creationTime: -1 } })
@@ -479,7 +441,7 @@ class DBService {
                     proposal["userVote"] = userVote?.['vote']
                 }
 
-                proposal["votingStatus"] = this.getProposalVotingStatus(proposal)
+                proposal["votingStatus"] = await this.getProposalVotingStatus(proposal)
             }
 
             logger.info("Proposals", proposals);
@@ -488,8 +450,6 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
     /*
@@ -561,7 +521,6 @@ class DBService {
     // TODO: voter is really string?
     public async voteForProposal(proposalId: string, voter: string, voteChoice: string) {
         try {
-            await this.client.connect();
 
             // Make sure the proposal exists and is open for voting
             if (! await this.isProposalInVotingPeriod(proposalId)) {
@@ -593,8 +552,6 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        } finally {
-            await this.client.close();
         }
     }
     /**
@@ -609,31 +566,48 @@ class DBService {
      * The voting period will start on the 15 at 00:00:00am and end the 21st at 23:59:59pm
      * todo: set voting period in the backend and configurable start/end days
      */
-    public getVotingPeriod(next: boolean = false): { startDate: Date, endDate: Date, isTodayInVotingPeriod: boolean} {
-        let startDay = 20;
-        let endDay = 27;
+    public async getVotingPeriod(next: boolean = false): Promise<{ startDate: Date, endDate: Date, isTodayInVotingPeriod: boolean}> {
+        try {
 
-        const now = moment().utc(false);
+            const votingPeriodCollection = this.client.db().collection('votingperiod');
+            let currentVotingPeriod = await votingPeriodCollection.findOne();
+            if (!currentVotingPeriod) { // Insert a default voting period in case the config is not init yet
+                const defaultVotingPeriod = { startDay: 20, endDay: 27 }
+                await votingPeriodCollection.insertOne(defaultVotingPeriod);
+                currentVotingPeriod = await votingPeriodCollection.findOne()
+            }
+            const startDay = currentVotingPeriod?.startDay as number;
+            const endDay = currentVotingPeriod?.endDay as number;
 
-        let votingStartDate;
-        let votingEndDate;
+            const now = moment().utc(false);
 
-        // If we are between the start day and the end day of a month, this is a vote period. So we return the current period.
-        if (!next && now.date() >= startDay && now.date() <= endDay) {
-            votingStartDate = now.clone().set('date', startDay).startOf('day');
-        } else {
-            // We are outside of a vote period or we want to get the next voting period
-            votingStartDate = now.clone()
-              .startOf("month")
-              .add(1, "month")
-              .set('date', startDay);
+            let votingStartDate;
+            // If we are between the start day and the end day of a month, this is a vote period. So we return the current period.
+            if (!next && now.date() >= startDay && now.date() <= endDay) {
+                votingStartDate = now.clone().set('date', startDay).startOf('day');
+            } else {
+                // We are outside of a vote period or we want to get the next voting period
+                votingStartDate = now.clone()
+                  .startOf("month")
+                  .add(1, "month")
+                  .set('date', startDay);
+            }
+            console.log(votingStartDate);
+
+            const votingEndDate = votingStartDate.clone().add((endDay - startDay), "days").endOf('day');
+            console.log(votingEndDate);
+
+            const todayCheck = moment().utc(false).toDate();
+            const isTodayInVotingPeriod = todayCheck.getTime() >= votingStartDate.toDate().getTime() && todayCheck.getTime() <= votingEndDate.toDate().getTime()
+
+            return {
+                startDate: votingStartDate.toDate(),
+                endDate: votingEndDate.toDate(),
+                isTodayInVotingPeriod: isTodayInVotingPeriod
+            };
+        } catch (e) {
+            throw e;
         }
-        votingEndDate = votingStartDate.clone().add((endDay - startDay), "days").endOf('day');
-
-        const todayCheck = moment().utc(false).toDate();
-        const isTodayInVotingPeriod = todayCheck.getTime() >= votingStartDate.toDate().getTime() && todayCheck.getTime() <= votingEndDate.toDate().getTime()
-
-        return { startDate: votingStartDate.toDate(), endDate: votingEndDate.toDate(), isTodayInVotingPeriod: isTodayInVotingPeriod};
     }
 
     /**
@@ -642,7 +616,7 @@ class DBService {
      */
     private async getTotalActiveProposals(): Promise<number> {
         const collection = this.client.db().collection('proposals');
-        const votingPeriod = this.getVotingPeriod();
+        const votingPeriod = await this.getVotingPeriod();
         const startVotingPeriod = dayjs(votingPeriod.startDate).startOf('day').toDate()
         const endVotingPeriod = dayjs(votingPeriod.endDate).endOf('day').toDate()
         return await collection.countDocuments({
@@ -662,7 +636,6 @@ class DBService {
      */
     async deleteVote(proposalId: any, userId: string) {
         try {
-            await this.client.connect();
             if (!await this.isProposalInVotingPeriod(proposalId)) {
                 return { code: 403, message: 'Proposal not found, or currently not open for votes' };
             }
@@ -686,8 +659,6 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return { code: 500, message: 'server error' };
-        }  finally {
-            await this.client.close();
         }
     }
 
@@ -696,27 +667,29 @@ class DBService {
      * @param proposal
      * @private
      */
-    private getProposalVotingStatus(proposal: any) {
+    private async getProposalVotingStatus(proposal: any): Promise<string> {
         // Check if the proposal has not yet any start date or end date
         if (!proposal["votingPeriodStartDate"] || !proposal["votingPeriodEndDate"]) {
-            return "not_approved"
+            return Promise.resolve("not_approved")
         }
 
         const proposalVotingStartDate = moment(proposal["votingPeriodStartDate"]).utc(false).toDate().getTime()
         const proposalVotingEndDate = moment(proposal["votingPeriodEndDate"]).utc(false).toDate().getTime()
         const now = moment().utc(false).toDate();
 
-        const currentVotingPeriod = this.getVotingPeriod();
+        const currentVotingPeriod = await this.getVotingPeriod();
 
         // For a proposal to be active it need to be both in the currentVotingPeriod and
         // today's date need to be superior to the current voting period start date
-        if (now.getTime() > proposalVotingStartDate && proposalVotingStartDate === currentVotingPeriod.startDate.getTime() && proposalVotingEndDate === currentVotingPeriod.endDate.getTime() ) {
-            return "active"
+        if (now.getTime() > proposalVotingStartDate && proposalVotingStartDate === currentVotingPeriod.startDate.getTime() && proposalVotingEndDate === currentVotingPeriod.endDate.getTime()) {
+            return Promise.resolve("active")
         } else if (now.getTime() > proposalVotingEndDate || proposalVotingEndDate < currentVotingPeriod.endDate.getTime()) { // Already ended
-            return "ended"
+            return Promise.resolve("ended")
         } else if (now.getTime() < proposalVotingStartDate || proposalVotingStartDate > currentVotingPeriod.startDate.getTime()) { // not started
-            return "not_started"
+            return Promise.resolve("not_started")
         }
+
+        return Promise.resolve("undefined")
     }
 
     /**
@@ -767,6 +740,31 @@ class DBService {
         return hasAlreadyVoted > 0
     }
 
+    async setVotingPeriod(startDay: number, endDay: number): Promise<void> {
+        try {
+            const votingPeriodCollection = this.client.db().collection('votingperiod');
+            let currentVotingPeriod = await votingPeriodCollection.findOne();
+            let votingPeriod = {
+                startDay: startDay,
+                endDay: endDay
+            }
+            if (!currentVotingPeriod) {
+                await votingPeriodCollection.insertOne(votingPeriod);
+            } else {
+                await votingPeriodCollection.updateOne({}, {
+                      $set: {
+                          "startDay": votingPeriod.startDay,
+                          "endDay": votingPeriod.endDay
+                      }},
+                  { upsert: true }
+                );
+            }
+            return Promise.resolve();
+        } catch (e) {
+            console.error(e);
+            return Promise.reject(e);
+        }
+    }
 }
 
 export const dbService = new DBService();

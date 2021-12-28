@@ -28,14 +28,12 @@ export class AuthService {
   async signIn(): Promise<void> {
     try {
       const verifiablePresentation: VerifiablePresentation = await this.elastosConnectivityService.getVerifiablePresentation();
-      console.debug(`Verifiable presentation:  ${verifiablePresentation}`);
       const accessToken: string = await this.elabService.login(verifiablePresentation);
-      console.debug(`Access token:  ${accessToken}`);
       // todo: return this in the promise and dont set it here
       setItem(StorageItem.AccessToken, accessToken);
       setItem(StorageItem.DID, verifiablePresentation.getHolder().getMethodSpecificId());
       await this.isLoggedIn$.next(true);
-      return Promise.resolve()
+      return Promise.resolve();
     } catch (error) {
       console.error("Error while getting credentials", error);
       await this.elastosConnectivityService.disconnect();
@@ -58,9 +56,9 @@ export class AuthService {
     console.debug("Signing out...");
     removeItem(StorageItem.AccessToken);
     try {
+      this.isLoggedIn$.next(false);
       return this.elastosConnectivityService.disconnect().then(() => {
         console.debug("Wallet session disconnected");
-        this.isLoggedIn$.next(false);
         return Promise.resolve();
       });
     } catch (error) {

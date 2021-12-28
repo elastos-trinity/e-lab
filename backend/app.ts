@@ -12,6 +12,7 @@ import traceLogger from "./logger";
 import { authMiddleware } from "./middlewares/auth.middleware";
 import router from "./routes/index";
 import { normalizePort } from "./utils";
+import { dbService } from './services/db.service';
 
 let app = express();
 
@@ -38,54 +39,56 @@ let dbg = debug('elab-api:server');
 let port = normalizePort(process.env.PORT || '3001');
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
+// Connect the DB
+dbService.connect().then(() => {
+    traceLogger.info(`========= DB CONNECTION OK =============`);
+    /**
+     * Create HTTP server.
+     */
+    let server = http.createServer(app);
 
-let server = http.createServer(app);
+    /**
+     * Listen on provided port, on all network interfaces.
+     */
+    server.listen(port);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
-server.listen(port);
-
-/**
- * Event listener for HTTP server "error" event.
- */
-server.on('error', (error) => {
-    /* if (error.syscall !== 'listen') {
-        throw error;
-    } */
-
-    let bind = typeof port === 'string'
-        ? 'Pipe ' + port
-        : 'Port ' + port;
-
-    // handle specific listen errors with friendly messages
-    switch (error.name) {
-        case 'EACCES':
-            throw new Error(bind + ' requires elevated privileges');
-        case 'EADDRINUSE':
-            throw new Error(bind + ' is already in use');
-        default:
+    /**
+     * Event listener for HTTP server "error" event.
+     */
+    server.on('error', (error) => {
+        /* if (error.syscall !== 'listen') {
             throw error;
-    }
-});
+        } */
 
-/**
- * Event listener for HTTP server "listening" event.
- */
-server.on('listening', () => {
-    let addr = server.address() as AddressInfo;
-    if (!addr)
-        throw new Error("No server address!");
+        let bind = typeof port === 'string'
+          ? 'Pipe ' + port
+          : 'Port ' + port;
 
-    let bind = typeof addr === 'string'
-        ? 'pipe ' + addr
-        : 'port ' + addr.port;
-    dbg('Listening on ' + bind);
+        // handle specific listen errors with friendly messages
+        switch (error.name) {
+            case 'EACCES':
+                throw new Error(bind + ' requires elevated privileges');
+            case 'EADDRINUSE':
+                throw new Error(bind + ' is already in use');
+            default:
+                throw error;
+        }
+    });
 
-    traceLogger.info(`========= ELAB service started with ${bind} =============`);
-});
+    /**
+     * Event listener for HTTP server "listening" event.
+     */
+    server.on('listening', () => {
+        let addr = server.address() as AddressInfo;
+        if (!addr)
+            throw new Error("No server address!");
 
+        let bind = typeof addr === 'string'
+          ? 'pipe ' + addr
+          : 'port ' + addr.port;
+        dbg('Listening on ' + bind);
+
+        traceLogger.info(`========= ELAB service started with ${bind} =============`);
+    });
+})
 

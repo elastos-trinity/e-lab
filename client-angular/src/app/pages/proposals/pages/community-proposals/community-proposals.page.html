@@ -62,8 +62,10 @@
   </div>
 
   <div *ngFor="let proposal of proposals; let first = first; let last = last; let indexOfElement = index">
-    <div [ngClass]="{'opacity-50': proposal.grant.toLowerCase() === 'notgranted',
-    'opacity-90': proposal.votedByUser && proposal.grant.toLowerCase() !== 'notgranted'}"
+    <div [ngClass]="{
+    'opacity-50': proposal.grant.toLowerCase() === 'notgranted'
+     || proposal.votingStatus === 'ended' && proposal.grant === 'undecided',
+    'opacity-90': proposal.votedByUser && proposal.grant.toLowerCase() !== 'notgranted' && proposal.votingStatus !== 'ended'}"
          class="flex flex-row h-auto
          md:flex-row md:h-auto lg:h-48
          md:rounded-xl md:bg-blue-800 md:mt-10 mt-6
@@ -206,11 +208,15 @@
 
       <!-- DESKTOP - APPROVE -->
       <div *ngIf="proposal.status === 'approved' && proposal.votingStatus === 'ended'"
-           class="hidden md:flex md:flex-row md:ml-auto md:mr-5 md:w-[320px]">
+           class="hidden md:flex md:flex-col my-auto md:ml-auto md:mr-5 md:w-[320px]">
         <span class="block font-bold text-pink-450">Vote Result: ended on {{ proposal.votingPeriodEndDate | date:'MMM d' }} </span>
-        <div class="justify-start">
+        <div class="justify-start mt-2 -ml-[5px]">
           <span class="block text-green-elab">{{ proposal.votesFor }} Votes up</span>
           <span class="block text-red-elab">{{ proposal.votesAgainst }} Votes down</span>
+        </div>
+
+        <div *ngIf="proposal.grant.toLowerCase() === 'granted'" class="text-green font-bold mt-auto ml-auto justify-end">
+          GRANTED
         </div>
       </div>
 

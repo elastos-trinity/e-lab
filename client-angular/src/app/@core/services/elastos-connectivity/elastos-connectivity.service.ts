@@ -32,6 +32,7 @@ import { EssentialsConnector } from "@elastosfoundation/essentials-connector-cli
 })
 export class ElastosConnectivityService {
   private readonly _connector: EssentialsConnector;
+  private readonly TrustedKYCProviders = ["did:elastos:iqjN3CLRjd7a4jGCZe6B3isXyeLy7KKDuK"] // Trinity. Tech KYC DID
 
   constructor() {
     this._connector = new EssentialsConnector()
@@ -91,18 +92,20 @@ export class ElastosConnectivityService {
     return this._connector
   }
 
+  /**
+   * Request the KYC credentials
+   */
   async requestKYCCredentials(): Promise<VerifiablePresentation> {
-    const TrustedKYCProviders = ["did:elastos:iqjN4CLRjd7a4jGCZe6B3isXyeLy7KKDuK"]
     const didAccess = new ConnDID.DIDAccess();
     return await didAccess.requestCredentials({
       claims: [
         ConnDID.simpleTypeClaim("Your name", "NameCredential", true)
-          .withIssuers(TrustedKYCProviders)
+          .withIssuers(this.TrustedKYCProviders)
           .withNoMatchRecommendations([
             { title: "KYC-me.io", url: "https://kyc-me.io", urlTarget: "internal" }
           ]),
         ConnDID.simpleTypeClaim("Your birth date", "BirthDateCredential", true)
-          .withIssuers(TrustedKYCProviders)
+          .withIssuers(this.TrustedKYCProviders)
           .withNoMatchRecommendations([
             { title: "KYC-me.io", url: "https://kyc-me.io", urlTarget: "internal" }
           ])

@@ -62,7 +62,7 @@ export class MenuComponent implements OnInit {
       events: {
         onclick: { enable: false, mode: "push" },
         onhover: {
-          enable: true,
+          enable: false,
           mode: "attract",
           parallax: { enable: false, force: 15, smooth: 10 }
         },
@@ -90,7 +90,6 @@ export class MenuComponent implements OnInit {
       move: {
         direction: "top" as const,
         enable: true,
-        out_mode: "bounce" as const,
         random: false,
         speed: 4,
         straight: false
@@ -100,7 +99,7 @@ export class MenuComponent implements OnInit {
           enable: true,
           area: 800
         },
-        value: 15
+        value: 18
       },
       opacity: {
         value: 1,
