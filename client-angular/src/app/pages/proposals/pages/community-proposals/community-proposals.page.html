@@ -150,7 +150,7 @@
           </div>
         </div>
 
-        <!-- VOTES COUNTS -->
+        <!-- MOBILE - VOTES COUNTS -->
         <div *ngIf="proposal.status === 'approved' && proposal.votedByUser" class="flex flex-row mt-4 text-sm md:hidden">
           <span class="block text-green-elab"><span class="font-bold">{{ proposal.votesFor }}</span>
             Vote<span *ngIf="proposal.votesFor > 1">s</span> Up
@@ -160,7 +160,7 @@
           </span>
         </div>
 
-        <!-- VOTE NOT STARTED -->
+        <!-- MOBILE - VOTE NOT STARTED -->
         <div *ngIf="proposal.status === 'approved' && proposal.votingStatus === 'not_started'" class="flex mt-4 text-[14px] md:hidden">
           <span class="align-middle my-auto block font-bold text-pink-450">Vote starting on {{ proposal.votingPeriodStartDate | date:'MMM d' }} </span>
         </div>
@@ -185,8 +185,10 @@
            class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 md:w-[320px] px-3 lg:px-0">
         <div class="align-middle my-auto opacity-100">
           <span class="block text-pink-elab font-bold">Vote Result</span>
-          <span class="block text-green-elab"><span class="font-bold">{{ proposal.votesFor }}</span> Votes Up</span>
-          <span class="block text-red-elab"><span class="font-bold">{{ proposal.votesAgainst }}</span> Votes Down</span>
+          <div class="justify-start mt-2 -ml-[5px]">
+            <span class="block text-green-elab"><span class="font-bold">{{ proposal.votesFor }}</span> Votes Up</span>
+            <span class="block text-red-elab"><span class="font-bold">{{ proposal.votesAgainst }}</span> Votes Down</span>
+          </div>
         </div>
 
         <!-- VOTING BUTTONS -->

@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ROUTER_UTILS } from '@core/utils/router.utils';
 import { NotFoundModule } from '@shell/ui/not-found/not-found.module';
 import { FooterModule } from '../ui/footer/footer.module';
+import { ElabFormControlModule } from '../ui/elab-form-control/elab-form-control.module';
 import { HeaderModule } from '../ui/header/header.module';
 import { MenuModule } from '../ui/menu/menu.module';
 import { LayoutModule } from '../ui/layout/layout.module';
@@ -71,6 +72,7 @@ const APP_ROUTES: Routes = [
     RouterModule.forRoot(APP_ROUTES),
     FooterModule,
     MenuModule,
+    ElabFormControlModule,
     ModalModule,
     HeaderModule,
     LayoutModule,
@@ -80,6 +82,7 @@ const APP_ROUTES: Routes = [
     RouterModule,
     FooterModule,
     HeaderModule,
+    ElabFormControlModule,
     MenuModule,
     ModalModule,
     LayoutModule,

@@ -35,7 +35,7 @@ export class ElabProposalService {
   async create(title: string, link: string, description: string): Promise<string> {
     try {
       const body = JSON.stringify({title: title, link: link, description: description});
-      const response = await this.http.post<any>(ElabProposalService.proposalUrl + '/add', body).toPromise();
+      const response = await this.http.post<any>(ElabProposalService.proposalsUrl, body).toPromise();
       if (response === undefined) {
         return Promise.reject("Returned proposal response by ELAB backend service is null");
       }
