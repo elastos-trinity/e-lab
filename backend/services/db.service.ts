@@ -325,6 +325,17 @@ class DBService {
     }
 
     public async addProposal(proposal: Proposal) {
+        // it should not be the db service to do the work here, we will need a proposal service that will take of all this.
+        if (proposal.title.length < 20) {
+            return { code: 400, message: 'Title is less than 20 chars' };
+        }
+        if (proposal.description.length < 50 || proposal.description.length > 150) {
+            return { code: 400, message: 'The proposal description do not match requirements (more than 50 chars and less than 150)' };
+        }
+        if (!/^(https?:\/\/)?(www\.)?(cyberrepublic\.org\/suggestion\/)[a-z0-9].*$/.test(proposal.link)) {
+            return { code: 400, message: 'Invalid CR link'};
+        }
+
         try {
             const collection = this.client.db().collection('proposals');
             await collection.insertOne(proposal);
@@ -392,17 +403,23 @@ class DBService {
     }
 
     public async listProposals(title: string, activeOnly: boolean, userId: string, pageNum: number, pageSize: number) {
-        let query: JSONObject;
-        if (activeOnly)
-            query = { status: 'approved' };
-        else
+        let query: object;
+        if (activeOnly) { // Active proposals are defined both by an approved status and a voting period set for the proposal.
+            query = {
+                status: "approved",
+                votingPeriodStartDate: { $ne: null },
+                votingPeriodEndDate: { $ne: null }
+            };
+        } else {
             query = {}; // all
+        }
 
-        if (title)
-            query['title'] = title;
+        if (title) {
+            // @ts-ignore
+            query.title = title;
+        }
 
         try {
-            console.log(this.client);
             const collection = this.client.db().collection('proposals');
             let total = await collection.find(query).count();
             let proposals = await collection.find(query, { sort: { creationTime: -1 } })
@@ -592,10 +609,8 @@ class DBService {
                   .add(1, "month")
                   .set('date', startDay);
             }
-            console.log(votingStartDate);
 
             const votingEndDate = votingStartDate.clone().add((endDay - startDay), "days").endOf('day');
-            console.log(votingEndDate);
 
             const todayCheck = moment().utc(false).toDate();
             const isTodayInVotingPeriod = todayCheck.getTime() >= votingStartDate.toDate().getTime() && todayCheck.getTime() <= votingEndDate.toDate().getTime()

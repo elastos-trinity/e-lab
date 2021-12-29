@@ -108,7 +108,7 @@ export class SignInPage implements OnInit {
         mode: "bounce" as const
       },
       move: {
-        direction: "top" as const,
+        direction: "top-left" as const,
         enable: true,
         random: false,
         speed: 4,
@@ -119,10 +119,10 @@ export class SignInPage implements OnInit {
           enable: true,
           area: 800
         },
-        value: 1
+        value: 7
       },
       opacity: {
-        value: 1,
+        value: 0.8,
         random: true,
         anim: {
           enable: false,

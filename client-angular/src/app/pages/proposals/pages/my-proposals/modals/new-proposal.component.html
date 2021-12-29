@@ -4,52 +4,7 @@
     New proposal
   </h4>
   <form [formGroup]="proposalForm" (ngSubmit)="createRecord()">
-    <label
-      for="title"
-      class="block mt-2 font-bold text-pink-450"
-    >
-      Title
-    </label>
-    <input
-      id="title"
-      type="text"
-      name="title"
-      formControlName="title"
-      class="block w-full p-2 mt-2 text-white bg-blue-800 text-sm
-      appearance-none focus:outline-none focus:bg-blue-900 focus:border-pink-450 rounded-full focus:shadow-inner"
-      required
-    />
-
-    <label
-      for="link"
-      class="block mt-2 font-bold text-pink-450"
-    >CR Link</label>
-    <input
-      id="link"
-      type="text"
-      name="link"
-      formControlName="link"
-      class="block w-full p-2 mt-2 text-white bg-blue-800 text-sm
-      appearance-none focus:outline-none focus:bg-blue-900 rounded-full"
-      required
-    />
-
-
-    <label
-      for="description"
-      class="block mt-2 font-bold text-pink-450"
-    >Short Description </label
-    >
-    <textarea
-      id="description"
-      name="description"
-      formControlName="description"
-      class="block w-full p-2 mt-2 text-white bg-blue-800 text-sm
-      appearance-none focus:outline-none focus:bg-blue-900 rounded-xl focus:shadow-inner
-      h-20
-resize-none	"
-      required></textarea>
-
+    <app-elab-form-control *ngFor="let control of getControls()" [control]="control"></app-elab-form-control>
     <ng-container *ngTemplateOutlet="toolbar"></ng-container>
   </form>
 </app-modal>
@@ -60,19 +15,15 @@ resize-none	"
       (click)="close()"
       type="button"
       class="bg-transparent text-orange-450 pl-0 hover:text-pink-450 focus:outline-none text-sm
-     transition ease-in-out delay-50 hover:scale-110 duration-200
-"
-    >
+     transition ease-in-out delay-50 hover:scale-110 duration-200 py-1">
       Cancel
     </button>
 
     <button
-      [ngClass]="{'cursor-not-allowed': loading || proposalForm.invalid , 'transition ease-in-out delay-50 hover:scale-110 duration-200 hover:bg-green-elab hover:text-white' : !loading && proposalForm.valid}" [attr.disabled]="loading || proposalForm.invalid ? 'disabled' : null"
+      [@slideInFromBottom]="{ value: '', params: { delay: 250 + 'ms' } }"
+      *ngIf="proposalForm.valid"
       type="submit"
-      class="bg-green-100 ml-10 font-bold text-sm text-green rounded-full px-4 py-1
-
-"
-    >
+      class="bg-green-100 ml-10 font-bold text-sm text-green rounded-full px-4 py-1 transition-all">
       <div class="flex flex-row">
       <svg *ngIf="loading === true" class="animate-spin -ml-1 mr-3 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

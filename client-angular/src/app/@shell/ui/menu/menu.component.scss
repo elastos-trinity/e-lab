@@ -1,6 +1,8 @@
 /*! purgecss start ignore */
-::ng-deep #tsparticles-menu {
-  @apply absolute top-0 left-0 w-full h-full;
+#menu-container {
+  ::ng-deep #tsparticles-menu {
+    @apply absolute top-0 left-0 w-full h-[800vh] overflow-hidden;
+  }
 }
 /*! purgecss end ignore */
 

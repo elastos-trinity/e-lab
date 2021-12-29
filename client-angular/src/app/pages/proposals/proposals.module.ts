@@ -7,6 +7,7 @@ import { NewProposalComponentModule } from "@pages/proposals/pages/my-proposals/
 import { CoreModule } from "@core/core.module";
 import { ActivateAccountComponentModule } from "@pages/proposals/modals/activate-account.component";
 import { ConfirmVoteComponentModule } from "@pages/proposals/pages/community-proposals/modals/confirm-vote-component";
+import { ElabFormControlModule } from "@shell/ui/elab-form-control/elab-form-control.module";
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { ConfirmVoteComponentModule } from "@pages/proposals/pages/community-pro
     ActivateAccountComponentModule,
     ProposalsRoutingModule,
     ConfirmVoteComponentModule,
-    CoreModule
+    CoreModule,
+    ElabFormControlModule
   ]
 })
 export class ProposalsModule { }

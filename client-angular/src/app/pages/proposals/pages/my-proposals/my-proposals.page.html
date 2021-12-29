@@ -72,7 +72,7 @@
           <h4 class="inline mr-2">{{proposal.title}}</h4>
 
           <!-- START STATUS -->
-          <span class="font-bold text-[12px]" *ngIf="proposal.votingStatus === 'not_approved'">
+          <span class="font-bold text-[12px]" *ngIf="proposal.status !== 'rejected' && proposal.votingStatus === 'not_approved'">
             AWAITING APPROVAL
           </span>
 
@@ -84,24 +84,24 @@
             REJECTED
           </span>
 
-          <span class="text-green-500 font-bold text-[12px]" *ngIf="proposal.votingStatus === 'active' && !proposal.votedByUser">
+          <span class="text-green-500 font-bold text-[12px]" *ngIf="proposal.status !== 'rejected' && proposal.votingStatus === 'active' && !proposal.votedByUser">
             VOTE ACTIVE
           </span>
 
           <span [ngClass]="{'text-green-500': proposal.userVote === 'for', 'text-red-500': proposal.userVote === 'against'}"
-                *ngIf="proposal.votingStatus === 'active' && proposal.votedByUser" class="font-bold  text-[12px]">
+                *ngIf="proposal.status !== 'rejected' && proposal.votingStatus === 'active' && proposal.votedByUser" class="font-bold  text-[12px]">
             ALREADY VOTED {{ proposal.userVote.toUpperCase() }}
           </span>
 
-          <span *ngIf="proposal.votingStatus === 'ended' && proposal.grant === 'undecided'" class="text-green-500 font-bold text-[12px]" >
+          <span *ngIf="proposal.status !== 'rejected' && proposal.votingStatus === 'ended' && proposal.grant === 'undecided'" class="text-green-500 font-bold text-[12px]" >
             VOTE ENDED
           </span>
 
-          <span *ngIf="proposal.votingStatus === 'ended' && proposal.grant.toLowerCase() === 'granted'" class="text-green-500 font-bold md:inline-block uppercase text-[12px]">
+          <span *ngIf="proposal.status !== 'rejected' && proposal.votingStatus === 'ended' && proposal.grant.toLowerCase() === 'granted'" class="text-green-500 font-bold md:inline-block uppercase text-[12px]">
             GRANTED
           </span>
 
-          <span *ngIf="proposal.votingStatus === 'ended' && proposal.grant.toLowerCase() === 'notgranted'" class="text-red-500 font-bold md:inline-block uppercase text-[12px]">
+          <span *ngIf="proposal.status !== 'rejected' && proposal.votingStatus === 'ended' && proposal.grant.toLowerCase() === 'notgranted'" class="text-red-500 font-bold md:inline-block uppercase text-[12px]">
             NOT GRANTED
           </span>
           <!-- END STATUS -->
@@ -174,8 +174,10 @@
            class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 md:w-[320px] px-3 lg:px-0">
         <div class="align-middle my-auto opacity-100">
           <span class="block text-pink-elab font-bold">Vote Result</span>
-          <span class="block text-green-elab"><span class="font-bold">{{ proposal.votesFor }}</span> Votes Up</span>
-          <span class="block text-red-elab"><span class="font-bold">{{ proposal.votesAgainst }}</span> Votes Down</span>
+          <div class="justify-start mt-2 -ml-[5px]">
+            <span class="block text-green-elab"><span class="font-bold">{{ proposal.votesFor }}</span> Votes Up</span>
+            <span class="block text-red-elab"><span class="font-bold">{{ proposal.votesAgainst }}</span> Votes Down</span>
+          </div>
         </div>
 
       </div>

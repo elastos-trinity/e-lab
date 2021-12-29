@@ -6,6 +6,7 @@ import { UserService } from "@pages/user/services/user.service";
 import User from "@core/models/user.model";
 import { Container, GradientType, Main } from "tsparticles";
 import { loadGradientUpdater } from "tsparticles-updater-gradient";
+import { fromEvent, Observable, Subscription } from "rxjs";
 
 @Component({
   selector: 'app-menu',
@@ -22,6 +23,9 @@ export class MenuComponent implements OnInit {
 
   menuOpened = false;
 
+  resizeObservable$!: Observable<Event>
+  resizeSubscription$!: Subscription
+
   constructor(private router: Router, private authService: AuthService, private userService: UserService) {}
 
   onClickSignOut(): void {
@@ -37,6 +41,12 @@ export class MenuComponent implements OnInit {
       if (v.type) {
         this.currentUser = v
       }
+    })
+
+    this.resizeObservable$ = fromEvent(window, 'resize')
+    this.resizeSubscription$ = this.resizeObservable$.subscribe( event => {
+      this.container.stop();
+      this.container.refresh();
     })
   }
 
@@ -141,9 +151,12 @@ export class MenuComponent implements OnInit {
     detectRetina: true
   };
 
+  container!: Container
+
   particlesLoaded(container: Container): void {
-    console.log(container)
+    this.container = container;
   }
+
 
   particlesInit(main: Main): void {
     loadGradientUpdater(main);
