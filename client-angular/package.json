@@ -23,7 +23,7 @@
     "@angular/router": "^13.1.0",
     "@elastosfoundation/did-js-sdk": "^2.2.0",
     "@elastosfoundation/elastos-connectivity-sdk-js": "^1.0.15",
-    "@elastosfoundation/essentials-connector-client-browser": "^1.0.30",
+    "@elastosfoundation/essentials-connector-client-browser": "^1.0.31",
     "@walletconnect/web3-provider": "^1.7.0",
     "assert": "^2.0.0",
     "crypto-browserify": "^3.12.0",
