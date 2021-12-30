@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import User from "@core/models/user.model";
-import { Proposal } from "@core/models/proposal.model";
+import { GrantStatus, Proposal, ProposalStatus, VotingStatus } from "@core/models/proposal.model";
 import { ModalService } from "@core/services/modal/modal.service";
 import { ActivateAccountComponent } from "@pages/proposals/modals/activate-account.component";
 import { ProposalsService } from "@pages/proposals/services/proposals.service";
@@ -25,6 +25,11 @@ export class CommunityProposalsPage implements OnInit {
   pageNum!: number;
   currentVotingPeriod!: { startDate: Date, endDate: Date , isTodayInVotingPeriod: boolean};
   isLoading: boolean;
+
+  // ENUM imports
+  VotingStatus = VotingStatus;
+  ProposalStatus = ProposalStatus;
+  GrantStatus = GrantStatus;
 
   constructor (private activateAccountProposalModalService: ModalService<ActivateAccountComponent>,
                private confirmVoteModal: ModalService<ConfirmVoteComponent>,

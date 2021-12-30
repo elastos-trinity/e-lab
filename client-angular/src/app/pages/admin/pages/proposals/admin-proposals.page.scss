@@ -1,3 +1,8 @@
+.admin-action-button {
+  @apply font-bold h-9 px-4 rounded-full min-w-max;
+  @apply transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-200 hover:text-white;
+}
+
 .admin-menu {
   @apply justify-center md:justify-start;
   @apply gap-x-5;

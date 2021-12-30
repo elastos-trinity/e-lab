@@ -128,11 +128,15 @@
 
 <!-- start sidebar -->
   <div id="sidebar"
-       class="hidden md:block md:w-56 lg:w-64 xl:w-80 md:max-w-60
+       class="hidden
+            md:block md:w-56
+            md:px-0.5 md:py-10 md:max-w-60
+            lg:px-1 lg:py-12 lg:w-64
+            xl:px-4
+            xl:w-80
             min-h-[650px]
-            md:px-0.5 lg:px-1 xl:px-4
-            md:py-10 lg:py-12 xl:py-14
-            md:mt-0 min-h-fit space-y-10">
+             xl:py-14
+            md:mt-0 space-y-10">
     <!-- logo -->
     <a [routerLink]="['/']" class="flex content-center justify-center" href="">
       <img src="/assets/img/logo.png" class="md:w-[100px] lg:w-[110px] xl:w-[129px]" alt="elab-logo" />
@@ -170,7 +174,7 @@
       </a>
 
       <a [routerLink]="['/', userPath.root, userPath.profile]" [routerLinkActive]="['is-active']">
-      <span class="icon">
+      <span class="icon pt-1">
         <svg width="17" height="20" viewBox="0 0 17 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M15.7248 19.9998H0.698616C0.126309 19.9998 -0.197998 19.3307 0.132668 18.8584L3.92897 13.4466C4.91461 12.0428 6.50435 11.2359 8.18312 11.2425C8.18948 11.2425 8.20219 11.2425 8.20855 11.2425C8.21491 11.2425 8.22763 11.2425 8.23399 11.2425C9.91275 11.2359 11.5025 12.0362 12.4881 13.4466L16.2844 18.8584C16.6215 19.3372 16.2908 19.9998 15.7248 19.9998Z" fill="white"/>
           <path d="M13.1359 4.65233C13.1359 6.4001 12.1181 7.91526 10.6214 8.7137C9.90959 9.09091 9.08471 9.30467 8.21326 9.30467C7.33516 9.30467 6.51694 9.09091 5.80514 8.7137C4.30173 7.92154 3.28394 6.4001 3.28394 4.65233C3.28394 3.3195 3.87599 2.11241 4.83391 1.26367C5.38605 0.773293 6.05793 0.402364 6.80298 0.194895C7.24868 0.0691563 7.721 0 8.20661 0C8.69223 0 9.16454 0.0691563 9.61024 0.194895C10.3553 0.402364 11.0272 0.773293 11.5793 1.26367C12.5372 2.11241 13.1359 3.3195 13.1359 4.65233Z" fill="white"/>

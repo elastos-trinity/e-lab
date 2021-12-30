@@ -115,8 +115,8 @@ export class MenuComponent implements OnInit {
         value: 1,
         random: true,
         anim: {
-          enable: false,
-          speed: 3,
+          enable: true,
+          speed: 0.5,
           opacity_min: 0.1,
           sync: false
         }
