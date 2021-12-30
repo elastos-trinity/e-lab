@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import User from "@core/models/user.model";
-import { Proposal } from "@core/models/proposal.model";
+import { GrantStatus, Proposal, ProposalStatus, VotingStatus } from "@core/models/proposal.model";
 import { ProposalsService } from "@pages/proposals/services/proposals.service";
 import { UserService } from "@pages/user/services/user.service";
 import { ActivatedRoute } from "@angular/router";
@@ -24,6 +24,11 @@ export class AdminProposalsPage implements OnInit {
   pageNum!: number;
   currentVotingPeriod!: { startDate: Date, endDate: Date, isTodayInVotingPeriod: boolean };
   isLoading: boolean;
+
+  // ENUM imports
+  VotingStatus = VotingStatus;
+  ProposalStatus = ProposalStatus;
+  GrantStatus = GrantStatus;
 
   constructor (private proposalService: ProposalsService,
                private voteService: VoteService,

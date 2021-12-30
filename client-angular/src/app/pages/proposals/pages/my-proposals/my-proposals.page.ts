@@ -3,7 +3,7 @@ import { ModalService } from "@core/services/modal/modal.service";
 import {
   NewProposalComponent as NewProposalComponentType
 } from "@pages/proposals/pages/my-proposals/modals/new-proposal-component";
-import { Proposal } from "@core/models/proposal.model";
+import { GrantStatus, Proposal, ProposalStatus, VotingStatus } from "@core/models/proposal.model";
 import { ProposalsService } from "@pages/proposals/services/proposals.service";
 import User from "@core/models/user.model";
 import { UserService } from "@pages/user/services/user.service";
@@ -26,6 +26,11 @@ export class MyProposalsPage implements OnInit {
   pageSize!: number;
   pageNum!: number;
   isLoading!: boolean;
+
+  // ENUM imports
+  VotingStatus = VotingStatus;
+  ProposalStatus = ProposalStatus;
+  GrantStatus = GrantStatus;
 
   constructor (private createProposalModalService: ModalService<NewProposalComponentType>,
                private voteService: VoteService,

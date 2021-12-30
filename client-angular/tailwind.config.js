@@ -42,6 +42,9 @@ module.exports = {
           elabLightGradient: 'rgba(16, 30, 66, 0)',
           800: '#101E42',
           900: '#000B26'
+        },
+        beige: {
+          elab: '#FAFAFA'
         }
       },
       color: {

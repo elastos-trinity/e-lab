@@ -1,21 +1,42 @@
 import { ElabBackendProposalResult } from "@core/dtos/proposals/elab-backend-proposals-response.dto";
 
+export enum GrantStatus {
+  UNDECIDED = 'undecided',
+  GRANTED = 'granted',
+  NOT_GRANTED = 'notgranted'
+}
+
+export enum ProposalStatus {
+  NEW = 'new',
+  APPROVED = 'approved',
+  REJECTED = 'rejected'
+}
+
+export enum VotingStatus {
+  NOT_STARTED = 'not_started',
+  ENDED = 'ended',
+  ACTIVE = 'active',
+  NOT_APPROVED = 'not_approved'
+}
+
 export class Proposal {
   private _id: string
   private _title: string
-  private _status: string
   private _description: string
   private _link: string
-  private _grant: string
   private _creator: string
   private _createdAt: Date
+
   private _votesFor: number
   private _votesAgainst: number
   private _votingPeriodStartDate: Date
   private _votingPeriodEndDate: Date
   private _votedByUser: boolean
   private _userVote: string
-  private _votingStatus: string
+
+  private _status: ProposalStatus
+  private _votingStatus: VotingStatus
+  private _grant: GrantStatus
 
   constructor(id: string, title: string, status: string, grant: string, description: string, link: string, createdAt: Date,
               votesFor = 0, votesAgainst = 0, votingPeriodStartDate = new Date(0),
@@ -23,19 +44,21 @@ export class Proposal {
               votingStatus: string) {
     this._id = id;
     this._title = title;
-    this._status = status;
     this._description = description;
-    this._grant = grant
     this._link = link;
     this._createdAt = createdAt;
+    this._creator = creator;
+
     this._votesFor = votesFor;
     this._votesAgainst = votesAgainst;
     this._votingPeriodStartDate = votingPeriodStartDate
     this._votingPeriodEndDate = votingPeriodEndDate
-    this._creator = creator;
     this._votedByUser = votedByUser;
     this._userVote = userVote;
-    this._votingStatus = votingStatus;
+
+    this._status = status as ProposalStatus;
+    this._grant = grant as GrantStatus
+    this._votingStatus = votingStatus as VotingStatus;
   }
 
   static fromGetProposal(elabProposal: ElabBackendProposalResult): Proposal {
@@ -83,13 +106,10 @@ export class Proposal {
   set description(value: string) {
     this._description = value;
   }
-  get status(): string {
+  get status(): ProposalStatus {
     return this._status;
   }
 
-  set status(value: string) {
-    this._status = value;
-  }
   get title(): string {
     return this._title;
   }
@@ -106,12 +126,8 @@ export class Proposal {
     this._id = value;
   }
 
-  get grant(): string {
+  get grant(): GrantStatus {
     return this._grant;
-  }
-
-  set grant(value: string) {
-    this._grant = value;
   }
 
   get creator(): string {
@@ -138,12 +154,8 @@ export class Proposal {
     this._userVote = value;
   }
 
-  get votingStatus(): string {
+  get votingStatus(): VotingStatus {
     return this._votingStatus;
-  }
-
-  set votingStatus(value: string) {
-    this._votingStatus = value;
   }
 
   get votingPeriodEndDate(): Date {
