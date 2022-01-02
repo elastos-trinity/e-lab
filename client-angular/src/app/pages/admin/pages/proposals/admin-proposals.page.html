@@ -47,11 +47,11 @@
 </div>
 
 <div class="flex-row md:flex-col" *ngIf="pageSize && pageNum" >
-  <div *ngIf="isLoading && currentUser.isActive" class="flex items-center align-middle justify-center mt-5">
-    <div class="w-40 h-40 border-t-4 border-b-4 border-pink-450 rounded-full animate-spin"></div>
+  <div *ngIf="isLoading" class="flex items-center align-middle justify-center mt-5 min-h-[350px]">
+    <div class="elab-spin-loader"></div>
   </div>
 
-  <div *ngIf="!isLoading && !totalProposals && currentUser.isActive" class="flex items-center align-middle justify-center mt-5">
+  <div *ngIf="!isLoading && !totalProposals" class="flex items-center align-middle justify-center mt-5">
     <h2 class="text-pink-300">No proposals yet</h2>
   </div>
 
@@ -61,15 +61,14 @@
     'opacity-90': proposal.votedByUser && proposal.grant.toLowerCase() !== 'notgranted'}"
          class="flex flex-row h-auto
          md:flex-row md:h-96 lg:h-72 xl:h-52
-         md:rounded-xl md:bg-blue-800 md:mt-10 mt-6
+         md:rounded-xl md:bg-blue-800 md:bg-gradient-to-r from-blue-800 to-blue-900 md:mt-10 mt-6
          md:p-3">
 
       <div class="my-auto pr-4 md:my-0 md:pr-2 lg:pr-6 lg:pl-4 pt-0.5">#{{ pageSize * (pageNum - 1) + (indexOfElement + 1) }}</div>
 
       <!-- FIRST COLUMN -->
-      <div class="flex flex-col w-full
-      bg-blue-800 p-3 rounded-xl
-      md:rounded-none md:p-0 md:bg-transparent md:w-1/2">
+      <div class="flex flex-col w-full p-3 rounded-xl bg-gradient-to-br from-blue-800 to-blue-900
+      md:rounded-none md:p-0 md:pr-1 md:bg-none md:w-1/2">
         <!-- First column - Title - Status - Description -->
         <div class="text-pink-elab font-bold md:hidden">Title</div>
         <div class="flex flex-row">
@@ -85,7 +84,7 @@
         <!-- MOBILE - Link -->
         <div class="md:hidden mt-4 text-green-elab break-all">
           <div class="text-pink-elab font-bold md:hidden">Link</div>
-          <a [href]="proposal.link" target="_blank" class="text-sm">{{ proposal.link }}</a>
+          <a [href]="proposal.link" target="_blank" class="text-sm hover:text-pink-elab">{{ proposal.link }}</a>
         </div>
 
         <!-- MOBILE - Proposer -->
@@ -107,25 +106,24 @@
           <!-- Mobile - Community proposal - Voting buttons -->
           <div class="flex gap-x-2 w-4/5 my-auto pr-5">
             <button *ngIf="proposal.status === ProposalStatus.NEW && proposal.grant === GrantStatus.UNDECIDED"
-                    class="bg-green-elabLight text-green-elab hover:bg-green-elab admin-action-button w-full" (click)="onClickApprove(proposal.id)">Accept</button>
+                    class="elab-button elab-button-green w-full h-9" (click)="onClickApprove(proposal.id)">Accept</button>
             <button *ngIf="proposal.status === ProposalStatus.NEW && proposal.grant === GrantStatus.UNDECIDED"
-                    class="py-1 bg-red-elabLight text-red-elab hover:bg-red-elab admin-action-button w-full" (click)="onClickReject(proposal.id)">Reject</button>
+                    class="elab-button elab-button-red w-full h-9" (click)="onClickReject(proposal.id)">Reject</button>
             <button
               *ngIf="proposal.status !== ProposalStatus.NEW && proposal.votingStatus === VotingStatus.NOT_STARTED"
               (click)="onClickCancelDecision(proposal.id)"
-                    class="bg-beige-elab text-grey hover:bg-blue-800 hover:border-2 border-beige-elab
-                    admin-action-button w-full" >
+                    class="elab-button elab-button-beige w-full h-9" >
               Cancel decision
             </button>
             <button (click)="onClickCancelGrant(proposal.id)"
                     *ngIf="proposal.votingStatus === VotingStatus.ENDED && proposal.grant !== GrantStatus.UNDECIDED"
-                    class="bg-beige-elab text-grey hover:bg-blue-800 hover:border-2 border-beige-elab admin-action-button w-full">Cancel grant</button>
+                    class="elab-button elab-button-beige w-full h-9">Cancel grant</button>
             <button (click)="onClickGrant(proposal.id)"
                     *ngIf="proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.UNDECIDED"
-                    class="bg-green-elabLight text-green-elab hover:bg-green-elab admin-action-button w-full">Grant</button>
+                    class="elab-button elab-button-green w-full h-9">Grant</button>
             <button (click)="onClickDontGrant(proposal.id)"
                     *ngIf="proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.UNDECIDED"
-                    class="bg-red-elabLight text-red-elab hover:bg-red-elab admin-action-button w-full ">Don't grant</button>
+                    class="elab-button elab-button-red w-full h-9">Don't grant</button>
           </div>
 
           <div class="flex-col">
@@ -159,8 +157,8 @@
       <div class="hidden md:flex flex-col w-1/5">
         <div class="pt-4">
           <span class="text-pink-450 font-bold">Link</span>
-          <span class="block break-all text-green-elabLight">
-            <a href="{{ proposal.link }}" target="_blank">
+          <span class="block break-all duration-200 hover:text-pink-elab text-green-elabLight">
+            <a href="{{ proposal.link }}" class="hover:text-pink-elab" target="_blank">
               <span class="hidden 2xl:inline">
                 {{ proposal.link }}
               </span>
@@ -208,9 +206,9 @@
 
         <div class="flex flex-col px-3 lg:px-12 justify-center gap-y-2">
           <button *ngIf="proposal.status === ProposalStatus.NEW && proposal.grant === GrantStatus.UNDECIDED"
-                  class="bg-green-elabLight text-green-elab hover:bg-green-elab admin-action-button w-full" (click)="onClickApprove(proposal.id)">Accept</button>
+                  class="elab-button elab-button-green w-full h-9 " (click)="onClickApprove(proposal.id)">Accept</button>
           <button *ngIf="proposal.status === ProposalStatus.NEW && proposal.grant === GrantStatus.UNDECIDED"
-                  class="bg-red-elabLight text-red-elab hover:bg-red-elab admin-action-button w-full" (click)="onClickReject(proposal.id)">Reject</button>
+                  class="elab-button elab-button-red w-full h-9" (click)="onClickReject(proposal.id)">Reject</button>
 
           <div *ngIf="proposal.status !== ProposalStatus.NEW && proposal.votingStatus === VotingStatus.NOT_STARTED"
                class="hidden md:flex md:flex-col md:ml-auto md:mr-0 lg:mr-5">
@@ -219,7 +217,7 @@
               Vote starting on {{ proposal.votingPeriodStartDate | date:'MMM d' }}
             </span>
             <button (click)="onClickCancelDecision(proposal.id)"
-                    class="bg-beige-elab text-grey hover:bg-blue-800 hover:border-2 border-beige-elab admin-action-button" >
+                    class="elab-button elab-button-beige w-full h-9" >
               Cancel decision
             </button>
           </div>
@@ -244,14 +242,14 @@
         <div class="flex flex-row gap-x-3 justify-around content-between" *ngIf="proposal.votingStatus === VotingStatus.ENDED">
           <button (click)="onClickCancelGrant(proposal.id)"
                   *ngIf="proposal.grant !== GrantStatus.UNDECIDED"
-                  class="bg-beige-elab text-grey hover:bg-blue-800 hover:border-2 border-beige-elab admin-action-button">Cancel grant</button>
+                  class="elab-button elab-button-beige h-9 w-full">Cancel grant</button>
 
           <button (click)="onClickGrant(proposal.id)"
                   *ngIf="proposal.grant === GrantStatus.UNDECIDED"
-                  class="bg-green-elabLight text-green-elab hover:bg-green-elab admin-action-button w-full min-w-max">Grant</button>
+                  class="elab-button elab-button-green h-9 w-full">Grant</button>
           <button (click)="onClickDontGrant(proposal.id)"
                   *ngIf="proposal.grant === GrantStatus.UNDECIDED"
-                  class="bg-red-elabLight text-red-elab hover:bg-red-elab admin-action-button w-full ">Don't grant</button>
+                  class="elab-button elab-button-red h-9 w-full">Don't grant</button>
         </div>
       </div>
 
@@ -263,12 +261,12 @@
 
   <div *ngIf="!isLoading && totalProposals" class="flex flex-row text-gray-400 py-5 lg:py-10 lg:pl-24 text-sm md:text-base">
     <div *ngIf="totalProposals">
-      Active proposals: {{totalActiveProposals}} / {{ totalProposals }}
+      Active <span class="hidden xl:inline">proposals</span>: {{totalActiveProposals}} / {{ totalProposals }}
     </div>
     <div class="ml-auto inline-flex">
-      Row per page: 10
+      Row<span class="inline xl:hidden">s</span><span class="hidden xl:inline">&nbsp;per page</span>: 10
     </div>
-    <div class="ml-auto md:ml-24 md:w-36">
+    <div class="ml-auto md:ml-24 md:w-32">
       <p *ngIf="pageSize && pageNum && totalProposals">
         {{ pageSize * (pageNum - 1) + 1 }} - {{pageSize * pageNum}} OF {{ totalProposals }}
       </p>

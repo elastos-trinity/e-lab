@@ -23,7 +23,7 @@ export class AdminProposalsPage implements OnInit {
   pageSize!: number;
   pageNum!: number;
   currentVotingPeriod!: { startDate: Date, endDate: Date, isTodayInVotingPeriod: boolean };
-  isLoading: boolean;
+  isLoading!: boolean;
 
   // ENUM imports
   VotingStatus = VotingStatus;
@@ -38,7 +38,6 @@ export class AdminProposalsPage implements OnInit {
     this.pageNum = 1;
     this.totalProposals = 0;
     this.proposals = new Array<Proposal>();
-    this.isLoading = true
   }
 
   /**
@@ -46,25 +45,27 @@ export class AdminProposalsPage implements OnInit {
    * - Initialize the current user
    */
   ngOnInit(): void {
-    this.voteService.getVotingPeriod().then((result) => {
-      this.currentVotingPeriod = result
-      this.getAdminProposals();
-    })
+    this.isLoading = true
     this.route.data.subscribe(({currentUser: user}) => {
       this.currentUser = user
     });
+    this.voteService.getVotingPeriod().then((result) => {
+      this.currentVotingPeriod = result
+    })
+    this.getAdminProposals();
   }
 
   /**
    * Get the proposal list
    */
   public getAdminProposals(): void {
-    this.proposalService.getAllProposals(this.pageNum, this.pageSize).subscribe(myProposalResponse => {
-      this.isLoading = false;
-      this.proposals = myProposalResponse.proposals
-      this.totalProposals = myProposalResponse.total
-      this.totalActiveProposals = myProposalResponse.totalActive
-    })
+    this.proposalService.getAllProposals(this.pageNum, this.pageSize)
+      .subscribe(myProposalResponse => {
+        this.proposals = myProposalResponse.proposals
+        this.totalProposals = myProposalResponse.total
+        this.totalActiveProposals = myProposalResponse.totalActive
+        this.isLoading = false;
+      })
   }
 
   /**
@@ -99,20 +100,35 @@ export class AdminProposalsPage implements OnInit {
     }
   }
 
-  async onClickApprove(id: string): Promise<void> {
-    await this.proposalService.approve(id).then(() => {
+  /**
+   * On click on approve proposal.
+   * Send the audit approve request.
+   * @param proposalId Proposal ID.
+   */
+  async onClickApprove(proposalId: string): Promise<void> {
+    this.proposalService.approve(proposalId).subscribe(() => {
       this.getAdminProposals()
     })
   }
 
-  async onClickReject(id: string): Promise<void> {
-    await this.proposalService.reject(id).then(() => {
+  /**
+   * On click on reject proposal.
+   * Send the audit refused request.
+   * @param proposalId Proposal ID.
+   */
+  async onClickReject(proposalId: string): Promise<void> {
+    this.proposalService.reject(proposalId).subscribe(() => {
       this.getAdminProposals()
     })
   }
 
-  async onClickCancelDecision(id: string): Promise<void> {
-    await this.proposalService.cancelDecision(id).then(() => {
+  /**
+   * On click on cancel decision.
+   * Send the audit null request.
+   * @param proposalId Proposal ID.
+   */
+  async onClickCancelDecision(proposalId: string): Promise<void> {
+    this.proposalService.cancelDecision(proposalId).subscribe(() => {
       this.getAdminProposals()
     })
   }

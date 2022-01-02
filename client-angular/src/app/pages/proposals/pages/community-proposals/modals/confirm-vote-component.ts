@@ -5,11 +5,24 @@ import { ModalModule } from "@shell/ui/modal/modal.module";
 import { ElabProposalService } from "@core/services/elab/elab-proposal.service";
 import { ElabBackendProposalResult } from "@core/dtos/proposals/elab-backend-proposals-response.dto";
 import { VoteService } from "@pages/proposals/services/vote.service";
+import { animate, style, transition, trigger } from "@angular/animations";
 
 @Component({
   selector: 'app-confirm-vote',
   templateUrl: './confirm-vote.component.html',
   styleUrls: ['./confirm-vote.component.scss'],
+  animations: [
+    trigger('slideInFromBottom', [
+      transition(":enter", [
+        style({transform: 'translateY(150%)'}),
+        animate('{{delay}} ease-in', style({transform: 'none'}))
+      ], {params: {delay: '1000ms'}}),
+      transition(":leave", [
+        style({ transform: 'none'}),
+        animate('500ms {{delay}} ease-in', style({transform: 'translateY(150%)'}))
+      ], { params: {delay: '1000ms'}})
+    ])
+  ]
 })
 export class ConfirmVoteComponent implements OnInit {
   loading = false;

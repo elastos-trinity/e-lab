@@ -8,7 +8,7 @@ import { ModalComponent } from "@shell/ui/modal/modal.component";
 import { ModalModule } from "@shell/ui/modal/modal.module";
 import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastos-connectivity.service";
 import { KycService } from "@core/services/kyc/kyc.service";
-import { timer } from "rxjs";
+import { interval } from "rxjs";
 
 @Component({
   selector: 'app-activate-account',
@@ -59,11 +59,11 @@ export class ActivateAccountComponent {
       this.isActivationInProcess = false
       this.isActivationSuccessful = true
       this.accountNewlyActivatedEvent.emit()
-      const timeSubscription = timer(0, 1000).subscribe(value => {
-        this.timeleft = 5 - value
-        if (this.timeleft === 0 ) {
-          timeSubscription.unsubscribe()
-          this.close()
+      const timeSubscription = interval(1000).subscribe(second => {
+        this.timeleft -= second
+        if (this.timeleft <= 0 ) {
+          timeSubscription.unsubscribe();
+          this.close();
         }
       })
       return Promise.resolve();

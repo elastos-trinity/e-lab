@@ -1,4 +1,4 @@
-<header class="hidden md:flex justify-between sticky top-0 h-16 bg-blue-900 z-50" *ngIf="currentUser && currentUser.name">
+<header class="hidden md:flex justify-between sticky top-0 h-16 bg-blue-900 z-50" *ngIf="isUserInfoUpdated$ | async">
   <nav class="flex h-full w-full py-3 header">
     <!-- SEARCH -->
     <div class="hidden h-10 bg-blue-800 rounded-2xl flex justify-between items-center relative text-black w-1/2 bg-blue-800">
@@ -19,7 +19,7 @@
     </div>
 
 
-    <div class="ml-auto inline-flex pr-3 h-10 p-2">
+    <div class="ml-auto inline-flex pr-3 h-10 p-2 cursor-pointer select-none" (click)="showMiniMenu()">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="12" cy="12" r="11.5" stroke="url(#paint0_linear_4196_2173)"/>
         <path d="M15.9795 17.5348H7.87672C7.56811 17.5348 7.39323 17.174 7.57154 16.9193L9.61866 14.0011C10.1502 13.2441 11.0074 12.809 11.9127 12.8125C11.9161 12.8125 11.923 12.8125 11.9264 12.8125C11.9298 12.8125 11.9367 12.8125 11.9401 12.8125C12.8454 12.809 13.7026 13.2405 14.2341 14.0011L16.2812 16.9193C16.463 17.1775 16.2847 17.5348 15.9795 17.5348Z" fill="url(#paint1_linear_4196_2173)"/>
@@ -43,7 +43,7 @@
 
       <div class="relative">
         <!-- Dropdown toggle button -->
-        <button (click)="showMiniMenu()">
+        <button >
           <svg *ngIf="! miniMenuEnabled" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
@@ -53,7 +53,7 @@
         </button>
 
         <div class="absolute right-0 w-auto py-2 mt-2">
-          <div  [ngClass]="{'visible': miniMenuEnabled, 'hidden': !miniMenuEnabled}"
+          <div [ngClass]="{'opacity-100 block': miniMenuEnabled, 'opacity-0 hidden': !miniMenuEnabled}"
             class="modal inline-block align-bottom p-0.5 rounded-xl
       bg-gradient-to-tr from-orange-450 to-pink-450 text-left overflow-hidden
       shadow-xl transform transition-all duration-200 ease-in-out md:align-middle md:max-w-lg md:w-full"

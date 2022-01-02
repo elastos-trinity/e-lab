@@ -1,4 +1,4 @@
-import { Component, EventEmitter, NgModule, OnInit, Output, ViewChild } from "@angular/core";
+import { Component, EventEmitter, NgModule, OnDestroy, OnInit, Output, ViewChild } from "@angular/core";
 import {
   FormGroup,
   FormBuilder,
@@ -31,13 +31,16 @@ import { animate, style, transition, trigger } from "@angular/animations";
       ])
     ]
 })
-export class NewProposalComponent implements OnInit {
+export class NewProposalComponent implements OnInit, OnDestroy {
   @ViewChild('modalComponent') modal:
     | ModalComponent<NewProposalComponent>
     | undefined;
 
   @Output()
-  proposalEvent = new EventEmitter()
+  newProposalEvent = new EventEmitter()
+
+  @Output()
+  modalCloseEvent = new EventEmitter()
 
   message = '';
   loading = false;
@@ -48,6 +51,10 @@ export class NewProposalComponent implements OnInit {
     public fb: FormBuilder,
     private elabProposalService: ElabProposalService
   ) {
+  }
+
+  ngOnDestroy(): void {
+    this.modalCloseEvent.emit(true);
   }
 
   ngOnInit(): void {
@@ -101,20 +108,13 @@ export class NewProposalComponent implements OnInit {
 
   async createRecord(): Promise<void> {
     this.loading = true
-
-    try {
-      await this.elabProposalService.create(
-        this.proposalForm.get('title')?.value,
-        this.proposalForm.get('link')?.value,
-        this.proposalForm.get('description')?.value
-      );
-      this.proposalEvent.emit();
-      await this.close();
-    } catch {
-      this.message = 'Something went wrong when creating the proposal... Please try again.'
-      await new Promise(f => setTimeout(f, 1000));
-      await this.close();
-    }
+    this.elabProposalService.create({
+      title: this.proposalForm.get('title')?.value,
+      link: this.proposalForm.get('link')?.value,
+      description: this.proposalForm.get('description')?.value
+    }).subscribe(() => {
+      this.newProposalEvent.emit();
+    });
   }
 
   async close(): Promise<void> {

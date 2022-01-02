@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { Router } from '@angular/router';
+import { AfterViewInit, ChangeDetectionStrategy, Component, NgZone, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { ROUTER_UTILS } from '@core/utils/router.utils';
 import { AuthService } from '@pages/auth/services/auth.service';
 import { UserService } from "@pages/user/services/user.service";
 import User from "@core/models/user.model";
 import { Container, GradientType, Main } from "tsparticles";
 import { loadGradientUpdater } from "tsparticles-updater-gradient";
-import { fromEvent, Observable, Subscription } from "rxjs";
+import { BehaviorSubject, fromEvent, Observable, Subject, Subscription } from "rxjs";
+import anime from "animejs";
 
 @Component({
   selector: 'app-menu',
@@ -14,11 +15,13 @@ import { fromEvent, Observable, Subscription } from "rxjs";
   styleUrls: ['./menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent implements OnInit, AfterViewInit {
   path = ROUTER_UTILS.config.base
   proposalPath = ROUTER_UTILS.config.proposals
   adminPath = ROUTER_UTILS.config.admin
   userPath = ROUTER_UTILS.config.user
+
+  isUserInfoUpdated$= new BehaviorSubject(false);
   currentUser!: User;
 
   menuOpened = false;
@@ -26,7 +29,8 @@ export class MenuComponent implements OnInit {
   resizeObservable$!: Observable<Event>
   resizeSubscription$!: Subscription
 
-  constructor(private router: Router, private authService: AuthService, private userService: UserService) {}
+  constructor(private router: Router, private authService: AuthService, private userService: UserService, private ngZone: NgZone) {
+  }
 
   onClickSignOut(): void {
     this.authService.signOut().then(() => {
@@ -37,17 +41,40 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.loggedInUser$.subscribe((v) => {
-      if (v.type) {
-        this.currentUser = v
-      }
+    this.userService.loggedInUser$.subscribe((currentUser) => {
+      this.isUserInfoUpdated$.next(true);
+      this.currentUser = currentUser;
     })
 
     this.resizeObservable$ = fromEvent(window, 'resize')
-    this.resizeSubscription$ = this.resizeObservable$.subscribe( event => {
+    this.resizeSubscription$ = this.resizeObservable$.subscribe( () => {
       this.container.stop();
       this.container.refresh();
     })
+  }
+
+  ngAfterViewInit(): void {
+    anime({
+      targets: '.logo-link path',
+      strokeDashoffset: [anime.setDashoffset, 0],
+      easing: 'linear',
+      duration: 6000,
+      delay: 500,
+      begin: function() {
+        document
+          .querySelector('.logo-link path')!
+          .setAttribute("stroke", "url(#stroke-gradient)");
+        document
+          .querySelector('.logo-link path')!
+          .setAttribute("fill", "url(#fill-gradient)");
+      },
+    });
+
+    anime({
+      targets: 'nav',
+      opacity: 1
+    })
+
   }
 
   openMenu() {

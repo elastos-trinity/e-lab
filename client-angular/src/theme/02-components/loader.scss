@@ -1,0 +1,73 @@
+.elab-spin-loader {
+  @apply w-40 h-40 border-t-4 border-b-4 border-pink-450 rounded-full animate-spin my-auto;
+}
+
+.effect-9~.focus-border i:before,
+.effect-9~.focus-border:before,  {
+  background-color: #FF66DD;
+}
+
+.effect-9~.focus-border i:after,
+.effect-9~.focus-border:after {
+  background-color: #FF9838 ;
+}
+
+.effect-9~.focus-border:before,
+.effect-9~.focus-border:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 1px;
+  transition: 0.2s;
+  transition-delay: 0.2s;
+}
+
+.effect-9~.focus-border:after {
+  top: auto;
+  bottom: 0;
+  right: auto;
+  left: 0;
+  transition-delay: 0.6s;
+}
+
+.effect-9~.focus-border i:before,
+.effect-9~.focus-border i:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 0;
+  transition: 0.2s;
+}
+
+.effect-9~.focus-border i:after {
+  left: auto;
+  right: 0;
+  top: auto;
+  bottom: 0;
+  transition-delay: 0.4s;
+}
+
+.effect-9:focus~.focus-border:before,
+.effect-9:focus~.focus-border:after {
+  width: 100%;
+  transition: 0.2s;
+  transition-delay: 0.6s;
+}
+
+.effect-9:focus~.focus-border:after {
+  transition-delay: 0.2s;
+}
+
+.effect-9:focus~.focus-border i:before,
+.effect-9:focus~.focus-border i:after {
+  height: 100%;
+  transition: 0.2s;
+}
+
+.effect-9:focus~.focus-border i:after {
+  transition-delay: 0.4s;
+}

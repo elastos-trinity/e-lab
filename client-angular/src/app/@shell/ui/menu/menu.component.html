@@ -1,18 +1,29 @@
 <!-- mobile menu bar -->
 <div id="left-menu" class="flex flex-row md:hidden p-7 py-4 sticky top-0 z-10 bg-blue-900">
   <!-- mobile menu button -->
-  <button (click)=openMenu() class="mobile-menu-button p-4 focus:outline-none
-  text-transparent bg-clip-text bg-gradient-to-tr from-pink-450 to-orange-450">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-         viewBox="0 0 24 24" stroke="url(#mobile-menu-button-gradient)">
+  <button (click)=openMenu() class="p-4 focus:outline-none min-w-[56px] w-[56px]">
+    <svg xmlns="http://www.w3.org/2000/svg" class="min-h-fit min-w-fit h-6 w-6" fill="url(#inside)"
+         viewBox="0 0 24 24" stroke="url(#inside)"  *ngIf="!menuOpened">
       <defs>
-        <linearGradient id="mobile-menu-button-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:#FF9838;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#FF66DD;stop-opacity:1" />
+        <linearGradient id="inside" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0" stop-color="#FF9838" />
+          <stop offset="1"  stop-color="#FF66DD" />
         </linearGradient>
       </defs>
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
     </svg>
+
+
+    <svg width="20" height="23" viewBox="0 0 20 23" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="menuOpened">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M3.56176 11.111L19.1289 2.12333C19.3815 1.97746 19.5653 1.73619 19.6398 1.45258C19.7142 1.16898 19.6733 0.866285 19.526 0.61108C19.3786 0.355876 19.1369 0.16907 18.8541 0.0917583C18.5713 0.0144463 18.2704 0.0529613 18.0178 0.19883L0.870478 10.0988C0.617825 10.2447 0.434052 10.486 0.359587 10.7696C0.329947 10.8825 0.318591 10.9984 0.324952 11.1131C0.319078 11.2265 0.330512 11.341 0.359804 11.4526C0.434269 11.7362 0.618042 11.9775 0.870695 12.1233L18.018 22.0233C18.2707 22.1692 18.5715 22.2077 18.8543 22.1304C19.1372 22.0531 19.3788 21.8663 19.5262 21.6111C19.6735 21.3559 19.7145 21.0532 19.64 20.7696C19.5655 20.486 19.3818 20.2447 19.1291 20.0988L3.56176 11.111Z" fill="url(#paint0_linear_3825_1061)"/>
+      <defs>
+        <linearGradient id="paint0_linear_3825_1061" x1="9.99979" y1="0.0527344" x2="9.99979" y2="22.1694" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FF9838"/>
+          <stop offset="1" stop-color="#FF66DD"/>
+        </linearGradient>
+      </defs>
+    </svg>
+
   </button>
 
   <!-- mobile logo -->
@@ -52,7 +63,7 @@
           </defs>
         </svg>
 
-        <div class="p-4 flex flex-col w-full" *ngIf="currentUser">
+        <div class="p-4 flex flex-col w-full" *ngIf="isUserInfoUpdated$ | async">
           <span class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450">{{ currentUser.name }}</span>
           <span class="text-sm text-gray-400 break-all w-4/5">{{ currentUser.did }}</span>
           <div class="flex flex-row mt-2 text-sm">
@@ -107,18 +118,20 @@
           <span class="menu-text">My Profile</span>
         </a>
 
-        <a (click)="closeMenu()"
-           *ngIf="currentUser && (currentUser.type === 'admin' || currentUser.type === 'superadmin')" [routerLink]="['/', adminPath.root, adminPath.proposals]"
-           [ngClass]="{'is-active': userProposalActive.isActive || adminProposalActive.isActive }" href="" class="flex flex-row">
-        <span class="icon">
-          <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 8.89189C20 5.04505 16.8944 1.89189 13.1056 1.89189C12.4845 1.89189 11.9255 1.95496 11.3665 2.14414V0.882883H10.3727V0H8.32298V0.81982H7.32919V9.01802H8.32298V10.027H10.3727V9.01802H11.3665V4.54054C11.9255 4.28829 12.4845 4.22523 13.1056 4.22523C15.6522 4.22523 17.764 6.30631 17.764 8.89189C17.764 10.4685 17.0186 11.7928 15.9006 12.6757L15.0932 11.6036C14.7826 11.1622 14.1615 11.1622 13.8509 11.6036L12.5466 13.4324H3.04348C2.67081 13.4324 2.42236 13.7477 2.42236 14.0631C2.42236 14.3784 2.73292 14.6937 3.04348 14.6937H11.5528L8.88199 18.4144H0V21H20V18.4144L17.205 14.5045C18.882 13.2432 20 11.2252 20 8.89189Z" fill="white"/>
-          </svg>
+        <span *ngIf="isUserInfoUpdated$ | async">
+          <a (click)="closeMenu()"
+             *ngIf="currentUser.type === 'admin' || currentUser.type === 'superadmin'" [routerLink]="['/', adminPath.root, adminPath.proposals]"
+             [ngClass]="{'is-active': userProposalActive.isActive || adminProposalActive.isActive }" href="" class="flex flex-row">
+          <span class="icon">
+            <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 8.89189C20 5.04505 16.8944 1.89189 13.1056 1.89189C12.4845 1.89189 11.9255 1.95496 11.3665 2.14414V0.882883H10.3727V0H8.32298V0.81982H7.32919V9.01802H8.32298V10.027H10.3727V9.01802H11.3665V4.54054C11.9255 4.28829 12.4845 4.22523 13.1056 4.22523C15.6522 4.22523 17.764 6.30631 17.764 8.89189C17.764 10.4685 17.0186 11.7928 15.9006 12.6757L15.0932 11.6036C14.7826 11.1622 14.1615 11.1622 13.8509 11.6036L12.5466 13.4324H3.04348C2.67081 13.4324 2.42236 13.7477 2.42236 14.0631C2.42236 14.3784 2.73292 14.6937 3.04348 14.6937H11.5528L8.88199 18.4144H0V21H20V18.4144L17.205 14.5045C18.882 13.2432 20 11.2252 20 8.89189Z" fill="white"/>
+            </svg>
+          </span>
+            <span class="menu-text">Admin</span>
+          </a>
+          <a [routerLink]="['/', adminPath.root, adminPath.proposals]" #adminProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
+          <a [routerLink]="['/', adminPath.root, adminPath.users]" #userProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
         </span>
-          <span class="menu-text">Admin</span>
-        </a>
-        <a [routerLink]="['/', adminPath.root, adminPath.proposals]" #adminProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
-        <a [routerLink]="['/', adminPath.root, adminPath.users]" #userProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
       </nav>
 
     </div>
@@ -127,8 +140,8 @@
 <!-- end mobile menu bar -->
 
 <!-- start sidebar -->
-  <div id="sidebar"
-       class="hidden
+<div id="sidebar"
+     class="hidden
             md:block md:w-56
             md:px-0.5 md:py-10 md:max-w-60
             lg:px-1 lg:py-12 lg:w-64
@@ -137,13 +150,40 @@
             min-h-[650px]
              xl:py-14
             md:mt-0 space-y-10">
-    <!-- logo -->
-    <a [routerLink]="['/']" class="flex content-center justify-center" href="">
-      <img src="/assets/img/logo.png" class="md:w-[100px] lg:w-[110px] xl:w-[129px]" alt="elab-logo" />
-    </a>
+  <!-- logo -->
+  <a [routerLink]="['/']" class="flex content-center justify-center logo-link" href="">
+    <svg width="129" height="57" viewBox="0 0 129 57"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg">
+      <linearGradient id="stroke-gradient" gradientUnits="userSpaceOnUse" x1="100%" x2="0">
+        <stop offset="0" stop-color="#ff9838"/>
+        <stop offset="1" stop-color="#FF66DD"/>
+      </linearGradient>
 
-    <nav class="text-lg pt-20 min-w-fit md:pl-2 lg:pl-3 xl:pl-4 flex flex-col md:gap-3 lg:gap-4 xl:gap-5">
-      <a [routerLink]="['/', proposalPath.root, proposalPath.communityProposals]" [routerLinkActive]="['is-active']" href="" class="flex flex-row">
+      <linearGradient id="fill-gradient" gradientUnits="userSpaceOnUse" x1="0" y1="0%" x2="100%" y2="0%">
+        <stop offset="0" stop-color="#FF66DD" >
+          <animate attributeName="offset"
+                   values="0;0.1;0.2;0.3;0.4;0.5" dur="1s"
+                   fill="freeze"/>
+        </stop>
+        <stop offset="0" stop-color="#FF9838">
+          <animate attributeName="offset"
+                   values="0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;1"
+                   dur="2s"
+                   fill="freeze"/>
+        </stop>
+        <stop offset="0.1" stop-color="transparent"/>
+        <stop offset="1" stop-color="transparent"/>
+      </linearGradient>
+
+      <path clip-rule="evenodd"
+            d="M54.6299 1.60576C54.6299 0.688183 55.3185 0 56.2367 0C57.1548 0 57.8434 0.688183 57.8434 1.60576C57.8434 2.52334 57.1548 3.21152 56.2367 3.21152C55.3185 3.21152 54.6299 2.52334 54.6299 1.60576ZM60.3683 8.48753C60.3683 7.22586 61.4012 6.19359 62.6637 6.19359C63.9261 6.19359 64.959 7.22586 64.959 8.48753C64.959 9.7492 63.9261 10.7815 62.6637 10.7815C61.4012 10.7815 60.3683 9.7492 60.3683 8.48753ZM53.4822 38.0795L57.3843 32.6888V18.8104V18.0075V14.1078H47.2847V14.6813V17.434V18.8104H51.9902V32.6888L34.8896 56.087H57.3843V51.3844H43.7268L53.4822 38.0795ZM78.0427 18.8104H73.2224V32.6888L90.3229 56.087H85.0436L79.6494 48.8611H67.943V44.1585H76.3211L71.8452 38.0795L67.943 32.6888V18.8104V18.0075V14.1078H78.0427V14.6813V17.434V18.8104ZM5.04982 37.3913H25.0196V32.6888H5.04982V18.8104H25.3639V14.1078H0V56.087H25.823V51.3844H5.04982V37.3913ZM126.934 31.5417C126.246 32.3446 125.442 32.9181 124.639 33.4916C124.212 33.7353 123.753 33.9789 123.262 34.2398C122.828 34.4701 122.369 34.7138 121.884 34.9826V35.6708C123.95 36.2443 125.557 37.2766 126.934 38.8824C128.311 40.3734 129 42.3233 129 44.6172V45.3054C129 46.9112 128.77 48.2875 128.197 49.6639C127.623 50.9256 126.819 52.0725 125.786 53.1048C124.754 54.0224 123.376 54.8253 121.884 55.3988C120.392 55.9722 118.556 56.2016 116.605 56.2016H99.6192V51.499H103.177V18.925H99.6192V14.2224H116.605C118.556 14.2224 120.392 14.4518 121.884 15.0253C123.376 15.5988 124.754 16.4017 125.786 17.3193C126.819 18.2368 127.623 19.3838 128.197 20.7602C128.77 22.1366 129 23.5129 129 25.1187V25.8069C129 26.9538 128.77 28.1008 128.426 29.0184C128.082 29.936 127.623 30.7388 126.934 31.5417ZM124.18 44.3878C124.18 42.2086 123.491 40.4881 122.114 39.2264C120.622 37.9648 118.786 37.3913 116.49 37.3913H108.342V51.3843H116.261C118.556 51.3843 120.507 50.8109 121.999 49.6639C123.491 48.4022 124.18 46.7965 124.18 44.7319V44.3878ZM108.227 32.6887H116.375C118.786 32.6887 120.622 32.1152 121.999 30.7388C123.376 29.5919 124.065 27.8714 124.065 25.6922V25.3481C124.065 23.2835 123.376 21.6778 121.884 20.5308C120.392 19.3838 118.556 18.8103 116.146 18.8103H108.227V32.6887Z"
+            />
+    </svg>
+  </a>
+
+  <nav class="text-lg pt-20 min-w-fit md:pl-2 lg:pl-3 xl:pl-4 flex flex-col md:gap-3 lg:gap-4 xl:gap-5">
+    <a [routerLink]="['/', proposalPath.root, proposalPath.communityProposals]" [routerLinkActive]="['is-active']" href="" class="flex flex-row">
       <span class="icon">
         <svg width="21" height="22" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M26.9996 23H6.55518L7.26629 21.9317L14.8515 10.9344V2.5765H12.8959V0H20.6589V2.5765H18.7033V10.9344L24.5107 19.3552L26.9996 23Z" fill="white"/>
@@ -156,10 +196,10 @@
           </defs>
         </svg>
       </span>
-        <span class="menu-text">Community Proposals</span>
-      </a>
+      <span class="menu-text">Community Proposals</span>
+    </a>
 
-      <a [routerLink]="['/', proposalPath.root, proposalPath.myProposals]" [routerLinkActive]="['is-active']" href="">
+    <a [routerLink]="['/', proposalPath.root, proposalPath.myProposals]" [routerLinkActive]="['is-active']" href="">
       <span class="icon">
         <svg width="21" height="22" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M4.4557 0H0V2.07595H4.4557V0Z" fill="white"/>
@@ -170,34 +210,36 @@
           <path d="M18.5049 0H14.0492V2.07595H18.5049V0Z" fill="white"/>
         </svg>
       </span>
-        <span class="menu-text">My Proposals</span>
-      </a>
+      <span class="menu-text">My Proposals</span>
+    </a>
 
-      <a [routerLink]="['/', userPath.root, userPath.profile]" [routerLinkActive]="['is-active']">
+    <a [routerLink]="['/', userPath.root, userPath.profile]" [routerLinkActive]="['is-active']">
       <span class="icon pt-1">
         <svg width="17" height="20" viewBox="0 0 17 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M15.7248 19.9998H0.698616C0.126309 19.9998 -0.197998 19.3307 0.132668 18.8584L3.92897 13.4466C4.91461 12.0428 6.50435 11.2359 8.18312 11.2425C8.18948 11.2425 8.20219 11.2425 8.20855 11.2425C8.21491 11.2425 8.22763 11.2425 8.23399 11.2425C9.91275 11.2359 11.5025 12.0362 12.4881 13.4466L16.2844 18.8584C16.6215 19.3372 16.2908 19.9998 15.7248 19.9998Z" fill="white"/>
           <path d="M13.1359 4.65233C13.1359 6.4001 12.1181 7.91526 10.6214 8.7137C9.90959 9.09091 9.08471 9.30467 8.21326 9.30467C7.33516 9.30467 6.51694 9.09091 5.80514 8.7137C4.30173 7.92154 3.28394 6.4001 3.28394 4.65233C3.28394 3.3195 3.87599 2.11241 4.83391 1.26367C5.38605 0.773293 6.05793 0.402364 6.80298 0.194895C7.24868 0.0691563 7.721 0 8.20661 0C8.69223 0 9.16454 0.0691563 9.61024 0.194895C10.3553 0.402364 11.0272 0.773293 11.5793 1.26367C12.5372 2.11241 13.1359 3.3195 13.1359 4.65233Z" fill="white"/>
         </svg>
       </span>
-        <span class="menu-text">My Profile</span>
-      </a>
+      <span class="menu-text">My Profile</span>
+    </a>
 
-      <a *ngIf="currentUser && (currentUser.type === 'admin' || currentUser.type === 'superadmin')" [routerLink]="['/', adminPath.root, adminPath.proposals]"
+    <span *ngIf="isUserInfoUpdated$ | async">
+      <a *ngIf="currentUser.type === 'admin' || currentUser.type === 'superadmin'" [routerLink]="['/', adminPath.root, adminPath.proposals]"
          [ngClass]="{'is-active': userProposalActive.isActive || adminProposalActive.isActive }" href="">
-      <span class="icon">
-        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20 8.89189C20 5.04505 16.8944 1.89189 13.1056 1.89189C12.4845 1.89189 11.9255 1.95496 11.3665 2.14414V0.882883H10.3727V0H8.32298V0.81982H7.32919V9.01802H8.32298V10.027H10.3727V9.01802H11.3665V4.54054C11.9255 4.28829 12.4845 4.22523 13.1056 4.22523C15.6522 4.22523 17.764 6.30631 17.764 8.89189C17.764 10.4685 17.0186 11.7928 15.9006 12.6757L15.0932 11.6036C14.7826 11.1622 14.1615 11.1622 13.8509 11.6036L12.5466 13.4324H3.04348C2.67081 13.4324 2.42236 13.7477 2.42236 14.0631C2.42236 14.3784 2.73292 14.6937 3.04348 14.6937H11.5528L8.88199 18.4144H0V21H20V18.4144L17.205 14.5045C18.882 13.2432 20 11.2252 20 8.89189Z" fill="white"/>
-        </svg>
-      </span>
+        <span class="icon">
+          <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 8.89189C20 5.04505 16.8944 1.89189 13.1056 1.89189C12.4845 1.89189 11.9255 1.95496 11.3665 2.14414V0.882883H10.3727V0H8.32298V0.81982H7.32919V9.01802H8.32298V10.027H10.3727V9.01802H11.3665V4.54054C11.9255 4.28829 12.4845 4.22523 13.1056 4.22523C15.6522 4.22523 17.764 6.30631 17.764 8.89189C17.764 10.4685 17.0186 11.7928 15.9006 12.6757L15.0932 11.6036C14.7826 11.1622 14.1615 11.1622 13.8509 11.6036L12.5466 13.4324H3.04348C2.67081 13.4324 2.42236 13.7477 2.42236 14.0631C2.42236 14.3784 2.73292 14.6937 3.04348 14.6937H11.5528L8.88199 18.4144H0V21H20V18.4144L17.205 14.5045C18.882 13.2432 20 11.2252 20 8.89189Z" fill="white"/>
+          </svg>
+        </span>
         <span class="menu-text">Admin</span>
       </a>
       <a [routerLink]="['/', adminPath.root, adminPath.proposals]" #adminProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
       <a [routerLink]="['/', adminPath.root, adminPath.users]" #userProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
+    </span>
 
-    </nav>
+  </nav>
 
-  </div>
+</div>
 
 <div id="menu-container" class="relative min-h-[calc(100vh-650px)] h-[calc(100%-650px)] hidden md:block bg-blue-900 overflow-hidden" >
   <ng-particles [id]="id" [options]="particlesOptions" (particlesLoaded)="particlesLoaded($event)"

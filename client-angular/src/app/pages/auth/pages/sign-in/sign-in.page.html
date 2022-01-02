@@ -1,54 +1,81 @@
-<div class="h-full px-5 sm:px-0">
+<div class="h-full px-5 sm:px-0" id="sign-in">
 
-  <div class="flex flex-col h-full relative w-full sm:w-fit sm:px-20">
+  <div class="flex flex-col min-h-screen h-full relative w-full sm:w-fit sm:px-20">
     <div class="mx-auto pt-[10%] md:pt-[15%] sm:py-0 sm:mx-0 sm:pt-10">
       <svg fill="none" height="71" viewBox="0 0 161 71"
-           width="161" xmlns="http://www.w3.org/2000/svg"
-           xmlns:xlink="http://www.w3.org/1999/xlink">
-        <linearGradient id="a" gradientUnits="userSpaceOnUse" x1="161" x2="0" y1="41.5" y2="41.5">
-          <stop offset="0" stop-color="#ff9838"/><stop offset="1" stop-color="#f6d"/>
+           width="161" xmlns="http://www.w3.org/2000/svg">
+        <linearGradient id="inside" gradientUnits="userSpaceOnUse" x1="0" y1="0%" x2="100%" y2="0%">
+          <stop offset="0" stop-color="#FF66DD" >
+            <animate attributeName="offset" from="0" to="0.5" dur="3s" fill="freeze"></animate>
+          </stop>
+          <stop offset="0" stop-color="#ff9838">
+            <animate attributeName="offset" from="0" to="1" dur="3s" fill="freeze"></animate>
+          </stop>
+          <stop offset="0.1" stop-color="transparent"/>
+          <stop offset="1" stop-color="transparent"/>
         </linearGradient>
-        <path clip-rule="evenodd" d="m68.1815 2.00409c0-1.145194.8595-2.00409 2.0054-2.00409s2.0053.858896 2.0053 2.00409c0 1.14519-.8594 2.00409-2.0053 2.00409s-2.0054-.8589-2.0054-2.00409zm7.1619 8.58891c0-1.57468 1.2891-2.86302 2.8648-2.86302 1.5756 0 2.8647 1.28834 2.8647 2.86302 0 1.5746-1.2891 2.863-2.8647 2.863-1.5757 0-2.8648-1.2884-2.8648-2.863zm-8.5943 36.9326 4.8701-6.728v-17.3211-1.002-4.8671h-12.605v.7158 3.4356 1.7177h5.8728v17.3211l-21.3426 29.2025h28.0748v-5.8692h-17.0454zm30.653-24.0491h-6.016v17.3211l21.3429 29.2025h-6.589l-6.7326-9.0185h-14.6103v-5.8691h10.4564l-5.5863-7.5869-4.8701-6.728v-17.3211-1.002-4.8671h12.605v.7158 3.4356zm-91.09961 23.1902h24.92351v-5.8691h-24.92351v-17.3211h25.35321v-5.8691h-31.6557v52.3927h32.2286v-5.8692h-25.92611zm152.11951-7.3007c-.86 1.0021-1.862 1.7178-2.865 2.4336-.533.3041-1.106.6082-1.719.9338-.541.2874-1.114.5915-1.719.9271v.8589c2.578.7157 4.584 2.0041 6.303 4.0082 1.719 1.8609 2.578 4.2945 2.578 7.1574v.8589c0 2.0041-.286 3.7219-1.003 5.4397-.716 1.5747-1.719 3.0061-3.008 4.2945-1.289 1.1452-3.008 2.1472-4.87 2.863-1.862.7157-4.154 1.002-6.589 1.002h-21.199v-5.8691h4.44v-40.6544h-4.44v-5.8691h21.199c2.435 0 4.727.2863 6.589 1.002 1.862.7158 3.581 1.7178 4.87 2.863s2.292 2.5767 3.008 4.2945c.717 1.7178 1.003 3.4356 1.003 5.4397v.8589c0 1.4315-.286 2.8629-.716 4.0081s-1.003 2.1473-1.862 3.1493zm-3.438 16.0327c0-2.7198-.859-4.867-2.578-6.4417-1.862-1.5746-4.154-2.2904-7.019-2.2904h-10.17v17.4643h9.884c2.864 0 5.299-.7158 7.161-2.1473 1.863-1.5746 2.722-3.5787 2.722-6.1554zm-19.91-14.6012h10.17c3.008 0 5.3-.7157 7.018-2.4335 1.719-1.4315 2.579-3.5787 2.579-6.2986v-.4294c0-2.5767-.86-4.5808-2.722-6.0123s-4.154-2.1472-7.162-2.1472h-9.883z" fill="url(#a)" fill-rule="evenodd"/>
+        <linearGradient id="outside" gradientUnits="userSpaceOnUse" x1="100%" x2="0">
+          <stop offset="0" stop-color="#ff9838"/>
+          <stop offset="1" stop-color="#FF66DD"/>
+        </linearGradient>
+        <path clip-rule="evenodd"
+              d="m68.1815 2.00409c0-1.145194.8595-2.00409 2.0054-2.00409s2.0053.858896
+              2.0053 2.00409c0 1.14519-.8594 2.00409-2.0053 2.00409s-2.0054-.8589-2.0054-2.00409zm7.1619
+              8.58891c0-1.57468 1.2891-2.86302 2.8648-2.86302 1.5756 0 2.8647 1.28834 2.8647
+              2.86302 0 1.5746-1.2891 2.863-2.8647 2.863-1.5757 0-2.8648-1.2884-2.8648-2.863zm-8.5943
+              36.9326 4.8701-6.728v-17.3211-1.002-4.8671h-12.605v.7158 3.4356
+              1.7177h5.8728v17.3211l-21.3426 29.2025h28.0748v-5.8692h-17.0454zm30.653-24.0491h-6.016v17.3211l21.3429
+              29.2025h-6.589l-6.7326-9.0185h-14.6103v-5.8691h10.4564l-5.5863-7.5869-4.8701-6.728v-17.3211-1.002-4.8671h12.605v.7158
+              3.4356zm-91.09961 23.1902h24.92351v-5.8691h-24.92351v-17.3211h25.35321v-5.8691h-31.6557v52.3927h32.2286v-5.8692h-25.92611zm152.11951-7.3007c-.86
+              1.0021-1.862 1.7178-2.865 2.4336-.533.3041-1.106.6082-1.719.9338-.541.2874-1.114.5915-1.719.9271v.8589c2.578.7157 4.584 2.0041 6.303
+              4.0082 1.719 1.8609 2.578 4.2945 2.578 7.1574v.8589c0 2.0041-.286 3.7219-1.003 5.4397-.716 1.5747-1.719 3.0061-3.008 4.2945-1.289
+              1.1452-3.008 2.1472-4.87 2.863-1.862.7157-4.154 1.002-6.589 1.002h-21.199v-5.8691h4.44v-40.6544h-4.44v-5.8691h21.199c2.435
+              0 4.727.2863 6.589 1.002 1.862.7158 3.581 1.7178 4.87 2.863s2.292 2.5767 3.008 4.2945c.717 1.7178 1.003 3.4356
+              1.003 5.4397v.8589c0 1.4315-.286 2.8629-.716 4.0081s-1.003 2.1473-1.862 3.1493zm-3.438 16.0327c0-2.7198-.859-4.867-2.578-6.4417-1.862-1.5746-4.154-2.2904-7.019-2.2904h-10.17v17.4643h9.884c2.864 0 5.299-.7158
+              7.161-2.1473 1.863-1.5746 2.722-3.5787 2.722-6.1554zm-19.91-14.6012h10.17c3.008 0 5.3-.7157 7.018-2.4335 1.719-1.4315 2.579-3.5787 2.579-6.2986v-.4294c0-2.5767-.86-4.5808-2.722-6.0123s-4.154-2.1472-7.162-2.1472h-9.883z" fill="none" fill-rule="evenodd"/>
       </svg>
     </div>
     <div class="pt-[15%] sm:pt-0 md:pt-[20%] mt-[15%] lg:pt-[20%] sm:max-w-lg">
       <div class="px-5 sm:px-0 ">
-        <p class="text-[30px] sm:text-[43px] sm:leading-[51.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r
+        <p class="text-[30px] opacity-0 welcome-message sm:text-[43px] sm:leading-[51.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r
   from-pink-elab to-orange-elab">Welcome,</p>
-        <p class="text-[30px] sm:text-[43px] sm:leading-[51.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r
+        <p class="text-[30px] opacity-0 welcome-message sm:text-[43px] sm:leading-[51.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r
   from-pink-elab to-orange-elab">CR Community app</p>
-        <button
-          [ngClass]="{'cursor-not-allowed': isLoading}"
-          [attr.disabled]="isLoading ? 'disabled' : null"
-          class="inline-block h-12
-        mt-12
-        py-2 w-full
-        sm:my-10 sm:mt-20 sm:min-w-min sm:w-96
-        font-bold text-black bg-gradient-to-r from-pink-elab to-orange-elab rounded-full
-        focus:outline-none transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105
-        hover:from-orange-elab hover:to-pink-elab
-        focus:ring-4 focus:ring-orange-elab
-        hover:transition-all
-        duration-400"
-          (click)="onClickSignIn()"
-        >
-          <div *ngIf="isLoading" class="flex items-center justify-center ">
-            <div class="w-8 h-8 border-l-2 border-gray-900 rounded-full animate-spin mr-2"></div>
-          </div>
-          <div *ngIf="!isLoading" class="flex items-center justify-center font-bold">
-            Sign in with your DID
-          </div>
-        </button>
+        <div class="button opacity-0">
+          <button
+            [ngClass]="{'cursor-not-allowed': isLoading}"
+            [attr.disabled]="isLoading ? 'disabled' : null"
+            class="inline-block h-12
+             scale-[1%]
+          mt-12
+          py-2 w-full
+          sm:my-10 sm:mt-20 sm:min-w-min sm:w-96
+          transition-all
+          font-bold text-blue-900 bg-gradient-to-r from-pink-elab to-orange-elab rounded-full
+          focus:outline-none hover:text-green-elabLight duration-300
+          hover:bg-none
+          hover:border-2
+          "
+            (click)="onClickSignIn()"
+          >
+            <div *ngIf="isLoading" class="flex items-center justify-center ">
+              <div class="w-8 h-8 border-l-2 border-gray-900 rounded-full animate-spin mr-2"></div>
+            </div>
+            <div *ngIf="!isLoading" class="flex items-center justify-center font-bold">
+              Sign in with your DID
+            </div>
+          </button>
+        </div>
       </div>
 
-      <div class="mt-10 sm:max-w-lg text-[15px]">
+      <div class="mt-10 sm:max-w-lg text-[15px] how-to-sign-in opacity-0">
         <p class="text-orange-elab font-bold">How to sign in ?</p>
         <p class="text-white opacity-50 mt-3 sm:ml-2">1. Either by opening this dApp from Elastos Essentials dApp browser. </p>
         <p class="mt-2 text-white opacity-50 sm:ml-2">2. Or by scanning the Wallet Connect QR code using the Elastos Essentials scanner.</p>
       </div>
     </div>
 
-    <div class="opacity-50 justify-end text-center sm:text-left align-bottom mt-auto mb-8">
+    <div class="opacity-50 justify-end text-center sm:text-left align-bottom mt-auto pt-5 mb-8">
       &copy; 2021 Elastos. All rights reserved.
     </div>
   </div>

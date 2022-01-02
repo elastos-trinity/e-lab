@@ -37,17 +37,32 @@
 
     <h1> My Proposals </h1>
   </div>
-  <div *ngIf="currentUser.isActive" class="mx-auto pr-0 md:mt-5 md:ml-auto lg:mt-0 lg:pr-10 lg:ml-auto lg:mr-0 mb-10 sm:mb-0">
-    <button class="bg-green-100 font-bold h-9 px-10 text-green rounded-full
-    transition ease-in-out delay-50 hover:scale-110 hover:bg-green-elab duration-200 hover:text-white" type="button" (click)="showNewProposal()">
-      + New Proposal
+  <div *ngIf="currentUser.isActive"
+       class="
+       mx-auto pr-0
+       sm:mb-0
+       md:mt-5 md:ml-auto
+       lg:mt-0 lg:pr-10 lg:ml-auto lg:mr-0 mb-10
+       ">
+    <button
+      class="h-9 elab-button" type="button" (click)="openNewProposalModal()"
+      [attr.disabled]="inNewProposalModal ? 'disabled' : null"
+      [ngClass]="{'elab-button-loading': inNewProposalModal,  'elab-button-green px-10': !inNewProposalModal}">
+      <span *ngIf="!inNewProposalModal">
+        + New Proposal
+      </span>
+      <svg *ngIf="inNewProposalModal === true" class="animate-spin mx-auto h-5 text-green-elabLight"
+           xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-95" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
     </button>
   </div>
 </div>
 
 <div class="flex-row md:flex-col" *ngIf="pageSize && pageNum" >
-  <div *ngIf="isLoading && currentUser.isActive" class="flex items-center align-middle justify-center mt-5">
-    <div class="w-40 h-40 border-t-4 border-b-4 border-pink-450 rounded-full animate-spin"></div>
+  <div *ngIf="isLoading && currentUser.isActive" class="flex items-center align-middle justify-center mt-5 min-h-[350px]">
+    <div class="elab-spin-loader"></div>
   </div>
 
   <div *ngIf="!isLoading && !totalProposals && currentUser.isActive" class="flex items-center align-middle justify-center mt-5">
@@ -60,15 +75,14 @@
     'opacity-90': proposal.votedByUser && proposal.grant.toLowerCase() !== 'notgranted'}"
          class="flex flex-row h-auto
          md:flex-row md:h-96 lg:h-72 xl:h-52
-         md:rounded-xl md:bg-blue-800 md:mt-10 mt-6
+         md:rounded-xl md:bg-blue-800 md:bg-gradient-to-r from-blue-800 to-blue-900 md:mt-10 mt-6
          md:p-3">
 
       <div class="my-auto pr-4 md:my-0 md:pr-2 lg:pr-6 lg:pl-4 pt-0.5">#{{ pageSize * (pageNum - 1) + (indexOfElement + 1) }}</div>
 
       <!-- FIRST COLUMN -->
-      <div class="flex flex-col w-full
-      bg-blue-800 p-3 rounded-xl
-      md:rounded-none md:p-0 md:bg-transparent md:w-1/2">
+      <div class="flex flex-col w-full p-3 rounded-xl bg-gradient-to-br from-blue-800 to-blue-900
+      md:rounded-none md:p-0 md:pr-1 md:bg-none md:w-1/2">
         <!-- First column - Title - Status - Description -->
         <div class="flex flex-row">
           <div class="text-pink-elab font-bold md:hidden">Title</div>
@@ -93,7 +107,7 @@
         <!-- MOBILE - Link -->
         <div class="md:hidden mt-4 text-green-elab break-all">
           <div class="text-pink-elab font-bold md:hidden">Link</div>
-          <a [href]="proposal.link" target="_blank" class="text-sm">{{ proposal.link }}</a>
+          <a [href]="proposal.link" target="_blank" class="text-sm text-pink-elab">{{ proposal.link }}</a>
         </div>
 
         <!-- MOBILE - Created / Result -->
@@ -160,7 +174,8 @@
         </div>
 
         <!-- MOBILE - STATUS -->
-        <div *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === VotingStatus.NOT_STARTED"
+        <div *ngIf="proposal.status === ProposalStatus.APPROVED
+        && proposal.votingStatus === VotingStatus.NOT_STARTED"
              class="md:hidden flex mt-4 text-[14px]">
           <span class="align-middle my-auto block font-bold text-pink-450">Vote starting on {{ proposal.votingPeriodStartDate | date:'MMM d' }} </span>
         </div>
@@ -172,7 +187,7 @@
         <div class="pt-4">
           <span class="text-pink-450 font-bold">Link</span>
           <span class="block break-all text-green-elabLight">
-            <a href="{{ proposal.link }}" target="_blank">
+            <a href="{{ proposal.link }}" target="_blank" class="duration-300 hover:text-pink-elab">
               <span class="hidden 2xl:inline">
                 {{ proposal.link }}
               </span>
@@ -247,12 +262,12 @@
 
   <div *ngIf="!isLoading && totalProposals" class="flex flex-row text-gray-400 py-5 lg:py-10 lg:pl-24 text-sm md:text-base">
     <div *ngIf="totalProposals">
-      Active proposals: {{totalActiveProposals}} / {{ totalProposals }}
+      Active <span class="hidden xl:inline">proposals</span>: {{totalActiveProposals}} / {{ totalProposals }}
     </div>
     <div class="ml-auto inline-flex">
-      Row per page: 10
+      Row<span class="inline xl:hidden">s</span><span class="hidden xl:inline">&nbsp;per page</span>: 10
     </div>
-    <div class="ml-auto md:ml-24 md:w-36">
+    <div class="ml-auto md:ml-24 md:w-32">
       <p *ngIf="pageSize && pageNum && totalProposals">
         {{ pageSize * (pageNum - 1) + 1 }} - {{pageSize * pageNum}} OF {{ totalProposals }}
       </p>
@@ -274,9 +289,7 @@
 
 <div *ngIf="!currentUser.isActive" class="flex flex-col items-center align-middle justify-center mt-5">
   <h3 class="text-pink-450 text-center">Your account is not active. You need to activate to create a proposal.</h3>
-  <button *ngIf="!currentUser.isActive" class="bg-green-100 font-bold h-9 px-10 text-blue-900 rounded-full
-  transition ease-in-out delay-50 hover:scale-110 hover:bg-green-elab duration-200 hover:text-white
-" type="button" (click)="showActivateAccount()">
+  <button *ngIf="!currentUser.isActive" class="elab-button-green h-9 px-10 rounded-full" type="button" (click)="openActivateAccountModal()">
     Activate
   </button>
 </div>

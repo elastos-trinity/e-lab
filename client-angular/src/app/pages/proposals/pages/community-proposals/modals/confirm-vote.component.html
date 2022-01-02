@@ -3,6 +3,9 @@
   from-pink-450 to-orange-450 max-w-fit inline-flex">
     Confirm your vote
   </h4>
+  <div *ngIf="!proposal || !proposal.title" class="flex items-center align-middle justify-center mt-5 min-h-[150px]">
+    <div class="elab-spin-loader"></div>
+  </div>
   <div *ngIf="proposal && proposal.title">
     <p>Please confirm that you want to vote <span [ngClass]="{'text-green': vote === 'for', 'text-red-500': vote === 'against'}">{{ vote | uppercase }}</span>
       the following proposal:<p>
@@ -10,32 +13,32 @@
       <span class="bg-blue-800 text-pink-450 font-bold px-2">Title</span>
       <span class="bg-blue-800 break-word" >{{ proposal.title }}</span>
       <span class="bg-blue-800 text-pink-450 font-bold px-2">Link</span>
-    <span class="bg-blue-800 break-all"><a [href]="proposal.link" target="_blank" class="text-green-elabLight">Click here to open the proposal</a></span>
+      <span class="bg-blue-800 break-all"><a [href]="proposal.link" target="_blank" class="text-green-elabLight duration-200 hover:text-pink-elab">Click here to open the proposal</a></span>
     </div>
     <p class="mt-4 text-sm">*Votes are not cancellable.</p>
   </div>
-  <div class="flex mt-10">
-    <button (click)="close()" type="button" class="bg-transparent text-orange-450 pl-0 hover:text-pink-450 focus:outline-none text-sm
-     transition ease-in-out delay-50 hover:scale-110 duration-200
-    ">
-      Cancel
-    </button>
+  <div class="flex flex-row gap-x-4 mt-10 min-h-[32px]">
+
+    <button (click)="close()" type="button" class="elab-button-transparent text-sm hover:pb-0.5">Cancel</button>
 
     <button
       (click)="confirmVote()"
+      [attr.disabled]="loading ? 'disabled' : null"
+      [@slideInFromBottom]="{ value: '', params: { delay: 250 + 'ms' } }"
       *ngIf="proposal && proposal.title"
-      [ngClass]="{'cursor-not-allowed': loading, 'bg-green-100 text-green hover:bg-green-elab': vote === 'for', 'bg-red-100 text-red hover:bg-red': vote === 'against'}" [attr.disabled]="loading ? 'disabled' : null"
+      [ngClass]="{'elab-button-loading': loading, 'elab-button elab-button-green text-sm px-4 hover:pb-0.5': !loading}"
       type="submit"
-      class="ml-10 font-bold text-sm rounded-full px-4 py-1 transition ease-in-out delay-50 hover:scale-110 duration-200 hover:text-white "
-    >
-      <div class="flex flex-row">
-        <svg *ngIf="loading === true" class="animate-spin -ml-1 mr-3 h-5 w-5 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-95" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        <p *ngIf="loading === false">Vote</p>
-        <p *ngIf="loading === true">Voting...</p>
-      </div>
+      class="flex flex-row justify-center items-center">
+      <svg *ngIf="loading"
+           class="animate-spin h-5 w-5 text-green-elabLight"
+           xmlns="http://www.w3.org/2000/svg"
+           fill="none"
+           viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-95" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <p *ngIf="!loading">Vote</p>
     </button>
+
   </div>
 </app-modal>
