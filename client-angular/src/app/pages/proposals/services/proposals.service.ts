@@ -29,10 +29,11 @@ export class ProposalsService {
   private getProposals(pageNumber = 1, pageSize = 10, type: GetProposalQueryType): Observable<GetProposalResponse> {
     return this.elabProposalService.get(pageNumber, pageSize, type).pipe(
       map(elabBackendProposalResult => {
-        return <GetProposalResponse>{
-          proposals: elabBackendProposalResult.data.result.map((element: ElabBackendProposalResult) => Proposal.fromGetProposal(element)),
+        return <GetProposalResponse> {
           total: elabBackendProposalResult.data.total,
-          totalActive: elabBackendProposalResult.data.totalActive
+          totalActive: elabBackendProposalResult.data.totalActive,
+          proposals: elabBackendProposalResult.data.result
+            .map((element: ElabBackendProposalResult) => Proposal.fromGetProposal(element))
         }
       })
     )
@@ -69,7 +70,7 @@ export class ProposalsService {
    * Approve a proposal
    * @param proposalId Proposal ID to approve
    */
-  approve(proposalId: string): Promise<unknown> {
+  approve(proposalId: string): Observable<any> {
     return this.elabProposalService.put(proposalId, 'approved')
   }
 
@@ -77,7 +78,7 @@ export class ProposalsService {
    * Reject a proposal
    * @param proposalId Proposal ID to reject
    */
-  reject(proposalId: string): Promise<unknown> {
+  reject(proposalId: string): Observable<any> {
     return this.elabProposalService.put(proposalId, 'rejected')
   }
 
@@ -85,7 +86,7 @@ export class ProposalsService {
    * Cancel the approval decision
    * @param proposalId Proposal ID to cancel the decision for
    */
-  cancelDecision(proposalId: string): Promise<unknown> {
+  cancelDecision(proposalId: string): Observable<any> {
     return this.elabProposalService.put(proposalId, 'new')
   }
 

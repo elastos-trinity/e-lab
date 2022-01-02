@@ -1,9 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { Router } from '@angular/router';
 import { ROUTER_UTILS } from '@core/utils/router.utils';
 import { AuthService } from '@pages/auth/services/auth.service';
 import { UserService } from "@pages/user/services/user.service";
 import User from "@core/models/user.model";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
 
 @Component({
   selector: 'app-header',
@@ -12,23 +13,26 @@ import User from "@core/models/user.model";
 })
 export class HeaderComponent implements OnInit {
   path = ROUTER_UTILS.config.base;
-  currentUser!: User
+
+  isUserInfoUpdated$ = new BehaviorSubject<boolean>(false);
+
   miniMenuEnabled = false;
+  public currentUser!: User;
 
-  constructor(private router: Router, private authService: AuthService, private userService: UserService) { }
+  constructor(private router: Router, private authService: AuthService, private userService: UserService) {
+  }
 
-  onClickSignOut(): void {
+  async onClickSignOut(): Promise<void> {
     this.authService.signOut().then(() => {
       const { root, signIn } = ROUTER_UTILS.config.auth;
-      this.router.navigate(['/', root, signIn]);
+      return this.router.navigate(['/', root, signIn]);
     })
   }
 
   ngOnInit(): void {
-    this.userService.loggedInUser$.subscribe((v) => {
-      if (v.name) {
-        this.currentUser = v
-      }
+    this.userService.loggedInUser$.subscribe((userInfo) => {
+      this.currentUser = userInfo
+      this.isUserInfoUpdated$.next(true)
     })
   }
 

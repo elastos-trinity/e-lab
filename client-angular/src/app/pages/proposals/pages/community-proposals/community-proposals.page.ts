@@ -24,7 +24,7 @@ export class CommunityProposalsPage implements OnInit {
   pageSize!: number;
   pageNum!: number;
   currentVotingPeriod!: { startDate: Date, endDate: Date , isTodayInVotingPeriod: boolean};
-  isLoading: boolean;
+  isLoading = true;
 
   // ENUM imports
   VotingStatus = VotingStatus;
@@ -37,7 +37,6 @@ export class CommunityProposalsPage implements OnInit {
                private voteService: VoteService,
                private userService: UserService,
                private route: ActivatedRoute) {
-    this.isLoading = true;
     this.pageSize = 10;
     this.pageNum = 1;
     this.totalProposals = 0;
@@ -49,12 +48,14 @@ export class CommunityProposalsPage implements OnInit {
    * - Initialize the current user
    */
   ngOnInit(): void {
-    this.voteService.getVotingPeriod().then((response) => {
-      this.currentVotingPeriod = response
-      this.getActiveProposals();
-    });
+    this.isLoading = true;
     this.route.data.subscribe(({currentUser: user}) => {
       this.currentUser = user
+
+      this.voteService.getVotingPeriod().then((response) => {
+        this.currentVotingPeriod = response
+        this.getActiveProposals();
+      });
     });
   }
 
@@ -66,9 +67,14 @@ export class CommunityProposalsPage implements OnInit {
   async showActivateAccount(): Promise<void> {
     const { ActivateAccountComponent } = await import('../../modals/activate-account.component')
     const modalReference = await this.activateAccountProposalModalService.open(ActivateAccountComponent)
+    this.getActiveProposals();
     modalReference.instance.accountNewlyActivatedEvent.subscribe(() => {
-      this.userService.getLoggedInUser()
-      this.getActiveProposals()
+      const loggedInUserSub = this.userService.fetchLoggedInUser()
+        .subscribe((newUserInfos) => {
+          this.currentUser = newUserInfos;
+          this.getActiveProposals();
+          loggedInUserSub.unsubscribe();
+        });
     })
   }
 
@@ -110,12 +116,14 @@ export class CommunityProposalsPage implements OnInit {
    * Get the proposal list
    */
   public getActiveProposals(): void {
-    this.proposalService.getActiveProposals(this.pageNum, this.pageSize).subscribe(activeProposalResponse => {
-      this.isLoading = false;
-      this.proposals = activeProposalResponse.proposals
-      this.totalProposals = activeProposalResponse.total
-      this.totalActiveProposals = activeProposalResponse.totalActive
-    })
+    this.isLoading = true;
+    this.proposalService.getActiveProposals(this.pageNum, this.pageSize)
+      .subscribe(activeProposalResponse => {
+        this.isLoading = false;
+        this.proposals = activeProposalResponse.proposals
+        this.totalProposals = activeProposalResponse.total
+        this.totalActiveProposals = activeProposalResponse.totalActive
+      })
   }
 
   /**

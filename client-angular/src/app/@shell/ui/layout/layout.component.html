@@ -1,11 +1,20 @@
 <div class="relative min-h-screen md:flex w-full">
   <!-- left menu -->
-  <app-menu></app-menu>
-  <div class="flex-col bg-blue-900 w-full h-fit min-h-screen p-5">
+  <app-menu class="z-10"></app-menu>
+  <div class="flex-col bg-blue-900 w-full min-h-screen p-5 z-0">
     <!-- desktop header -->
     <app-header></app-header>
     <!-- page content -->
-    <ng-content></ng-content>
+
+    <div>
+      <div class="flex h-[80vh] justify-center items-center" #spinnerElement>
+          <app-elab-loader></app-elab-loader>
+      </div>
+      <div #contentElement>
+        <ng-content ></ng-content>
+      </div>
+    </div>
+
     <!-- footer for future ref -->
     <app-footer></app-footer>
   </div>

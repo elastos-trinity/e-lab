@@ -8,10 +8,12 @@ const routes: Routes = [
   {
     path: ROUTER_UTILS.config.admin.proposals,
     component: AdminProposalsPage,
+    data: { animation: 'AdminProposalsPage' }
   },
   {
     path: ROUTER_UTILS.config.admin.users,
     component: AdminUsersPage,
+    data: { animation: 'AdminUsersPage' }
   }
 ];
 

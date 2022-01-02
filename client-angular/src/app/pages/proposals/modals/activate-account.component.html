@@ -22,8 +22,9 @@
       <p *ngIf="isActivationInProcess">Please check your wallet</p>
 
       <button (click)=onClickProvideCredentials() [attr.disabled]="isActivationInProcess ? 'disabled' : null"
-              class="bg-green-100 font-bold h-9 px-10 text-green rounded-full w-[170px] px-[10px] mt-2 md:mt-0 md:ml-auto
-      transition ease-in-out delay-50 hover:scale-110 hover:bg-green-elab duration-200 hover:text-white
+              class="button-green-elab
+               h-9 px-10
+              w-[170px] px-[10px] mt-2 md:mt-0 md:ml-auto
 " type="button">
         <div *ngIf="isActivationInProcess" class="flex items-center justify-center ">
           <div class="w-6 h-6 border-l-2 border-pink-450 rounded-full animate-spin mr-2"></div>
@@ -42,7 +43,7 @@
       </div>
 
       <button (click)=goToKycMe() class="h-9 px-10 rounded-full w-[170px] mt-2
-      transition ease-in-out delay-50 hover:scale-110 hover:bg-green-elab duration-200 hover:text-white
+      transition ease-in-out delay-50 hover:scale-110 duration-200 hover:text-white
       md:ml-auto md:mt-auto kyc-button" type="button">
         <svg width="22" height="15" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto">
           <path d="M10.761 0C10.1321 0 9.61816 0.510053 9.61816 1.14283V13.246C9.61816 13.875 10.1282 14.3889 10.761 14.3889C11.3899 14.3889 11.9038 13.8788 11.9038 13.246V1.14283C11.9038 0.510053 11.3938 0 10.761 0Z" fill="#4AB4F0"/>

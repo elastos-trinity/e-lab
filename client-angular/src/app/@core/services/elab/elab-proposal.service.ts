@@ -27,22 +27,12 @@ export class ElabProposalService {
 
   /**
    * Get auth token from ELAB backend
-   * @param title Proposal title
-   * @param link Proposal link
-   * @param description Proposal desc
+   *
    * @return Promise<string> Access token if success, error message otherwise.
+   * @param body
    */
-  async create(title: string, link: string, description: string): Promise<string> {
-    try {
-      const body = JSON.stringify({title: title, link: link, description: description});
-      const response = await this.http.post<any>(ElabProposalService.proposalsUrl, body).toPromise();
-      if (response === undefined) {
-        return Promise.reject("Returned proposal response by ELAB backend service is null");
-      }
-      return Promise.resolve(response);
-    } catch {
-      return Promise.reject("Call to ELAB backend service failed.");
-    }
+  create(body: { title: string, link: string, description: string }): Observable<any> {
+    return this.http.post(ElabProposalService.proposalsUrl, body);
   }
 
   find(proposalId: string): Observable<ElabBackendProposalResult> {
@@ -90,10 +80,10 @@ export class ElabProposalService {
    * @param proposalId
    * @param status
    */
-  put(proposalId: string, status: string): Promise<unknown> {
-    return this.http.put<unknown>(`${ElabProposalService.proposalUrl}/${proposalId}/audit`, {
+  put(proposalId: string, status: string):Observable<any> {
+    return this.http.put(`${ElabProposalService.proposalUrl}/${proposalId}/audit`, {
       result: status
-    }).toPromise()
+    })
   }
 
   /**

@@ -20,28 +20,50 @@ export enum VotingStatus {
 }
 
 export class Proposal {
-  private _id: string
-  private _title: string
-  private _description: string
-  private _link: string
-  private _creator: string
-  private _createdAt: Date
+  private readonly _id: string
+  private readonly _title: string
+  private readonly _description: string
+  private readonly _link: string
+  private readonly _creator: string
+  private readonly _createdAt: Date
 
-  private _votesFor: number
-  private _votesAgainst: number
-  private _votingPeriodStartDate: Date
-  private _votingPeriodEndDate: Date
-  private _votedByUser: boolean
-  private _userVote: string
+  private readonly _votesFor: number
+  private readonly _votesAgainst: number
+  private readonly _votingPeriodStartDate: Date
+  private readonly _votingPeriodEndDate: Date
+  private readonly _votedByUser: boolean
+  private readonly _userVote: string
 
-  private _status: ProposalStatus
-  private _votingStatus: VotingStatus
-  private _grant: GrantStatus
+  private readonly _status: ProposalStatus
+  private readonly _votingStatus: VotingStatus
+  private readonly _grant: GrantStatus
 
-  constructor(id: string, title: string, status: string, grant: string, description: string, link: string, createdAt: Date,
-              votesFor = 0, votesAgainst = 0, votingPeriodStartDate = new Date(0),
-              votingPeriodEndDate = new Date(0), creator: string, votedByUser: boolean, userVote: string,
-              votingStatus: string) {
+  /**
+   * Proposal
+   * @param id ID
+   * @param title Title
+   * @param description Description
+   * @param link Link
+   * @param createdAt Created date
+   * @param creator Proposer
+   * @param votesFor Number of votes for
+   * @param votesAgainst Number of votes against
+   * @param votingPeriodStartDate Voting period start date
+   * @param votingPeriodEndDate Voting period end date
+   * @param votedByUser Has the proposal been voted by the user already
+   * @param userVote User vote if he voted.
+   * @param status Status (approved, rejected, new)
+   * @param votingStatus Voting status - Using this we can figure out what is the proposal state (in voting period, ended, starting soon...)
+   * @param grant Grant status
+   */
+  constructor(id: string, title: string, description: string, link: string, createdAt: Date,
+              creator: string,
+              votesFor = 0, votesAgainst = 0,
+              votingPeriodStartDate = new Date(0),
+              votingPeriodEndDate = new Date(0),
+              votedByUser: boolean,
+              userVote: string,
+              status: ProposalStatus, votingStatus: VotingStatus, grant: GrantStatus) {
     this._id = id;
     this._title = title;
     this._description = description;
@@ -56,27 +78,36 @@ export class Proposal {
     this._votedByUser = votedByUser;
     this._userVote = userVote;
 
-    this._status = status as ProposalStatus;
-    this._grant = grant as GrantStatus
-    this._votingStatus = votingStatus as VotingStatus;
+    this._status = status;
+    this._votingStatus = votingStatus;
+    this._grant = grant;
   }
 
+  /**
+   * Return a formatted proposal from a GET proposal response.
+   * @param elabProposal The GET proposal response from elab.
+   */
   static fromGetProposal(elabProposal: ElabBackendProposalResult): Proposal {
-    return new Proposal(elabProposal.id, elabProposal.title, elabProposal.status, elabProposal.grant, elabProposal.description,
-      elabProposal.link, new Date(elabProposal.creationTime), elabProposal.votesFor, elabProposal.votesAgainst, elabProposal.votingPeriodStartDate,
-      elabProposal.votingPeriodEndDate, elabProposal.creator, elabProposal.votedByUser, elabProposal.userVote, elabProposal.votingStatus);
+    return new Proposal(elabProposal.id,
+      elabProposal.title,
+      elabProposal.description,
+      elabProposal.link,
+      new Date(elabProposal.creationTime),
+      elabProposal.creator,
+      elabProposal.votesFor,
+      elabProposal.votesAgainst,
+      elabProposal.votingPeriodStartDate,
+      elabProposal.votingPeriodEndDate,
+      elabProposal.votedByUser,
+      elabProposal.userVote,
+      elabProposal.status as ProposalStatus,
+      elabProposal.votingStatus as VotingStatus,
+      elabProposal.grant as GrantStatus
+      );
   }
 
   get votesAgainst(): number {
     return this._votesAgainst;
-  }
-
-  set votesAgainst(value: number) {
-    this._votesAgainst = value;
-  }
-
-  set votesFor(value: number) {
-    this._votesFor = value;
   }
 
   get votesFor(): number {
@@ -87,25 +118,14 @@ export class Proposal {
     return this._createdAt;
   }
 
-  set createdAt(value: Date) {
-    this._createdAt = value;
-  }
-
   get link(): string {
     return this._link;
-  }
-
-  set link(value: string) {
-    this._link = value;
   }
 
   get description(): string {
     return this._description;
   }
 
-  set description(value: string) {
-    this._description = value;
-  }
   get status(): ProposalStatus {
     return this._status;
   }
@@ -114,16 +134,8 @@ export class Proposal {
     return this._title;
   }
 
-  set title(value: string) {
-    this._title = value;
-  }
-
   get id(): string {
     return this._id;
-  }
-
-  set id(value: string) {
-    this._id = value;
   }
 
   get grant(): GrantStatus {
@@ -134,24 +146,12 @@ export class Proposal {
     return this._creator;
   }
 
-  set creator(value: string) {
-    this._creator = value;
-  }
-
   get votedByUser(): boolean {
     return this._votedByUser;
   }
 
-  set votedByUser(value: boolean) {
-    this._votedByUser = value;
-  }
-
   get userVote(): string {
     return this._userVote;
-  }
-
-  set userVote(value: string) {
-    this._userVote = value;
   }
 
   get votingStatus(): VotingStatus {
@@ -162,15 +162,8 @@ export class Proposal {
     return this._votingPeriodEndDate;
   }
 
-  set votingPeriodEndDate(value: Date) {
-    this._votingPeriodEndDate = value;
-  }
   get votingPeriodStartDate(): Date {
     return this._votingPeriodStartDate;
-  }
-
-  set votingPeriodStartDate(value: Date) {
-    this._votingPeriodStartDate = value;
   }
 
 }

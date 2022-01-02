@@ -8,10 +8,12 @@ const routes: Routes = [
   {
     path: ROUTER_UTILS.config.proposals.communityProposals,
     component: CommunityProposalsPage,
+    data: { animation: 'CommunityProposalsPage' }
   },
   {
     path: ROUTER_UTILS.config.proposals.myProposals,
     component: MyProposalsPage,
+    data: { animation: 'MyProposalsPage' }
   }
 ];
 

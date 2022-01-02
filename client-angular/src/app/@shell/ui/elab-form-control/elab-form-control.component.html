@@ -3,14 +3,14 @@
     <label [for]="control.name" class="font-bold text-pink-450">{{control.label}}</label>
     <div *ngFor="let error of control.errorMessages" class="ml-auto text-red text-sm max-w-fit justify-end">{{error}}</div>
   </div>
-  <div class="form-control" [ngClass]="{'form-error': control.errorMessages && control.errorMessages.length > 0}">
+  <div class="form-control relative" [ngClass]="{'form-error': control.errorMessages && control.errorMessages.length > 0}">
     <input *ngIf="!control.type || control.type === 'input'"
       [id]="control.name" type="text"
            [name]="control.name"
            [formControl]="control"
            [placeholder]="control.placeholder"
            class="block w-full p-2 mt-2 text-white bg-blue-800 text-sm
-      appearance-none focus:outline-none focus:bg-blue-900 focus:border-pink-450 rounded-full focus:shadow-inner"
+      appearance-none focus:outline-none focus:bg-blue-900 focus:border-pink-450 rounded-full focus:shadow-inner effect-9"
     />
     <textarea *ngIf="control.type && control.type === 'textarea'"
            [id]="control.name"
@@ -18,6 +18,7 @@
            [formControl]="control"
            [placeholder]="control.placeholder"
            class="block w-full p-2 mt-2 text-white bg-blue-800 text-sm
-      appearance-none focus:outline-none focus:bg-blue-900 focus:border-pink-450 rounded-xl focus:shadow-inner resize-none h-20"></textarea>
+      appearance-none focus:outline-none focus:bg-blue-900 focus:border-pink-450 rounded-xl focus:shadow-inner resize-none h-20 effect-9"></textarea>
+    <span class="focus-border"></span>
   </div>
 </div>

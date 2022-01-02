@@ -32,6 +32,8 @@ export class MyProposalsPage implements OnInit {
   ProposalStatus = ProposalStatus;
   GrantStatus = GrantStatus;
 
+  inNewProposalModal = false;
+
   constructor (private createProposalModalService: ModalService<NewProposalComponentType>,
                private voteService: VoteService,
                private activateAccountProposalModalService: ModalService<ActivateAccountComponent>,
@@ -48,7 +50,7 @@ export class MyProposalsPage implements OnInit {
    */
   ngOnInit(): void {
     this.isLoading = true
-    this.route.data.subscribe(({currentUser: user}) => {
+    this.route.data.subscribe(({ currentUser: user }) => {
       this.currentUser = user
       if (this.currentUser.isActive) {
         this.getMyProposals();
@@ -56,30 +58,37 @@ export class MyProposalsPage implements OnInit {
     });
   }
 
-  // ======= UI
-
   /**
    * Display the new proposal modal
    */
-  async showNewProposal(): Promise<void> {
+  async openNewProposalModal(): Promise<void> {
+    this.inNewProposalModal = true;
     const { NewProposalComponent } = await import('./modals/new-proposal-component')
     const modalReference = await this.createProposalModalService.open(NewProposalComponent) as ComponentRef<NewProposalComponentType>
-    modalReference.instance.proposalEvent.subscribe(() => { this.getMyProposals() })
+    modalReference.instance.newProposalEvent.subscribe(() => {
+      this.getMyProposals();
+      this.createProposalModalService.close();
+    })
+
+    modalReference.instance.modalCloseEvent.subscribe(() => {
+      this.inNewProposalModal = false;
+    })
   }
 
 
   /**
    * Display the activate account modal
    */
-  async showActivateAccount(): Promise<void> {
+  async openActivateAccountModal(): Promise<void> {
     const { ActivateAccountComponent } = await import('../../modals/activate-account.component')
     const modalReference = await this.activateAccountProposalModalService.open(ActivateAccountComponent)
     modalReference.instance.accountNewlyActivatedEvent.subscribe(() => {
-      const newUserInfos = this.userService.getLoggedInUser().subscribe((currentUser) => {
-        this.currentUser = currentUser;
-        this.getMyProposals();
-        newUserInfos.unsubscribe();
-      });
+      const loggedInUserSub = this.userService.fetchLoggedInUser()
+        .subscribe((newUserInfos) => {
+          this.currentUser = newUserInfos;
+          this.getMyProposals();
+          loggedInUserSub.unsubscribe();
+        });
     })
   }
 
@@ -101,31 +110,27 @@ export class MyProposalsPage implements OnInit {
    * Increment the current page number.
    */
   incrementCurrentPage(): void {
-    if (this.canDoNextPage()) {
-      this.pageNum += 1;
-    }
+    this.pageNum = this.canDoNextPage() ? this.pageNum + 1 : this.pageNum;
   }
 
   /**
    * Decrement the current page number.
    */
   decrementCurrentPage(): void {
-    if (this.canDoPreviousPage()) {
-      this.pageNum -= 1;
-    }
+    this.pageNum = this.canDoPreviousPage() ? this.pageNum - 1 : this.pageNum;
   }
-
-  // ======= API
 
   /**
    * Get the proposal list
    */
   public getMyProposals(): void {
-    this.proposalService.getMyProposals(this.pageNum, this.pageSize).subscribe(myProposalResponse => {
-      this.isLoading = false;
-      this.proposals = myProposalResponse.proposals
-      this.totalProposals = myProposalResponse.total
-      this.totalActiveProposals = myProposalResponse.totalActive
-    })
+    this.isLoading = true;
+    this.proposalService.getMyProposals(this.pageNum, this.pageSize)
+      .subscribe(myProposalResponse => {
+        this.proposals = myProposalResponse.proposals
+        this.totalProposals = myProposalResponse.total
+        this.totalActiveProposals = myProposalResponse.totalActive
+        this.isLoading = false;
+      })
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute, Router } from '@angular/router';
 import { ROUTER_UTILS } from '@core/utils/router.utils';
 import { AuthService } from '../../services/auth.service';
@@ -6,6 +6,8 @@ import { ElastosConnectivityService } from "@core/services/elastos-connectivity/
 import { Container, GradientType, Main } from "tsparticles";
 import { loadGradientUpdater } from "tsparticles-updater-gradient";
 import { loadLightInteraction } from "tsparticles-interaction-light";
+import anime from "animejs";
+
 
 @Component({
   templateUrl: './sign-in.page.html',
@@ -15,7 +17,7 @@ import { loadLightInteraction } from "tsparticles-interaction-light";
 /**
  * The sign-in page.
  */
-export class SignInPage implements OnInit {
+export class SignInPage implements OnInit, AfterViewInit {
   isLoggedIn!: boolean;
   isLoading = false;
 
@@ -25,6 +27,62 @@ export class SignInPage implements OnInit {
     private elastosConnectivityService: ElastosConnectivityService,
     private authService: AuthService
   ) { }
+
+  ngAfterViewInit(): void {
+    anime({
+      targets: '#sign-in path',
+      strokeDashoffset: [anime.setDashoffset, 0],
+      easing: 'linear',
+      duration: 6000,
+      begin: function(anim) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        document
+          .querySelector('#sign-in path')
+          .setAttribute("stroke", "url(#outside)");
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        document
+          .querySelector('#sign-in path')
+          .setAttribute("fill", "url(#inside)");
+      },
+    });
+
+
+    anime({
+      targets: '#sign-in .welcome-message',
+      opacity: '1',
+      easing: 'easeInOutQuad',
+      duration: 3000
+    });
+
+    anime({
+      targets: '#sign-in .button',
+      opacity: '1',
+      easing: 'easeInOutQuad',
+      duration: 1000
+    })
+
+    anime({
+      targets: '#sign-in .how-to-sign-in',
+      opacity: '1',
+      duration: 3000,
+      easing: 'easeInOutQuad',
+      delay: 500
+    })
+
+    setTimeout(function() {
+      anime({
+        targets: '#sign-in button',
+        scale: {
+          value: 1,
+          duration: 3000,
+          easing: 'easeInOutQuart'
+        },
+      })
+    }, 1000);
+
+  }
 
   async ngOnInit(): Promise<void> {
     if (this.elastosConnectivityService.isAlreadyConnected() && this.authService.isLoggedIn$) {
@@ -36,21 +94,20 @@ export class SignInPage implements OnInit {
   }
 
 
-  async onClickSignIn(): Promise<void> {
+  async onClickSignIn(): Promise<boolean> {
     try {
       if (this.elastosConnectivityService.isAlreadyConnected()) {
         await this.authService.signOut();
         await this.authService.signIn();
-        await this.router.navigate([`/${ROUTER_UTILS.config.base.home}`]);
-        return Promise.resolve();
+        return this.router.navigate([`/${ROUTER_UTILS.config.base.home}`]);
       } else {
         this.isLoading = true;
         await this.authService.signIn();
-        await this.router.navigate([`/${ROUTER_UTILS.config.base.home}`]);
-        return Promise.resolve();
+        return this.router.navigate([`/${ROUTER_UTILS.config.base.home}`]);
       }
     } catch {
       this.isLoading = false;
+      return Promise.resolve(false)
     }
   }
 
@@ -122,14 +179,8 @@ export class SignInPage implements OnInit {
         value: 7
       },
       opacity: {
-        value: 0.8,
+        value: 0.7,
         random: true,
-        anim: {
-          enable: false,
-          speed: 3,
-          opacity_min: 0.1,
-          sync: false
-        }
       },
       shape: {
         type: "circle" as const

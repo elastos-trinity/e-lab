@@ -28,15 +28,19 @@ export class AuthService {
   async signIn(): Promise<void> {
     try {
       const verifiablePresentation: VerifiablePresentation = await this.elastosConnectivityService.getVerifiablePresentation();
+      if (!verifiablePresentation) {
+        return Promise.reject("User closed modal");
+      }
       const accessToken: string = await this.elabService.login(verifiablePresentation);
-      // todo: return this in the promise and dont set it here
       setItem(StorageItem.AccessToken, accessToken);
       setItem(StorageItem.DID, verifiablePresentation.getHolder().getMethodSpecificId());
       await this.isLoggedIn$.next(true);
       return Promise.resolve();
     } catch (error) {
       console.error("Error while getting credentials", error);
-      await this.elastosConnectivityService.disconnect();
+      if (this.elastosConnectivityService.isAlreadyConnected()) {
+        await this.elastosConnectivityService.disconnect();
+      }
       return Promise.reject()
     }
   }
@@ -57,10 +61,9 @@ export class AuthService {
     removeItem(StorageItem.AccessToken);
     try {
       this.isLoggedIn$.next(false);
-      return this.elastosConnectivityService.disconnect().then(() => {
-        console.debug("Wallet session disconnected");
-        return Promise.resolve();
-      });
+      this.elastosConnectivityService.disconnect();
+      console.debug("Wallet session disconnected");
+      return Promise.resolve()
     } catch (error) {
       console.error(`Disconnect failed: ${error}`);
       return Promise.reject(error);

@@ -7,6 +7,7 @@ const routes: Routes = [
   {
     path: ROUTER_UTILS.config.auth.signIn,
     component: SignInPage,
+    data: { animation: 'SignInPage' }
   }
 ];
 

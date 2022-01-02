@@ -7,6 +7,7 @@ const routes: Routes = [
   {
     path: ROUTER_UTILS.config.user.profile,
     component: ProfilePage,
+    data: { animation: 'ProfilePage' }
   }
 ];
 

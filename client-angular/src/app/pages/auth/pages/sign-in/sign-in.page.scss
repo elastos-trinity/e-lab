@@ -1,2 +1,24 @@
 // Elastos connectivity sdk styles ( used for the sign-in form )
 @import "~@elastosfoundation/elastos-connectivity-sdk-js/dist/bundle.css";
+path { transition: fill .4s ease; }
+button {
+  background-position: left;
+  background-size: 100%;
+  transition: background-position 1s;
+  animation: bg-animation 5s infinite alternate;
+  :hover {
+   transition: background-color 5s;
+  }
+}
+
+@keyframes bg-animation {
+  0% {
+    background-size: 200%;
+  }
+  50% {
+    background-size: 150%;
+  }
+  100% {
+    background-size: 100%;
+  }
+}
