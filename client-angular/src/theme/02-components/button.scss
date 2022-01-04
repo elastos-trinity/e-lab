@@ -11,7 +11,7 @@
 }
 
 .elab-button {
-  @apply min-w-fit rounded-full px-4;
+  @apply min-w-max rounded-full px-4 outline-0;
   @apply transition duration-200 ease-in-out;
   @apply hover:scale-110 hover:bg-transparent hover:border-2;
 }

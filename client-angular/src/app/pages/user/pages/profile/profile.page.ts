@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import User from "@core/models/user.model";
+import { UserService } from "@pages/user/services/user.service";
 
 @Component({
   templateUrl: './profile.page.html',
@@ -12,15 +13,15 @@ import User from "@core/models/user.model";
 export class ProfilePage implements OnInit {
   currentUser!: User
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private userService: UserService) { }
 
   /**
    * - Initialize the current user
    */
   ngOnInit(): void {
-    this.route.data.subscribe(({currentUser: user}) => {
-      this.currentUser = user
-    });
+    this.userService.loggedInUser$.subscribe((currentUser) => {
+      this.currentUser = currentUser;
+    })
   }
 
 }

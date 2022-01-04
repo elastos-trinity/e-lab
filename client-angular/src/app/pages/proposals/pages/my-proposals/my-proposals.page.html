@@ -37,7 +37,7 @@
 
     <h1> My Proposals </h1>
   </div>
-  <div *ngIf="currentUser.isActive"
+  <div *ngIf="currentUser && currentUser.isActive"
        class="
        mx-auto pr-0
        sm:mb-0
@@ -61,7 +61,7 @@
 </div>
 
 <div class="flex-row md:flex-col" *ngIf="pageSize && pageNum" >
-  <div *ngIf="isLoading && currentUser.isActive" class="flex items-center align-middle justify-center mt-5 min-h-[350px]">
+  <div *ngIf="currentUser && isLoading && currentUser.isActive" class="flex items-center align-middle justify-center mt-5 min-h-[350px]">
     <div class="elab-spin-loader"></div>
   </div>
 
@@ -69,124 +69,125 @@
     <h2 class="text-pink-300">No proposals yet</h2>
   </div>
 
-  <div *ngFor="let proposal of proposals; let first = first; let last = last; let indexOfElement = index">
-    <div [ngClass]="{
+  <div *ngIf="currentUser && currentUser.isActive" >
+    <div *ngFor="let proposal of proposals; let first = first; let last = last; let indexOfElement = index">
+      <div [ngClass]="{
     'opacity-50': proposal.grant.toLowerCase() === 'notgranted' || proposal.status === ProposalStatus.REJECTED,
     'opacity-90': proposal.votedByUser && proposal.grant.toLowerCase() !== 'notgranted'}"
-         class="flex flex-row h-auto
+           class="flex flex-row h-auto
          md:flex-row md:h-96 lg:h-72 xl:h-52
          md:rounded-xl md:bg-blue-800 md:bg-gradient-to-r from-blue-800 to-blue-900 md:mt-10 mt-6
          md:p-3">
 
-      <div class="my-auto pr-4 md:my-0 md:pr-2 lg:pr-6 lg:pl-4 pt-0.5">#{{ pageSize * (pageNum - 1) + (indexOfElement + 1) }}</div>
+        <div class="my-auto pr-4 md:my-0 md:pr-2 lg:pr-6 lg:pl-4 pt-0.5">#{{ pageSize * (pageNum - 1) + (indexOfElement + 1) }}</div>
 
-      <!-- FIRST COLUMN -->
-      <div class="flex flex-col w-full p-3 rounded-xl bg-gradient-to-br from-blue-800 to-blue-900
+        <!-- FIRST COLUMN -->
+        <div class="flex flex-col w-full p-3 rounded-xl bg-gradient-to-br from-blue-800 to-blue-900
       md:rounded-none md:p-0 md:pr-1 md:bg-none md:w-1/2">
-        <!-- First column - Title - Status - Description -->
-        <div class="flex flex-row">
-          <div class="text-pink-elab font-bold md:hidden">Title</div>
+          <!-- First column - Title - Status - Description -->
+          <div class="flex flex-row">
+            <div class="text-pink-elab font-bold md:hidden">Title</div>
 
-          <div class="text-green-elabLight self-end md:hidden ml-auto text-sm"
-               *ngIf="proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.UNDECIDED" >
-            AWAITING ADMIN GRANT DECISION
-          </div>
-        </div>
-
-        <div class="flex flex-row">
-          <div class="inline mr-2 text-sm font-normal md:font-bold md:text-xl">{{proposal.title}}</div>
-          <ng-container [ngTemplateOutlet]="status" [ngTemplateOutletContext]="{ proposal: proposal }"></ng-container>
-
-        </div>
-
-        <div class="flex flex-col mt-4 md:mt-2">
-          <div class="text-pink-elab font-bold md:hidden">Description</div>
-          <div class="block text-sm md-text-base md:pr-2 break-words">{{proposal.description}}</div>
-        </div>
-
-        <!-- MOBILE - Link -->
-        <div class="md:hidden mt-4 text-green-elab break-all">
-          <div class="text-pink-elab font-bold md:hidden">Link</div>
-          <a [href]="proposal.link" target="_blank" class="text-sm text-pink-elab">{{ proposal.link }}</a>
-        </div>
-
-        <!-- MOBILE - Created / Result -->
-        <div class="md:hidden grid grid-cols-3 min-w-full justify-items-stretch mt-4">
-          <div class="justify-self-start self-start">
-            <div class="font-bold text-pink-elab">Created</div>
-            <div class="text-sm">{{ proposal.createdAt | dateAgo }}</div>
-          </div>
-          <div class="justify-self-center self-center" >
-            <div *ngIf="proposal.votingStatus === VotingStatus.ACTIVE || proposal.votingStatus === VotingStatus.ENDED">
-              <div class="font-bold text-pink-elab text-center">Results</div>
-              <div class="flex flex-row justify-between">
-                <div class="text-green-elab">{{ proposal.votesFor }}</div>
-                <div class="text-red-elab">{{ proposal.votesAgainst }}</div>
-              </div>
+            <div class="text-green-elabLight self-end md:hidden ml-auto text-sm pl-2 text-right"
+                 *ngIf="proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.UNDECIDED" >
+              AWAITING ADMIN GRANT DECISION
             </div>
           </div>
-          <div class="justify-self-end self-end">
+
+          <div class="flex flex-row">
+            <div class="inline mr-2 text-sm font-normal md:font-bold md:text-xl">{{proposal.title}}</div>
+            <ng-container [ngTemplateOutlet]="status" [ngTemplateOutletContext]="{ proposal: proposal }"></ng-container>
+
+          </div>
+
+          <div class="flex flex-col mt-4 md:mt-2">
+            <div class="text-pink-elab font-bold md:hidden">Description</div>
+            <div class="block text-sm md-text-base md:pr-2 break-words">{{proposal.description}}</div>
+          </div>
+
+          <!-- MOBILE - Link -->
+          <div class="md:hidden mt-4 text-green-elab break-all">
+            <div class="text-pink-elab font-bold md:hidden">Link</div>
+            <a [href]="proposal.link" target="_blank" class="text-sm text-pink-elab">{{ proposal.link }}</a>
+          </div>
+
+          <!-- MOBILE - Created / Result -->
+          <div class="md:hidden grid grid-cols-3 min-w-full justify-items-stretch mt-4">
+            <div class="justify-self-start self-start">
+              <div class="font-bold text-pink-elab">Created</div>
+              <div class="text-sm">{{ proposal.createdAt | dateAgo }}</div>
+            </div>
+            <div class="justify-self-center self-center" >
+              <div *ngIf="proposal.votingStatus === VotingStatus.ACTIVE || proposal.votingStatus === VotingStatus.ENDED">
+                <div class="font-bold text-pink-elab text-center">Results</div>
+                <div class="flex flex-row justify-between">
+                  <div class="text-green-elab">{{ proposal.votesFor }}</div>
+                  <div class="text-red-elab">{{ proposal.votesAgainst }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="justify-self-end self-end">
            <span class="mobile-status bg-beige-elab text-grey"
                  *ngIf="proposal.status !== ProposalStatus.REJECTED
                   && proposal.votingStatus === VotingStatus.NOT_APPROVED">
               Pending
             </span>
 
-            <span class="mobile-status bg-green text-white" *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.NOT_STARTED">
-              Starting soon
+              <span class="mobile-status bg-green text-white" *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.NOT_STARTED">
+              Soon
             </span>
 
-            <span class="mobile-status bg-red text-white" *ngIf="proposal.status === ProposalStatus.REJECTED">
+              <span class="mobile-status bg-red text-white" *ngIf="proposal.status === ProposalStatus.REJECTED">
               Rejected
             </span>
 
-            <span class="mobile-status bg-green-elabLight text-green-elab" *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ACTIVE && !proposal.votedByUser">
+              <span class="mobile-status bg-green-elabLight text-green-elab" *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ACTIVE && !proposal.votedByUser">
               Active
             </span>
 
-            <span *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.UNDECIDED"
-                  class="mobile-status bg-green-elab text-green-elabLight" >
+              <span *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.UNDECIDED"
+                    class="mobile-status bg-green-elab text-green-elabLight" >
               Ended
             </span>
 
-            <span *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.GRANTED"
-                  class="mobile-status bg-transparent border-2 border-green-elab text-green-elabLight">
+              <span *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.GRANTED"
+                    class="mobile-status bg-transparent border-2 border-green-elab text-green-elabLight">
               Granted
             </span>
 
-            <span *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.NOT_GRANTED"
-                  class="mobile-status bg-transparent border-2 border-red-elab text-red-elabLight">
-              Not granted
+              <span *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.NOT_GRANTED"
+                    class="mobile-status bg-transparent border-2 border-red-elab text-red-elabLight">
+              Refused
             </span>
+            </div>
           </div>
-        </div>
 
-        <!-- MOBILE - VOTES -->
-        <div *ngIf="proposal.status === ProposalStatus.APPROVED &&
+          <!-- MOBILE - VOTES -->
+          <div *ngIf="proposal.status === ProposalStatus.APPROVED &&
         proposal.votingStatus !== VotingStatus.NOT_STARTED"
-             class="flex flex-row mt-4 text-sm hidden">
+               class="flex flex-row mt-4 text-sm hidden">
           <span class="block text-green-elab"><span class="font-bold">{{ proposal.votesFor }}</span>
             Vote<span *ngIf="proposal.votesFor > 1">s</span> Up
           </span>
-          <span class="block text-red-elab ml-auto"><span class="font-bold">{{ proposal.votesAgainst }}</span>
+            <span class="block text-red-elab ml-auto"><span class="font-bold">{{ proposal.votesAgainst }}</span>
             Vote<span *ngIf="proposal.votesAgainst > 1">s</span> Down
           </span>
-        </div>
+          </div>
 
-        <!-- MOBILE - STATUS -->
-        <div *ngIf="proposal.status === ProposalStatus.APPROVED
+          <!-- MOBILE - STATUS -->
+          <div *ngIf="proposal.status === ProposalStatus.APPROVED
         && proposal.votingStatus === VotingStatus.NOT_STARTED"
-             class="md:hidden flex mt-4 text-[14px]">
-          <span class="align-middle my-auto block font-bold text-pink-450">Vote starting on {{ proposal.votingPeriodStartDate | date:'MMM d' }} </span>
+               class="md:hidden flex mt-4 text-[14px]">
+            <span class="align-middle my-auto block font-bold text-pink-450">Vote starting on {{ proposal.votingPeriodStartDate | date:'MMM d' }} </span>
+          </div>
+
         </div>
 
-      </div>
-
-      <!-- DESKTOP - Second column Link/Created at -->
-      <div class="hidden md:flex flex-col w-1/5">
-        <div class="pt-4">
-          <span class="text-pink-450 font-bold">Link</span>
-          <span class="block break-all text-green-elabLight">
+        <!-- DESKTOP - Second column Link/Created at -->
+        <div class="hidden md:flex flex-col w-1/5">
+          <div class="pt-4">
+            <span class="text-pink-450 font-bold">Link</span>
+            <span class="block break-all text-green-elabLight">
             <a href="{{ proposal.link }}" target="_blank" class="duration-300 hover:text-pink-elab">
               <span class="hidden 2xl:inline">
                 {{ proposal.link }}
@@ -197,137 +198,138 @@
               </span>
             </a>
           </span>
+          </div>
+
+          <div class="mt-auto">
+            <span class="text-pink-450 justify-end mt-auto font-bold">Created on</span>
+            <span class="block opacity-50">{{proposal.createdAt | dateAgo}}</span>
+          </div>
         </div>
 
-        <div class="mt-auto">
-          <span class="text-pink-450 justify-end mt-auto font-bold">Created on</span>
-          <span class="block opacity-50">{{proposal.createdAt | dateAgo}}</span>
-        </div>
-      </div>
+        <!-- DESKTOP - Voting status -->
 
-      <!-- DESKTOP - Voting status -->
-
-      <div *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === VotingStatus.ACTIVE"
-           class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 md:w-[320px] px-3 lg:px-0">
-        <div class="align-middle my-auto opacity-100 md:min-w-[60px] ">
+        <div *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === VotingStatus.ACTIVE"
+             class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 md:w-[320px] px-3 lg:px-0">
+          <div class="align-middle my-auto opacity-100 md:min-w-[60px] ">
           <span class="block text-pink-elab font-bold">
             <span class="md:hidden 2xl:inline">Vote</span> Result
           </span>
-          <div class="justify-start mt-2 -ml-[5px]">
+            <div class="justify-start mt-2 -ml-[5px]">
             <span class="block text-green-elab"><span class="font-bold">{{ proposal.votesFor }}</span>
               <span class="md:hidden 2xl:inline">&nbsp;Votes</span> Up
             </span>
-            <span class="block text-red-elab"><span class="font-bold">{{ proposal.votesAgainst }}</span>
+              <span class="block text-red-elab"><span class="font-bold">{{ proposal.votesAgainst }}</span>
               <span class="md:hidden 2xl:inline">&nbsp;Votes</span> Down
             </span>
+            </div>
           </div>
+
         </div>
 
-      </div>
+        <div *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === VotingStatus.NOT_STARTED"
+             class="hidden md:flex md:flex-row md:ml-auto md:mr-0 lg:mr-5 md:w-[320px]">
+          <span class="align-middle my-auto block font-bold text-pink-450">Vote starting on {{ proposal.votingPeriodStartDate | date:'MMM d' }} </span>
+        </div>
 
-      <div *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === VotingStatus.NOT_STARTED"
-           class="hidden md:flex md:flex-row md:ml-auto md:mr-0 lg:mr-5 md:w-[320px]">
-        <span class="align-middle my-auto block font-bold text-pink-450">Vote starting on {{ proposal.votingPeriodStartDate | date:'MMM d' }} </span>
-      </div>
-
-      <div *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === 'ended'"
-           class="hidden md:flex md:flex-col md:ml-auto
+        <div *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === 'ended'"
+             class="hidden md:flex md:flex-col md:ml-auto
            md:mr-5 md:w-[320px] min-h-max justify-between">
-        <div></div>
-        <div>
-          <span class="block font-bold text-pink-450">Vote Result: ended on {{ proposal.votingPeriodEndDate | date:'MMM d' }} </span>
-          <div class="mt-2 -ml-[5px]">
-            <span class="block text-green-elab">{{ proposal.votesFor }} Votes up</span>
-            <span class="block text-red-elab">{{ proposal.votesAgainst }} Votes down</span>
+          <div></div>
+          <div>
+            <span class="block font-bold text-pink-450">Vote Result: ended on {{ proposal.votingPeriodEndDate | date:'MMM d' }} </span>
+            <div class="mt-2 -ml-[5px]">
+              <span class="block text-green-elab">{{ proposal.votesFor }} Votes up</span>
+              <span class="block text-red-elab">{{ proposal.votesAgainst }} Votes down</span>
+            </div>
+          </div>
+
+          <div class="text-green font-bold self-end"
+               *ngIf="proposal.grant === GrantStatus.GRANTED" >
+            GRANTED
+          </div>
+          <div class="text-red-elab font-bold self-end"
+               *ngIf="proposal.grant === GrantStatus.NOT_GRANTED" >
+            NOT GRANTED
+          </div>
+          <div class="text-green-elabLight self-end"
+               *ngIf="proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.UNDECIDED" >
+            AWAITING ADMIN GRANT DECISION
           </div>
         </div>
-
-        <div class="text-green font-bold self-end"
-             *ngIf="proposal.grant === GrantStatus.GRANTED" >
-          GRANTED
-        </div>
-        <div class="text-red-elab font-bold self-end"
-             *ngIf="proposal.grant === GrantStatus.NOT_GRANTED" >
-          NOT GRANTED
-        </div>
-        <div class="text-green-elabLight self-end"
-             *ngIf="proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.UNDECIDED" >
-          AWAITING ADMIN GRANT DECISION
-        </div>
+        <!-- END VOTING DESKTOP -->
       </div>
-      <!-- END VOTING DESKTOP -->
+
     </div>
 
+    <div *ngIf="!isLoading && totalProposals" class="flex flex-row text-gray-400 py-5 lg:py-10 lg:pl-24 text-sm md:text-base">
+      <div *ngIf="totalProposals">
+        Active <span class="hidden xl:inline">proposals</span>: {{totalActiveProposals}} / {{ totalProposals }}
+      </div>
+      <div class="ml-auto inline-flex">
+        Row<span class="inline xl:hidden">s</span><span class="hidden xl:inline">&nbsp;per page</span>: 10
+      </div>
+      <div class="ml-auto md:ml-24 md:w-32">
+        <p *ngIf="pageSize && pageNum && totalProposals">
+          {{ pageSize * (pageNum - 1) + 1 }} - {{pageSize * pageNum}} OF {{ totalProposals }}
+        </p>
+      </div>
+      <div class="md:ml-16 inline-flex">
+        <button type="button" [ngClass]="{'cursor-not-allowed': !canDoPreviousPage()}" [attr.disabled]="!canDoPreviousPage() ? 'disabled' : null" (click)="decrementCurrentPage()">
+          <svg xmlns="http://www.w3.org/2000/svg" [ngClass]="{'opacity-50': !canDoPreviousPage()}" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button type="button" [ngClass]="{'cursor-not-allowed': !canDoNextPage()}" [attr.disabled]="!canDoNextPage() ? 'disabled' : null" (click)="incrementCurrentPage()">
+          <svg xmlns="http://www.w3.org/2000/svg" [ngClass]="{'opacity-50': !canDoNextPage()}" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"  />
+          </svg>
+        </button>
+      </div>
+    </div>
   </div>
 
-  <div *ngIf="!isLoading && totalProposals" class="flex flex-row text-gray-400 py-5 lg:py-10 lg:pl-24 text-sm md:text-base">
-    <div *ngIf="totalProposals">
-      Active <span class="hidden xl:inline">proposals</span>: {{totalActiveProposals}} / {{ totalProposals }}
-    </div>
-    <div class="ml-auto inline-flex">
-      Row<span class="inline xl:hidden">s</span><span class="hidden xl:inline">&nbsp;per page</span>: 10
-    </div>
-    <div class="ml-auto md:ml-24 md:w-32">
-      <p *ngIf="pageSize && pageNum && totalProposals">
-        {{ pageSize * (pageNum - 1) + 1 }} - {{pageSize * pageNum}} OF {{ totalProposals }}
-      </p>
-    </div>
-    <div class="md:ml-16 inline-flex">
-      <button type="button" [ngClass]="{'cursor-not-allowed': !canDoPreviousPage()}" [attr.disabled]="!canDoPreviousPage() ? 'disabled' : null" (click)="decrementCurrentPage()">
-        <svg xmlns="http://www.w3.org/2000/svg" [ngClass]="{'opacity-50': !canDoPreviousPage()}" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-      <button type="button" [ngClass]="{'cursor-not-allowed': !canDoNextPage()}" [attr.disabled]="!canDoNextPage() ? 'disabled' : null" (click)="incrementCurrentPage()">
-        <svg xmlns="http://www.w3.org/2000/svg" [ngClass]="{'opacity-50': !canDoNextPage()}" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"  />
-        </svg>
-      </button>
-    </div>
+  <div *ngIf="currentUser && !currentUser.isActive" class="flex flex-col items-center align-middle justify-center mt-5">
+    <h3 class="text-pink-450 text-center">Your account is not active. You need to activate to create a proposal.</h3>
+    <button *ngIf="!currentUser.isActive" class="elab-button elab-button-green h-9 px-10" type="button" (click)="openActivateAccountModal()">
+      Activate
+    </button>
   </div>
-</div>
 
-<div *ngIf="!currentUser.isActive" class="flex flex-col items-center align-middle justify-center mt-5">
-  <h3 class="text-pink-450 text-center">Your account is not active. You need to activate to create a proposal.</h3>
-  <button *ngIf="!currentUser.isActive" class="elab-button-green h-9 px-10 rounded-full" type="button" (click)="openActivateAccountModal()">
-    Activate
-  </button>
-</div>
-
-<ng-template #status let-proposal="proposal">
-  <div class="hidden md:inline">
+  <ng-template #status let-proposal="proposal">
+    <div class="hidden md:inline">
     <span class="opacity-50 text-[12px]" *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.NOT_APPROVED">
       AWAITING APPROVAL
     </span>
 
-    <span class="text-grey text-[12px]" *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.NOT_STARTED">
+      <span class="text-grey text-[12px]" *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.NOT_STARTED">
       NOT STARTED
     </span>
 
-    <span class="font-bold text-red text-[12px]" *ngIf="proposal.status === ProposalStatus.REJECTED">
+      <span class="font-bold text-red text-[12px]" *ngIf="proposal.status === ProposalStatus.REJECTED">
       REJECTED
     </span>
 
-    <span class="text-green-500 text-[12px]" *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ACTIVE && !proposal.votedByUser">
+      <span class="text-green-500 text-[12px]" *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ACTIVE && !proposal.votedByUser">
       VOTE ACTIVE
     </span>
 
-    <span [ngClass]="{'text-green-500': proposal.userVote === 'for', 'text-red-500': proposal.userVote === 'against'}"
-          *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ACTIVE && proposal.votedByUser"
-          class="font-bold  text-[12px]">
+      <span [ngClass]="{'text-green-500': proposal.userVote === 'for', 'text-red-500': proposal.userVote === 'against'}"
+            *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ACTIVE && proposal.votedByUser"
+            class="font-bold  text-[12px]">
       ALREADY VOTED {{ proposal.userVote.toUpperCase() }}
     </span>
 
-    <span *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.UNDECIDED" class="text-green-500 font-bold text-[12px]" >
+      <span *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.UNDECIDED" class="text-green-500 font-bold text-[12px]" >
       VOTE ENDED
     </span>
 
-    <span *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.GRANTED" class="text-green-500 font-bold md:inline-block uppercase text-[12px]">
+      <span *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.GRANTED" class="text-green-500 font-bold md:inline-block uppercase text-[12px]">
       GRANTED
     </span>
 
-    <span *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.NOT_GRANTED" class="text-red-500 font-bold md:inline-block uppercase text-[12px]">
+      <span *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.NOT_GRANTED" class="text-red-500 font-bold md:inline-block uppercase text-[12px]">
       NOT GRANTED
     </span>
-  </div>
-</ng-template>
+    </div>
+  </ng-template>
+</div>

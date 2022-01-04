@@ -1,28 +1,131 @@
-<div class="md:pt-24 flex flex-col">
-  <div class="title-with-svg w-full">
-    <h1> Welcome to ELAB </h1>
+<div class="md:pt-24 flex flex-col items-center space-y-10 md:px-40 xl:px-56">
+  <div class="title-with-svg w-full items-center">
+    <div class="text-center font-bold text-3xl md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 min-w-fit">
+      <span *ngIf="currentUser.name"> {{currentUser.name}}, w</span>
+      <span *ngIf="!currentUser.name"> W</span>elcome to ELAB !
+    </div>
   </div>
 
-  <div>
-    <h2>Vote</h2>
-    <p>View and vote for existing proposals in "community proposals".</p>
-    <p>
-      (if not active) Notice: you profile is not active yet, so your actions are restricted.
-      ELAB is a democratic voting system where each user has one vote.
-      Identity verification (stored in DID credentials) is required to create proposals and to vote.
-      For this, please visit kyc-me.io.
-    </p>
+  <div class="flex flex-col mt-5 space-y-10 text-center">
+    <div *ngIf="!currentUser.isActive" class="flex flex-col w-full items-center space-y-3">
+      <p class="font-bold text-2xl">Verify your account</p>
+      <p class="font-bold text-lg">Your profile is not active yet, so your actions are restricted.</p>
+      <p class="opacity-70">
+        Identity verification (stored in DID credentials) is required to create proposals and to vote.<br/>
+      </p>
+      <button *ngIf="!currentUser.isActive"
+              class="elab-button elab-button-green h-9 px-10" type="button" (click)="openActivateAccountModal()">
+        Activate
+      </button>
+    </div>
 
-    <h2>Propose</h2>
-    <p>Create your own proposals.</p>
-    <p>
-    First, write a suggestion with all necessary details on cyber-republic.org.
-    If you don't want to make this suggestion as a proposal voted by the 12 council members,
-    you can create a proposal here and your project will be voted by the community,
-    and possibility granted with funds.
-    </p>
+    <div class="flex flex-col w-full items-center space-y-3">
 
-    <h2>Get rewarded</h2>
-    Bind your wallet to your profile, and get a chance of token airdrop after each vote.
+      <p class="font-bold text-2xl relative">
+        <svg
+          class="absolute -left-7 h-[30px] -top-1"
+          fill="none"
+             height="41"
+             viewBox="0 0 48 41"
+             width="48" xmlns="http://www.w3.org/2000/svg">
+          <g fill="#fff" opacity=".15">
+            <path d="m47.8334 41h-36.4445l1.2677-1.9044 13.5214-19.6038v-14.8989h-3.486v-4.5929h13.8383v4.5929h-3.486v14.8989l10.3524 15.0109z"/><path d="m36.4444 41h-36.4444l1.26763-1.9044 13.52147-19.6038v-14.8989h-3.486v-4.5929h13.8383v4.5929h-3.486v14.8989l10.3523 15.0109z" fill-opacity=".4"/>
+          </g>
+        </svg>
+        Vote
+      </p>
+      <p class="font-bold text-lg">View and vote for existing proposals.</p>
+      <p>
+        ELAB is a democratic voting system where each user has one vote.<br/>
+      </p>
+      <p class="opacity-70">
+        Heads to
+        <a [routerLink]="['/', proposalPath.root, proposalPath.communityProposals]" href="" class="transition duration-200 text-green-elabLight hover:text-pink-elab">
+          community proposal
+        </a>
+        to vote for proposals submitted by the community.<br/>
+      </p>
+
+      <div *ngIf="!currentUser.isActive">
+        (if not active) Notice: you profile is not active yet, so your actions are restricted.
+        Identity verification (stored in DID credentials) is required to create proposals and to vote.<br/>
+        Please click here to activate your account.
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full items-center space-y-3">
+      <p class="font-bold text-2xl relative">
+        Propose
+
+        <svg
+          class="absolute -right-4 h-[30px] -top-1"
+          width="38" height="42" viewBox="0 0 38 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g opacity="0.15">
+            <path d="M9.14984 0H0V4.26299H9.14984V0Z" fill="white"/>
+            <path d="M8.00581 4.26221H1.24741V37.7423C1.24741 39.6138 2.80704 41.0695 4.57462 41.0695C6.44618 41.0695 7.90183 39.5099 7.90183 37.7423L8.00581 4.26221Z" fill="white"/>
+            <path d="M22.3792 4.26221H15.6208V37.7423C15.6208 39.6138 17.1804 41.0695 18.948 41.0695C20.8196 41.0695 22.2752 39.5099 22.2752 37.7423L22.3792 4.26221Z" fill="white"/>
+            <path d="M36.8564 4.26221H30.098V37.7423C30.098 39.6138 31.6577 41.0695 33.4252 41.0695C35.2968 41.0695 36.7524 39.5099 36.7524 37.7423L36.8564 4.26221Z" fill="white"/>
+            <path d="M23.6269 0H14.4771V4.26299H23.6269V0Z" fill="white"/>
+            <path d="M38 0H28.8502V4.26299H38V0Z" fill="white"/>
+          </g>
+        </svg>
+
+      </p>
+      <p class="font-bold text-lg">Create your own proposals.</p>
+      <p>
+        If you don't want to make this suggestion as a proposal voted by the 12 council members,
+        you can create a proposal here and your project will be voted by the community,
+        and possibility granted with funds.
+      </p>
+      <p class="text-center opacity-70">
+        First, create a suggestion with all necessary details on
+        <a target="_blank" href="https://www.cyberrepublic.org/suggestion" class="transition duration-200 text-green-elabLight hover:text-pink-elab">
+          cyberrepublic.org
+        </a>.<br/>
+        Then go to
+        <a [routerLink]="['/', proposalPath.root, proposalPath.myProposals]" href="" class="transition duration-200 text-green-elabLight hover:text-pink-elab">
+          my proposals
+        </a> and create your proposal using the "New proposal" button.
+      </p>
+    </div>
+
+    <div class="flex flex-col w-full items-center space-y-3">
+      <p class="font-bold text-2xl relative">
+        Get rewarded
+
+        <svg
+          class="absolute -right-7 h-[60px] -top-5"
+          width="35" height="61" viewBox="0 0 35 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g opacity="0.15" clip-path="url(#clip0_4934_58)">
+            <path opacity="0.5" d="M8.49739 8.99998C13.1955 8.99998 16.9948 7.50899 16.9948 5.68305V3.48438H0V5.67225C0 7.50899 3.80971 8.99998 8.49739 8.99998Z" fill="white"/>
+            <path d="M8.49739 6.64466C13.1904 6.64466 16.9948 5.1572 16.9948 3.32233C16.9948 1.48746 13.1904 0 8.49739 0C3.80441 0 0 1.48746 0 3.32233C0 5.1572 3.80441 6.64466 8.49739 6.64466Z" fill="white"/>
+          </g>
+          <g opacity="0.15" clip-path="url(#clip1_4934_58)">
+            <path opacity="0.5" d="M15.5706 27.0573C20.2266 24.3692 23.1387 20.7177 22.0939 18.9082L20.8359 16.7292L3.99365 26.4531L5.24549 28.6214C6.29641 30.4416 10.925 29.7394 15.5706 27.0573Z" fill="white"/>
+            <path d="M14.223 24.7231C18.8739 22.0379 21.793 18.387 20.7432 16.5686C19.6933 14.7502 15.072 15.4529 10.4211 18.1381C5.77027 20.8232 2.85108 24.4741 3.90093 26.2925C4.95079 28.1109 9.57213 27.4083 14.223 24.7231Z" fill="white"/>
+          </g>
+          <g opacity="0.15" clip-path="url(#clip2_4934_58)">
+            <path opacity="0.5" d="M17.9142 54.4879C23.4846 57.7039 29.0099 58.5369 30.2598 56.3719L31.7649 53.765L11.6148 42.1313L10.1171 44.7254C8.85975 46.9032 12.3561 51.2789 17.9142 54.4879Z" fill="white"/>
+            <path d="M19.5265 51.6952C25.0908 54.9077 30.6198 55.7484 31.8758 53.5728C33.1319 51.3973 29.6394 47.0294 24.0751 43.8168C18.5108 40.6043 12.9818 39.7636 11.7257 41.9392C10.4697 44.1147 13.9622 48.4826 19.5265 51.6952Z" fill="white"/>
+          </g>
+          <defs>
+            <clipPath id="clip0_4934_58">
+              <rect width="17" height="9" fill="white"/>
+            </clipPath>
+            <clipPath id="clip1_4934_58">
+              <rect width="19.4537" height="10.299" fill="white" transform="translate(2 23) rotate(-30)"/>
+            </clipPath>
+            <clipPath id="clip2_4934_58">
+              <rect width="23.2745" height="12.3218" fill="white" transform="translate(14 38) rotate(30)"/>
+            </clipPath>
+          </defs>
+        </svg>
+
+      </p>
+      <p class="font-bold text-lg">Get a chance of token airdrop after each vote...</p>
+      <p class="text-center opacity-50">
+        ...Coming very soon
+      </p>
+    </div>
   </div>
 </div>

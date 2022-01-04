@@ -39,4 +39,15 @@ export class ElabUserService {
         return userList.data
       }))
   }
+
+  /**
+   * Set the user status
+   * @param userDid
+   * @param status 'active' or 'inactive'
+   */
+  setStatus(userDid: string, status: string): Observable<any> {
+    return this.http.patch(`${ElabUserService.userURL}/user/${userDid}`, {
+      status: status
+    })
+  }
 }

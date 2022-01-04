@@ -281,14 +281,22 @@ class DBService {
     }
 
 
-    public async auditProposal(id: string, status: ProposalStatus, operator: string) {
+    /**
+     *
+     * @param id
+     * @param status
+     * @param operator
+     * @param now Activate the proposal for the current voting period - Only used for testing
+     */
+    public async auditProposal(id: string, status: ProposalStatus, operator: string, now: boolean, isSuperAdmin: boolean) {
         try {
             const collection = this.client.db().collection('proposals');
-            // If we approve for the future check that we don't have any votes
-            if (status === 'new' && await this.isProposalInVotingPeriod(id)) {
+            if (status === 'new' && await this.isProposalInVotingPeriod(id) && !isSuperAdmin) {
                 return { code: 400, message: 'can not cancel a decision for a proposal already in a voting period' }
             }
-            const votingPeriod = await this.getVotingPeriod(true) // Always set the next voting period when approving a proposal
+            const votingPeriod = !now ?
+              await this.getVotingPeriod(true):
+              await this.getVotingPeriod(false) // Always set the next voting period when approving a proposal
             const result = await collection.updateOne({ id },
               { $set: {
                       status,
@@ -599,7 +607,9 @@ class DBService {
             const now = moment().utc(false);
 
             let votingStartDate;
-            // If we are between the start day and the end day of a month, this is a vote period. So we return the current period.
+            // If we asked for the current voting period
+            // And we are between the start day and the end day of the voting period.
+            // We return the current period.
             if (!next && now.date() >= startDay && now.date() <= endDay) {
                 votingStartDate = now.clone().set('date', startDay).startOf('day');
             } else {
@@ -691,12 +701,13 @@ class DBService {
         const proposalVotingStartDate = moment(proposal["votingPeriodStartDate"]).utc(false).toDate().getTime()
         const proposalVotingEndDate = moment(proposal["votingPeriodEndDate"]).utc(false).toDate().getTime()
         const now = moment().utc(false).toDate();
-
         const currentVotingPeriod = await this.getVotingPeriod();
 
-        // For a proposal to be active it need to be both in the currentVotingPeriod and
-        // today's date need to be superior to the current voting period start date
-        if (now.getTime() > proposalVotingStartDate && proposalVotingStartDate === currentVotingPeriod.startDate.getTime() && proposalVotingEndDate === currentVotingPeriod.endDate.getTime()) {
+        // If the current time is superior to the proposal voting start date, and inferior to the proposal voting period end date
+        // We check that the voting period end date is inside the current voting period.
+        if (now.getTime() >= proposalVotingStartDate && now.getTime() <= proposalVotingEndDate
+          && proposalVotingEndDate >= currentVotingPeriod.startDate.getTime()
+          && proposalVotingEndDate <= currentVotingPeriod.endDate.getTime()) {
             return Promise.resolve("active")
         } else if (now.getTime() > proposalVotingEndDate || proposalVotingEndDate < currentVotingPeriod.endDate.getTime()) { // Already ended
             return Promise.resolve("ended")
@@ -798,6 +809,38 @@ class DBService {
         } catch (err) {
             logger.error(err);
             return 500;
+        }
+    }
+
+    /**
+     * Patch user
+     * For now only update the status
+     * @param userDid User ID
+     * @param status user status
+     */
+    async patchUser(userDid: string, status: string): Promise<number> {
+        try {
+            const collection = this.client.db().collection('users');
+            let updateStatus = {}
+            if (status === "inactive") {
+                updateStatus = {
+                    active: false,
+                    kycIdentityHash: null
+                }
+            } else if (status === "active") {
+                updateStatus = {
+                    active: true
+                }
+            } else {
+                throw new Error("invalid status")
+            }
+            await collection.updateOne({ did: userDid }, {
+                $set: updateStatus
+            });
+            return Promise.resolve(200)
+        } catch (err) {
+            logger.error(err);
+            return err
         }
     }
 }

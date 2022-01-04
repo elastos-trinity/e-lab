@@ -13,7 +13,7 @@ export class RoleGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     return new Observable<boolean>(obs => {
       this.userService.fetchLoggedInUser().subscribe((user) => {
-        if (!route.data.roles.includes(user.type)) {
+        if (!user || !route.data.roles.includes(user.type)) {
           obs.next(false)
           this.router.navigate([`/${ROUTER_UTILS.config.errorResponse.notFound}`]);
         } else {

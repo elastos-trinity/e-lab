@@ -6,11 +6,11 @@
       <path d="M24.3335 27H0.333496L1.16828 25.7459L10.0726 12.8361V3.02459H7.77697V0H16.89V3.02459H14.5944V12.8361L21.4118 22.7213L24.3335 27Z" fill="url(#paint1_linear_3809_1476)" fill-opacity="0.4"/>
       <defs>
         <linearGradient id="paint0_linear_3809_1476" x1="19.834" y1="0" x2="19.834" y2="27" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#FF9838"/>
+          <stop offset="0" stop-color="#FF9838"/>
           <stop offset="1" stop-color="#FF66DD"/>
         </linearGradient>
         <linearGradient id="paint1_linear_3809_1476" x1="12.3335" y1="0" x2="12.3335" y2="27" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#FF9838"/>
+          <stop offset="0" stop-color="#FF9838"/>
           <stop offset="1" stop-color="#FF66DD"/>
         </linearGradient>
       </defs>
@@ -71,8 +71,10 @@
 
   <div *ngFor="let proposal of proposals; let first = first; let last = last; let indexOfElement = index">
     <div [ngClass]="{
-    'opacity-50': proposal.grant === GrantStatus.NOT_GRANTED || proposal.status === ProposalStatus.REJECTED,
-    'opacity-90': proposal.votedByUser }"
+    'opacity-90': proposal.votedByUser,
+    'opacity-70': (proposal.grant === GrantStatus.NOT_GRANTED || proposal.status === ProposalStatus.REJECTED) && proposal.votedByUser,
+    'opacity-50': proposal.grant === GrantStatus.NOT_GRANTED || proposal.status === ProposalStatus.REJECTED
+    }"
          class="flex flex-row h-auto
          md:flex-row md:h-96 lg:h-72 xl:h-52
          md:rounded-xl md:bg-blue-900 md:bg-gradient-to-r from-blue-800 to-blue-900 md:mt-10 mt-6
@@ -121,7 +123,7 @@
           <div class="w-[200px] mt-auto">
             <div *ngIf="proposal.votingStatus === VotingStatus.ACTIVE &&
             currentUser.isActive && !proposal.votedByUser"
-                 class="flex flex-col gap-y-4 justify-end">
+                 class="flex flex-col space-y-4 justify-end">
               <div class="flex flex-row">
                 <span class="text-green-elab font-bold justify-between my-auto ml-4 mr-2">{{ proposal.votesFor }}</span>
                 <button class="text-sm elab-button elab-button-green h-9 w-full px-2" (click)="onClickVoteFor(proposal.id)">Up Vote</button>
@@ -205,7 +207,7 @@
         </div>
 
         <!-- Community proposal - Voting buttons -->
-        <div *ngIf="currentUser.isActive && !proposal.votedByUser" class="flex flex-col gap-y-2 px-3 lg:px-12 justify-center">
+        <div *ngIf="currentUser.isActive && !proposal.votedByUser" class="flex flex-col space-y-2 px-3 lg:px-12 justify-center">
           <button class="elab-button elab-button-green h-9 px-2" (click)="onClickVoteFor(proposal.id)">Up Vote</button>
           <button class="elab-button elab-button-red h-9 px-2" (click)="onClickVoteAgainst(proposal.id)">Down Vote</button>
         </div>

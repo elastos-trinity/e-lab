@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from '@angular/router';
 import { ROUTER_UTILS } from '@core/utils/router.utils';
 import { AuthService } from '@pages/auth/services/auth.service';
 import { UserService } from "@pages/user/services/user.service";
 import User from "@core/models/user.model";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { BehaviorSubject} from "rxjs";
 
 @Component({
   selector: 'app-header',
@@ -31,8 +31,10 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.loggedInUser$.subscribe((userInfo) => {
-      this.currentUser = userInfo
-      this.isUserInfoUpdated$.next(true)
+      if (userInfo) {
+        this.currentUser = userInfo
+        this.isUserInfoUpdated$.next(true)
+      }
     })
   }
 

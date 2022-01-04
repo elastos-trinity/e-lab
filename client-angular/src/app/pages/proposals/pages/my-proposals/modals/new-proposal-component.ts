@@ -73,7 +73,7 @@ export class NewProposalComponent implements OnInit, OnDestroy {
       link: new ElabFormControlModel(
         {
           label: 'CR Link',
-          placeholder: 'CR Link (must be a valid CR link)',
+          placeholder: 'CR Link (must be a valid CR suggestion link)',
           name: 'link',
           validation: {
             required: 'Please enter the CR link',
