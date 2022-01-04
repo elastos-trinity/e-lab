@@ -1,13 +1,13 @@
 <div class="md:pt-24 flex flex-col items-center space-y-10 md:px-40 xl:px-56">
   <div class="title-with-svg w-full items-center">
-    <div class="text-center font-bold text-3xl md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 min-w-fit">
+    <div id="welcome" class="text-center font-bold text-3xl md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 min-w-fit">
       <span *ngIf="currentUser.name"> {{currentUser.name}}, w</span>
       <span *ngIf="!currentUser.name"> W</span>elcome to ELAB !
     </div>
   </div>
 
   <div class="flex flex-col mt-5 space-y-10 text-center">
-    <div *ngIf="!currentUser.isActive" class="flex flex-col w-full items-center space-y-3">
+    <div id="paragraph-1" *ngIf="!currentUser.isActive" class="flex flex-col w-full items-center space-y-3">
       <p class="font-bold text-2xl">Verify your account</p>
       <p class="font-bold text-lg">Your profile is not active yet, so your actions are restricted.</p>
       <p class="opacity-70">
@@ -19,8 +19,7 @@
       </button>
     </div>
 
-    <div class="flex flex-col w-full items-center space-y-3">
-
+    <div id="paragraph-2" class="flex flex-col w-full items-center space-y-3">
       <p class="font-bold text-2xl relative">
         <svg
           class="absolute -left-7 h-[30px] -top-1"
@@ -53,7 +52,7 @@
       </div>
     </div>
 
-    <div class="flex flex-col w-full items-center space-y-3">
+    <div id="paragraph-3" class="flex flex-col w-full items-center space-y-3">
       <p class="font-bold text-2xl relative">
         Propose
 
@@ -89,10 +88,9 @@
       </p>
     </div>
 
-    <div class="flex flex-col w-full items-center space-y-3">
+    <div id="paragraph-4" class="flex flex-col w-full items-center space-y-3">
       <p class="font-bold text-2xl relative">
         Get rewarded
-
         <svg
           class="absolute -right-7 h-[60px] -top-5"
           width="35" height="61" viewBox="0 0 35 61" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -120,7 +118,6 @@
             </clipPath>
           </defs>
         </svg>
-
       </p>
       <p class="font-bold text-lg">Get a chance of token airdrop after each vote...</p>
       <p class="text-center opacity-50">
