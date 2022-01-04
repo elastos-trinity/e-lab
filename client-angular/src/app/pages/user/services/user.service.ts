@@ -8,20 +8,29 @@ import { KycService } from "@core/services/kyc/kyc.service";
   providedIn: 'root',
 })
 export class UserService {
-  public loggedInUser$ = new Subject<User>();
+  public loggedInUser$ = new BehaviorSubject<User>(
+    {
+      name: "",
+      type: "",
+      did: "",
+      isActive: false,
+      canManageAdmin: false
+    });
 
   constructor(private elabUserService: ElabUserService, private kycService: KycService) {}
+
+  refreshUserData(): void {
+    this.elabUserService.getCurrentUser().subscribe((user) => {
+      this.loggedInUser$.next(user);
+    })
+  }
 
   /**
    * Get the current user information
    * @return Observable<User> an User observable
    */
-  fetchLoggedInUser(): Subject<User> {
-    console.debug("Getting logged in user infos")
-    const user = this.elabUserService.getCurrentUser()
-    user.subscribe((user) => {
-      this.loggedInUser$.next(user)
-    })
+  fetchLoggedInUser(): BehaviorSubject<User> {
+    this.refreshUserData();
     return this.loggedInUser$;
   }
 }

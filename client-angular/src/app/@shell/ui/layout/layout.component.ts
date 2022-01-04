@@ -1,6 +1,6 @@
 import {
   ChangeDetectionStrategy, Component, ElementRef,
-  NgZone, ViewChild, Renderer2, OnInit
+  NgZone, ViewChild, Renderer2, OnInit, AfterViewInit
 } from "@angular/core";
 import {
   ActivatedRoute,
@@ -18,8 +18,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutComponent implements OnInit {
-  @ViewChild('spinnerElement')
-  spinnerElement!: ElementRef
+  @ViewChild('loaderElement')
+  loaderElement!: ElementRef
 
   @ViewChild('contentElement')
   contentElement!: ElementRef
@@ -36,21 +36,21 @@ export class LayoutComponent implements OnInit {
     // @ts-ignore
     this.router.events.subscribe((event:RouterEvent) => {
         if (event instanceof NavigationEnd) {
-          this._hideSpinner()
+          this._hideLoader()
         } else if (event instanceof NavigationStart) {
-          this._showSpinner()
+          this._showLoader()
         } else if (event instanceof NavigationError) {
-          this._hideSpinner()
+          this._hideLoader()
         } else if (event instanceof NavigationCancel) {
-          this._hideSpinner()
+          this._hideLoader()
         }
       })
   }
 
-  private _showSpinner(): void {
+  private _showLoader(): void {
     this.ngZone.runOutsideAngular(() => {
       this.renderer.setStyle(
-        this.spinnerElement.nativeElement,
+        this.loaderElement.nativeElement,
         'display',
         'block'
       );
@@ -62,10 +62,10 @@ export class LayoutComponent implements OnInit {
     })
   }
 
-  private _hideSpinner(): void {
+  private _hideLoader(): void {
     this.ngZone.runOutsideAngular(() => {
       this.renderer.setStyle(
-        this.spinnerElement.nativeElement,
+        this.loaderElement.nativeElement,
         'display',
         'none'
       );

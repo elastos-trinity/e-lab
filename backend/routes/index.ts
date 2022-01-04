@@ -143,6 +143,21 @@ router.post('/user/setTelegramVerificationCode', async (req, res) => {
     res.json(await dbService.setTelegramVerificationCode(did, code));
 })
 
+/**
+ * Attempt to verify the telegram verification code from the user.
+ */
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.patch('/user/:did', async (req, res) => {
+    let status = req.body.status as string;
+    let userDid = req.params.did as string;
+
+    try {
+        return res.status(await dbService.patchUser(userDid, status)).json({});
+    } catch (e) {
+        return res.sendStatus(500);
+    }
+})
+
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/user/setUserType', async (req, res) => {
     if (req.user.type !== 'superadmin') {
@@ -193,7 +208,7 @@ router.post('/user/kycactivation', async (req, res) => {
         response = await credentialsService.prepareKycActivationFromPresentation(did, vp);
 
         if (response.error) {
-            apiError(res, response);
+            return apiError(res, response);
         }
     } catch (parseError) {
         console.error(parseError);
@@ -276,8 +291,15 @@ router.put('/proposal/:id/audit', async (req, res) => {
         return;
     }
 
-    let proposalId = req.params.id as string;
-    let status = req.body.result as ProposalStatus;
+    if (req.body.now && req.user.type !== 'superadmin') {
+        res.json({ code: 403, message: 'forbidden' });
+        return;
+    }
+
+    const setForCurrentVotingPeriod = req.body.now;
+
+    const proposalId = req.params.id as string;
+    const status = req.body.result as ProposalStatus;
 
     if (!proposalId || !status) {
         res.json({ code: 400, message: 'required parameter absence' });
@@ -286,7 +308,8 @@ router.put('/proposal/:id/audit', async (req, res) => {
 
     let operator = req.user.did;
 
-    res.json(await dbService.auditProposal(proposalId, status, operator));
+    const isSuperAdmin: boolean = req.user.type === 'superadmin';
+    res.json(await dbService.auditProposal(proposalId, status, operator, setForCurrentVotingPeriod, isSuperAdmin));
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -335,7 +358,7 @@ router.post('/proposals', async (req, res) => {
     res.json(await dbService.addProposal(proposal));
 })
 
-router.get('/proposal/votingPeriod', async (req, res) => {
+router.get('/voting-period', async (req, res) => {
     try {
         const votingPeriod = await dbService.getVotingPeriod()
         return res.status(200).json(votingPeriod);
@@ -345,7 +368,7 @@ router.get('/proposal/votingPeriod', async (req, res) => {
     }
 })
 
-router.put('/proposal/votingPeriod', async (req, res) => {
+router.put('/voting-period', async (req, res) => {
     try {
         if (!req.body.startDay || !req.body.endDay) {
             console.error('Error while trying to update the voting period starDay or endDay null')

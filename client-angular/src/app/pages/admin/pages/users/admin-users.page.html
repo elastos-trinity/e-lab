@@ -16,28 +16,41 @@
 </div>
 
 <div class="w-full flex flex-row admin-menu">
-  <a href="" [routerLink]="['/', adminPath.root, adminPath.proposals]" [routerLinkActive]="['is-active']">
-    <span>Manage Proposals</span>
-  </a>
-  <a href="" [routerLink]="['/', adminPath.root, adminPath.users]" [routerLinkActive]="['is-active']">
-    <span>Manage Users</span>
-  </a>
+  <div>
+    <a href="" [routerLink]="['/', adminPath.root, adminPath.proposals]" [routerLinkActive]="['is-active']">
+      Manage Proposals
+    </a>
+  </div>
+  <div>
+    <a href="" [routerLink]="['/', adminPath.root, adminPath.users]" [routerLinkActive]="['is-active']">
+      Manage Users
+    </a>
+  </div>
 </div>
 
-<div class="grid grid-cols-4 gap-4 bg-blue-800 rounded-xl px-5 py-2 mt-5">
-  <span class="font-bold text-pink-450">Name</span>
-  <span class="font-bold text-pink-450">Email</span>
-  <span class="font-bold text-pink-450">DID</span>
-  <span class="font-bold text-pink-450">Status</span>
+<div
+  [ngClass]="{'grid-cols-5': currentUser.type === 'superadmin', 'grid-cols-4': currentUser.type !== 'superadmin'}"
+  class="grid bg-blue-800 rounded-xl px-5 py-2 mt-5">
+  <span class="font-bold text-pink-450 p-3">Name</span>
+  <span class="font-bold text-pink-450 p-3">Email</span>
+  <span class="font-bold text-pink-450 p-3">DID</span>
+  <span class="font-bold text-pink-450 p-3">Status</span>
+  <span *ngIf="currentUser.type === 'superadmin'" class="font-bold text-pink-450 p-3">Action</span>
 </div>
 
 <div *ngIf="isLoading" class="flex items-center align-middle justify-center mt-5">>
   <div class="w-40 h-40 border-t-4 border-b-4 border-pink-450 rounded-full animate-spin"></div>
 </div>
 
-<div class="grid grid-cols-4 gap-4 bg-blue-800 rounded-xl px-5 py-2 mt-4 break-all" *ngFor="let user of userList">
-  <span class="">{{ user.name }}</span>
-  <span class="">{{ user.email }}</span>
-  <span class="">{{ user.did }}</span>
-  <span class="">{{ user.active ? 'active' : 'inactive' }}</span>
+<div
+  [ngClass]="{'grid-cols-5': currentUser.type === 'superadmin', 'grid-cols-4': currentUser.type !== 'superadmin'}"
+  class="grid space-y-3 bg-blue-800 rounded-xl px-5 py-2 mt-4 break-all" *ngFor="let user of userList">
+  <span class="p-3">{{ user.name }}</span>
+  <span class="p-3">{{ user.email }}</span>
+  <span class="p-3">{{ user.did }}</span>
+  <span class="p-3">{{ user.active ? 'active' : 'inactive' }}</span>
+  <span *ngIf="currentUser.type === 'superadmin'" class="p-3">
+    <button *ngIf="user.active" (click)="setInactive(user.did)" class="elab-button elab-button-red">Set inactive</button>
+    <button *ngIf="!user.active" (click)="setActive(user.did)" class="elab-button elab-button-green">Set active</button>
+  </span>
 </div>

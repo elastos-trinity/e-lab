@@ -27,7 +27,8 @@ export class AuthService {
    */
   async signIn(): Promise<void> {
     try {
-      const verifiablePresentation: VerifiablePresentation = await this.elastosConnectivityService.getVerifiablePresentation();
+      const verifiablePresentation: VerifiablePresentation =
+        await this.elastosConnectivityService.getVerifiablePresentation();
       if (!verifiablePresentation) {
         return Promise.reject("User closed modal");
       }

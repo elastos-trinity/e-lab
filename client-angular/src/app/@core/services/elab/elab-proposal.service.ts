@@ -79,10 +79,12 @@ export class ElabProposalService {
    * Should change the backend to a put to match it.
    * @param proposalId
    * @param status
+   * @param now Approve the proposal for the current voting period if set to true - Only super admin and testing purpose.
    */
-  put(proposalId: string, status: string):Observable<any> {
+  put(proposalId: string, status: string, now = false):Observable<any> {
     return this.http.put(`${ElabProposalService.proposalUrl}/${proposalId}/audit`, {
-      result: status
+      result: status,
+      now: now
     })
   }
 

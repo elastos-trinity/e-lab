@@ -42,8 +42,10 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.userService.loggedInUser$.subscribe((currentUser) => {
-      this.isUserInfoUpdated$.next(true);
-      this.currentUser = currentUser;
+      if (currentUser) {
+        this.isUserInfoUpdated$.next(true);
+        this.currentUser = currentUser;
+      }
     })
 
     this.resizeObservable$ = fromEvent(window, 'resize')
@@ -121,8 +123,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     },
     particles: {
       collisions: {
-        enable: true,
-        mode: "bounce" as const
+        enable: false,
       },
       move: {
         direction: "top" as const,

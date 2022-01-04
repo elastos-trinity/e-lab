@@ -17,31 +17,59 @@
 </div>
 
 <div class="w-full flex flex-row admin-menu">
-  <a href="" [routerLink]="['/', adminPath.root, adminPath.proposals]" [routerLinkActive]="['is-active']">
-    <span>Manage Proposals</span>
-  </a>
-  <a href="" [routerLink]="['/', adminPath.root, adminPath.users]" [routerLinkActive]="['is-active']">
-    <span>Manage Users</span>
-  </a>
+  <div>
+    <a href="" [routerLink]="['/', adminPath.root, adminPath.proposals]" [routerLinkActive]="['is-active']">
+      Manage Proposals
+    </a>
+  </div>
+  <div>
+    <a href="" [routerLink]="['/', adminPath.root, adminPath.users]" [routerLinkActive]="['is-active']">
+      Manage Users
+    </a>
+  </div>
 </div>
-
 <!-- ACTIVATE / CURRENT VOTING PERIOD -->
 <div class="flex flex-col justify-end md:ml-0.5 lg:ml-2 xl:ml-3">
 
   <!-- ACCOUNT CHECK / ACTIVATE ACCOUNT -->
   <div class="flex flex-col md:flex-row align-middle items-center justify-center min-h-min text-sm md:text-base">
     <!-- Mobile - Voting period -->
-    <span *ngIf="!currentUser.isActive && currentVotingPeriod && currentVotingPeriod.isTodayInVotingPeriod"
+    <span *ngIf="currentVotingPeriod && currentVotingPeriod.isTodayInVotingPeriod"
           class="block mt-3 md:hidden text-green-elabLight">Current vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
-    <span *ngIf="!currentUser.isActive && currentVotingPeriod && !currentVotingPeriod.isTodayInVotingPeriod"
+
+    <span *ngIf="currentVotingPeriod && !currentVotingPeriod.isTodayInVotingPeriod"
           class="block mt-3 md:hidden text-gray-400">Next vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
   </div>
 
   <!-- CURRENT VOTE PERIOD -->
   <div *ngIf="currentVotingPeriod && currentVotingPeriod.startDate && currentVotingPeriod.endDate"
-       class="justify-center flex flex-row align-bottom items-center h-100 text-gray-400 text-[16px]">
+       class="hidden justify-center md:flex md:flex-row align-bottom items-center h-100 text-gray-400 text-[16px]">
     <span *ngIf="currentVotingPeriod && currentVotingPeriod.isTodayInVotingPeriod" class="text-green-elabLight">Current vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
     <span *ngIf="currentVotingPeriod && !currentVotingPeriod.isTodayInVotingPeriod">Next vote period: {{ currentVotingPeriod.startDate | date : 'd MMM' }} - {{ currentVotingPeriod.endDate | date : 'd MMM' }}</span>
+  </div>
+  <div
+    *ngIf="currentUser.type === 'superadmin'"
+    class="justify-center flex flex-col md:flex-row align-bottom items-center h-100 text-gray-400 text-[16px] space-x-0 space-y-3 md:space-x-3 md:space-y-0 mt-3">
+    <button *ngIf="currentVotingPeriod && !currentVotingPeriod.isTodayInVotingPeriod"
+            class="elab-button elab-button-beige hover:scale-100 border-2 w-1/3 justify-center items-center"
+            type="submit"
+            (click)="setVotingPeriodToNow()"
+    >
+      Set voting period to current date range
+    </button>
+    <button *ngIf="currentVotingPeriod && currentVotingPeriod.isTodayInVotingPeriod"
+            class="elab-button elab-button-beige hover:scale-100 border-2 w-1/3 justify-center items-center"
+            (click)="setVotingPeriodToFuture()"
+            type="submit">
+      Set voting period in the future
+    </button>
+    <button *ngIf="currentUser.type === 'superadmin'"
+            class="elab-button elab-button-beige hover:scale-100 border-2 w-1/3 justify-center items-center"
+            (click)="resetVotingPeriod()"
+            type="submit">
+      Reset voting period from 20th to 27th
+    </button>
+
   </div>
 
 </div>
@@ -104,17 +132,25 @@
         <!-- MOBILE - Proposer / Created -->
         <div class="md:hidden flex flex-row text-sm mt-6">
           <!-- Mobile - Community proposal - Voting buttons -->
-          <div class="flex gap-x-2 w-4/5 my-auto pr-5">
+          <div class="flex space-x-2 w-4/5 my-auto pr-5">
+            <button *ngIf="currentUser.type === 'superadmin' && proposal.status === ProposalStatus.NEW && proposal.grant === GrantStatus.UNDECIDED"
+                    class="elab-button elab-button-green w-full h-9" (click)="onClickApproveNow(proposal.id)">Accept NOW</button>
             <button *ngIf="proposal.status === ProposalStatus.NEW && proposal.grant === GrantStatus.UNDECIDED"
                     class="elab-button elab-button-green w-full h-9" (click)="onClickApprove(proposal.id)">Accept</button>
             <button *ngIf="proposal.status === ProposalStatus.NEW && proposal.grant === GrantStatus.UNDECIDED"
                     class="elab-button elab-button-red w-full h-9" (click)="onClickReject(proposal.id)">Reject</button>
-            <button
-              *ngIf="proposal.status !== ProposalStatus.NEW && proposal.votingStatus === VotingStatus.NOT_STARTED"
+
+            <button *ngIf="(proposal.status !== ProposalStatus.NEW && proposal.votingStatus === VotingStatus.NOT_STARTED)
+          || (proposal.status !== ProposalStatus.NEW && currentUser.type ==='superadmin')"
               (click)="onClickCancelDecision(proposal.id)"
                     class="elab-button elab-button-beige w-full h-9" >
               Cancel decision
             </button>
+
+            <button (click)="onClickCancelGrant(proposal.id)"
+                    *ngIf="proposal.votingStatus === VotingStatus.ENDED && proposal.grant !== GrantStatus.UNDECIDED"
+                    class="elab-button elab-button-beige w-full h-9">Terminate</button>
+
             <button (click)="onClickCancelGrant(proposal.id)"
                     *ngIf="proposal.votingStatus === VotingStatus.ENDED && proposal.grant !== GrantStatus.UNDECIDED"
                     class="elab-button elab-button-beige w-full h-9">Cancel grant</button>
@@ -196,28 +232,44 @@
       </div>
 
       <!-- Desktop - Approval action -->
-      <div *ngIf="proposal.status === ProposalStatus.NEW || proposal.votingStatus === VotingStatus.NOT_STARTED"
+      <div
+        *ngIf="proposal.status === ProposalStatus.NEW
+        || proposal.votingStatus === VotingStatus.NOT_STARTED
+        || currentUser.type === 'superadmin'"
            class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 md:w-[330px] px-3 lg:px-0">
-        <div *ngIf="proposal.status === ProposalStatus.NEW" class="align-middle my-auto opacity-100 md:min-w-[60px] ">
+        <div *ngIf="proposal.status === ProposalStatus.NEW && proposal.grant === GrantStatus.UNDECIDED" class="align-middle my-auto opacity-100 md:min-w-[60px] ">
           <span class="block text-pink-elab font-bold">
             <span class="md:hidden 2xl:inline">Review required</span>
           </span>
         </div>
+        <div *ngIf="proposal.status === ProposalStatus.NEW && proposal.grant !== GrantStatus.UNDECIDED" class="align-middle my-auto opacity-100 md:min-w-[60px] ">
+          <span class="block text-pink-elab font-bold">
+            <span class="md:hidden 2xl:inline">This proposal has a NEW status but is already granted :(</span>
+          </span>
+        </div>
 
-        <div class="flex flex-col px-3 lg:px-12 justify-center gap-y-2">
+
+        <div class="flex flex-col px-3 lg:px-12 justify-center space-y-2">
+          <button *ngIf="currentUser.type === 'superadmin' &&
+          proposal.status === ProposalStatus.NEW
+          && proposal.grant === GrantStatus.UNDECIDED"
+                  class="elab-button elab-button-green h-9 text-sm" (click)="onClickApproveNow(proposal.id)">Accept NOW</button>
           <button *ngIf="proposal.status === ProposalStatus.NEW && proposal.grant === GrantStatus.UNDECIDED"
                   class="elab-button elab-button-green w-full h-9 " (click)="onClickApprove(proposal.id)">Accept</button>
           <button *ngIf="proposal.status === ProposalStatus.NEW && proposal.grant === GrantStatus.UNDECIDED"
                   class="elab-button elab-button-red w-full h-9" (click)="onClickReject(proposal.id)">Reject</button>
 
-          <div *ngIf="proposal.status !== ProposalStatus.NEW && proposal.votingStatus === VotingStatus.NOT_STARTED"
+
+
+          <div *ngIf="(proposal.status !== ProposalStatus.NEW && proposal.votingStatus === VotingStatus.NOT_STARTED)
+          || (proposal.status !== ProposalStatus.NEW && currentUser.type === 'superadmin')"
                class="hidden md:flex md:flex-col md:ml-auto md:mr-0 lg:mr-5">
-            <span *ngIf="proposal.status === ProposalStatus.APPROVED"
+            <span *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === VotingStatus.NOT_STARTED"
                   class="align-middle my-auto block font-bold text-pink-450 mb-3" >
               Vote starting on {{ proposal.votingPeriodStartDate | date:'MMM d' }}
             </span>
             <button (click)="onClickCancelDecision(proposal.id)"
-                    class="elab-button elab-button-beige w-full h-9" >
+                    class="elab-button elab-button-beige w-full h-9 hover:scale-100 hover:border-0" >
               Cancel decision
             </button>
           </div>
@@ -239,7 +291,7 @@
         </div>
 
 
-        <div class="flex flex-row gap-x-3 justify-around content-between" *ngIf="proposal.votingStatus === VotingStatus.ENDED">
+        <div class="flex flex-row space-x-3 justify-around content-between" *ngIf="proposal.votingStatus === VotingStatus.ENDED">
           <button (click)="onClickCancelGrant(proposal.id)"
                   *ngIf="proposal.grant !== GrantStatus.UNDECIDED"
                   class="elab-button elab-button-beige h-9 w-full">Cancel grant</button>

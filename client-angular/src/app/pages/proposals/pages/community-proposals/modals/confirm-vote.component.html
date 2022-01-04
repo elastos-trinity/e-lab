@@ -1,15 +1,18 @@
 <app-modal #modalComponent>
-  <h4 class="font-bold text-transparent bg-clip-text bg-gradient-to-r
-  from-pink-450 to-orange-450 max-w-fit inline-flex">
-    Confirm your vote
-  </h4>
+  <div class="w-full justify-center items-center text-center">
+    <h4
+      class="block font-bold text-transparent
+      bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 min-w-fit justify-center">
+      Confirm your vote
+    </h4>
+  </div>
   <div *ngIf="!proposal || !proposal.title" class="flex items-center align-middle justify-center mt-5 min-h-[150px]">
     <div class="elab-spin-loader"></div>
   </div>
   <div *ngIf="proposal && proposal.title">
     <p>Please confirm that you want to vote <span [ngClass]="{'text-green': vote === 'for', 'text-red-500': vote === 'against'}">{{ vote | uppercase }}</span>
       the following proposal:<p>
-    <div class="grid grid-cols-2 grid-cols grid-cols-[20%_80%] gap-y-1 mt-2">
+    <div class="grid grid-cols-2 grid-cols grid-cols-[20%_80%] space-y-1 mt-2">
       <span class="bg-blue-800 text-pink-450 font-bold px-2">Title</span>
       <span class="bg-blue-800 break-word" >{{ proposal.title }}</span>
       <span class="bg-blue-800 text-pink-450 font-bold px-2">Link</span>
@@ -17,7 +20,7 @@
     </div>
     <p class="mt-4 text-sm">*Votes are not cancellable.</p>
   </div>
-  <div class="flex flex-row gap-x-4 mt-10 min-h-[32px]">
+  <div class="flex flex-row space-x-4 mt-10 min-h-[32px]">
 
     <button (click)="close()" type="button" class="elab-button-transparent text-sm hover:pb-0.5">Cancel</button>
 
@@ -26,7 +29,11 @@
       [attr.disabled]="loading ? 'disabled' : null"
       [@slideInFromBottom]="{ value: '', params: { delay: 250 + 'ms' } }"
       *ngIf="proposal && proposal.title"
-      [ngClass]="{'elab-button-loading': loading, 'elab-button elab-button-green text-sm px-4 hover:pb-0.5': !loading}"
+      [ngClass]="{
+      'elab-button-loading': loading,
+      'elab-button text-sm px-4 hover:pb-0.5': !loading,
+      'elab-button-green': !loading && vote === 'for',
+      'elab-button-red': !loading && vote === 'against' }"
       type="submit"
       class="flex flex-row justify-center items-center">
       <svg *ngIf="loading"

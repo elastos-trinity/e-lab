@@ -12,13 +12,6 @@ export class VoteService {
   constructor(private elabVotingService: ElabVoteService) { }
 
   /**
-   * Returns information about the current vote period (start, end)
-   */
-  getVotingPeriod(): Promise<{ startDate: Date, endDate: Date, isTodayInVotingPeriod: boolean}> {
-    return this.elabVotingService.getVotingPeriod()
-  }
-
-  /**
    * Vote for a proposal
    * @param proposalId Proposal ID to add the vote for
    */

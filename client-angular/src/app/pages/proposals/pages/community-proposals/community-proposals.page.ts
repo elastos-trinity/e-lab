@@ -8,6 +8,7 @@ import { UserService } from "@pages/user/services/user.service";
 import { ActivatedRoute } from "@angular/router";
 import { VoteService } from "@pages/proposals/services/vote.service";
 import { ConfirmVoteComponent } from "@pages/proposals/pages/community-proposals/modals/confirm-vote-component";
+import { VotingPeriodService } from "@pages/proposals/services/voting-period.service";
 
 @Component({
   templateUrl: './community-proposals.page.html',
@@ -36,7 +37,7 @@ export class CommunityProposalsPage implements OnInit {
                private proposalService: ProposalsService,
                private voteService: VoteService,
                private userService: UserService,
-               private route: ActivatedRoute) {
+               private votingPeriodService: VotingPeriodService) {
     this.pageSize = 10;
     this.pageNum = 1;
     this.totalProposals = 0;
@@ -49,14 +50,13 @@ export class CommunityProposalsPage implements OnInit {
    */
   ngOnInit(): void {
     this.isLoading = true;
-    this.route.data.subscribe(({currentUser: user}) => {
-      this.currentUser = user
-
-      this.voteService.getVotingPeriod().then((response) => {
-        this.currentVotingPeriod = response
-        this.getActiveProposals();
-      });
+    this.votingPeriodService.getCurrentVotingPeriod().subscribe((currentVotingPeriod) => {
+      this.currentVotingPeriod = currentVotingPeriod
     });
+    this.getActiveProposals();
+    this.userService.loggedInUser$.subscribe((user) => {
+      this.currentUser = user
+    })
   }
 
   // ============ UI
@@ -69,12 +69,7 @@ export class CommunityProposalsPage implements OnInit {
     const modalReference = await this.activateAccountProposalModalService.open(ActivateAccountComponent)
     this.getActiveProposals();
     modalReference.instance.accountNewlyActivatedEvent.subscribe(() => {
-      const loggedInUserSub = this.userService.fetchLoggedInUser()
-        .subscribe((newUserInfos) => {
-          this.currentUser = newUserInfos;
-          this.getActiveProposals();
-          loggedInUserSub.unsubscribe();
-        });
+      this.userService.refreshUserData();
     })
   }
 

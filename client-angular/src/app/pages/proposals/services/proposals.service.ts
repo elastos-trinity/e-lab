@@ -74,6 +74,15 @@ export class ProposalsService {
     return this.elabProposalService.put(proposalId, 'approved')
   }
 
+
+  /**
+   * Approve a proposal
+   * @param proposalId Proposal ID to approve
+   */
+  approveNow(proposalId: string): Observable<any> {
+    return this.elabProposalService.put(proposalId, 'approved', true)
+  }
+
   /**
    * Reject a proposal
    * @param proposalId Proposal ID to reject

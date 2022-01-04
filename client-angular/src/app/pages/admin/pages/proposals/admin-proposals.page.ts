@@ -1,11 +1,13 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import User from "@core/models/user.model";
 import { GrantStatus, Proposal, ProposalStatus, VotingStatus } from "@core/models/proposal.model";
 import { ProposalsService } from "@pages/proposals/services/proposals.service";
 import { UserService } from "@pages/user/services/user.service";
-import { ActivatedRoute } from "@angular/router";
 import { VoteService } from "@pages/proposals/services/vote.service";
 import { ROUTER_UTILS } from "@core/utils/router.utils";
+import { NgForm } from "@angular/forms";
+import { AdminService } from "@pages/admin/services/admin.service";
+import { VotingPeriodService } from "@pages/proposals/services/voting-period.service";
 
 @Component({
   templateUrl: './admin-proposals.page.html',
@@ -33,7 +35,7 @@ export class AdminProposalsPage implements OnInit {
   constructor (private proposalService: ProposalsService,
                private voteService: VoteService,
                private userService: UserService,
-               private route: ActivatedRoute) {
+               private votingPeriodService: VotingPeriodService) {
     this.pageSize = 10;
     this.pageNum = 1;
     this.totalProposals = 0;
@@ -46,11 +48,11 @@ export class AdminProposalsPage implements OnInit {
    */
   ngOnInit(): void {
     this.isLoading = true
-    this.route.data.subscribe(({currentUser: user}) => {
+    this.userService.loggedInUser$.subscribe((user) => {
       this.currentUser = user
     });
-    this.voteService.getVotingPeriod().then((result) => {
-      this.currentVotingPeriod = result
+    this.votingPeriodService.getCurrentVotingPeriod().subscribe((currentVotingPeriod) => {
+      this.currentVotingPeriod = currentVotingPeriod
     })
     this.getAdminProposals();
   }
@@ -111,6 +113,18 @@ export class AdminProposalsPage implements OnInit {
     })
   }
 
+
+  /**
+   * On click on approve proposal.
+   * Send the audit approve request.
+   * @param proposalId Proposal ID.
+   */
+  async onClickApproveNow(proposalId: string): Promise<void> {
+    this.proposalService.approveNow(proposalId).subscribe(() => {
+      this.getAdminProposals()
+    })
+  }
+
   /**
    * On click on reject proposal.
    * Send the audit refused request.
@@ -149,5 +163,38 @@ export class AdminProposalsPage implements OnInit {
     await this.proposalService.cancelGrant(id).then(() => {
       this.getAdminProposals()
     })
+  }
+
+  /**
+   * Set the voting period to the current date range.
+   */
+  setVotingPeriodToNow() {
+    this.votingPeriodService.setVotingPeriodToCurrent().subscribe(() => {
+      this.votingPeriodService.getCurrentVotingPeriod().subscribe((currentVotingPeriod) => {
+        this.currentVotingPeriod = currentVotingPeriod;
+        this.getAdminProposals();
+      })
+    });
+  }
+
+
+  /**
+   * Set the voting period to a future date range (+1 month).
+   */
+  setVotingPeriodToFuture() {
+    this.votingPeriodService.setVotingPeriodToFutureDateRange().subscribe(() => {
+      this.votingPeriodService.getCurrentVotingPeriod().subscribe((currentVotingPeriod) => {
+        this.currentVotingPeriod = currentVotingPeriod;
+        this.getAdminProposals();
+      })
+    });
+  }
+
+  resetVotingPeriod() {
+    this.votingPeriodService.resetVotingPeriod().subscribe(() => {
+      this.votingPeriodService.getCurrentVotingPeriod().subscribe((currentVotingPeriod) => {
+        this.currentVotingPeriod = currentVotingPeriod;
+      })
+    });
   }
 }

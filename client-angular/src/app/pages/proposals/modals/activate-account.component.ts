@@ -1,4 +1,4 @@
-import { Component, EventEmitter, NgModule, Output, ViewChild } from "@angular/core";
+import { Component, EventEmitter, NgModule, OnDestroy, Output, ViewChild } from "@angular/core";
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -15,7 +15,7 @@ import { interval } from "rxjs";
   templateUrl: './activate-account.component.html',
   styleUrls: ['./activate-account.component.scss'],
 })
-export class ActivateAccountComponent {
+export class ActivateAccountComponent implements OnDestroy {
   @ViewChild('modalComponent') modal:
     | ModalComponent<ActivateAccountComponent>
     | undefined;
@@ -75,6 +75,10 @@ export class ActivateAccountComponent {
 
   goToKycMe() {
     window.open("https://kyc-me.io/", "_blank");
+  }
+
+  ngOnDestroy(): void {
+    this.accountNewlyActivatedEvent.complete()
   }
 }
 

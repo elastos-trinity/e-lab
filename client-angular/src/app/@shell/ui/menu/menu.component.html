@@ -2,7 +2,7 @@
 <div id="left-menu" class="flex flex-row md:hidden p-7 py-4 sticky top-0 z-10 bg-blue-900">
   <!-- mobile menu button -->
   <button (click)=openMenu() class="p-4 focus:outline-none min-w-[56px] w-[56px]">
-    <svg xmlns="http://www.w3.org/2000/svg" class="min-h-fit min-w-fit h-6 w-6" fill="url(#inside)"
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="url(#inside)"
          viewBox="0 0 24 24" stroke="url(#inside)"  *ngIf="!menuOpened">
       <defs>
         <linearGradient id="inside" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -74,7 +74,7 @@
         </div>
       </div>
 
-      <nav class="min-w-fit mx-auto pt-10 flex flex-col gap-y-8">
+      <nav class="min-w-fit mx-auto pt-10 flex flex-col space-y-8">
         <a (click)="closeMenu()"
            [routerLink]="['/', proposalPath.root, proposalPath.communityProposals]" [routerLinkActive]="['is-active']" href="" class="flex flex-row">
             <span class="icon">
@@ -89,7 +89,7 @@
               </defs>
             </svg>
           </span>
-          <span class="menu-text">Community Proposals</span>
+          <div class="menu-text">Community Proposals</div>
         </a>
 
         <a (click)="closeMenu()"
@@ -104,7 +104,7 @@
             <path d="M18.5049 0H14.0492V2.07595H18.5049V0Z" fill="white"/>
           </svg>
         </span>
-          <span class="menu-text">My Proposals</span>
+          <div class="menu-text">My Proposals</div>
         </a>
 
         <a (click)="closeMenu()"
@@ -115,7 +115,7 @@
             <path d="M13.1359 4.65233C13.1359 6.4001 12.1181 7.91526 10.6214 8.7137C9.90959 9.09091 9.08471 9.30467 8.21326 9.30467C7.33516 9.30467 6.51694 9.09091 5.80514 8.7137C4.30173 7.92154 3.28394 6.4001 3.28394 4.65233C3.28394 3.3195 3.87599 2.11241 4.83391 1.26367C5.38605 0.773293 6.05793 0.402364 6.80298 0.194895C7.24868 0.0691563 7.721 0 8.20661 0C8.69223 0 9.16454 0.0691563 9.61024 0.194895C10.3553 0.402364 11.0272 0.773293 11.5793 1.26367C12.5372 2.11241 13.1359 3.3195 13.1359 4.65233Z" fill="white"/>
           </svg>
         </span>
-          <span class="menu-text">My Profile</span>
+          <div class="menu-text">My Profile</div>
         </a>
 
         <span *ngIf="isUserInfoUpdated$ | async">
@@ -127,7 +127,7 @@
               <path d="M20 8.89189C20 5.04505 16.8944 1.89189 13.1056 1.89189C12.4845 1.89189 11.9255 1.95496 11.3665 2.14414V0.882883H10.3727V0H8.32298V0.81982H7.32919V9.01802H8.32298V10.027H10.3727V9.01802H11.3665V4.54054C11.9255 4.28829 12.4845 4.22523 13.1056 4.22523C15.6522 4.22523 17.764 6.30631 17.764 8.89189C17.764 10.4685 17.0186 11.7928 15.9006 12.6757L15.0932 11.6036C14.7826 11.1622 14.1615 11.1622 13.8509 11.6036L12.5466 13.4324H3.04348C2.67081 13.4324 2.42236 13.7477 2.42236 14.0631C2.42236 14.3784 2.73292 14.6937 3.04348 14.6937H11.5528L8.88199 18.4144H0V21H20V18.4144L17.205 14.5045C18.882 13.2432 20 11.2252 20 8.89189Z" fill="white"/>
             </svg>
           </span>
-            <span class="menu-text">Admin</span>
+            <div class="menu-text">Admin</div>
           </a>
           <a [routerLink]="['/', adminPath.root, adminPath.proposals]" #adminProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
           <a [routerLink]="['/', adminPath.root, adminPath.users]" #userProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
@@ -148,7 +148,7 @@
             xl:px-4
             xl:w-80
             min-h-[650px]
-             xl:py-14
+            xl:py-14
             md:mt-0 space-y-10">
   <!-- logo -->
   <a [routerLink]="['/']" class="flex content-center justify-center logo-link" href="">
@@ -182,7 +182,9 @@
     </svg>
   </a>
 
-  <nav class="text-lg pt-20 min-w-fit md:pl-2 lg:pl-3 xl:pl-4 flex flex-col md:gap-3 lg:gap-4 xl:gap-5">
+  <nav class="text-lg
+  pt-20 min-w-fit md:pl-2 lg:pl-3 xl:pl-4
+  flex flex-col md:space-y-3 lg:space-y-4 xl:space-y-5">
     <a [routerLink]="['/', proposalPath.root, proposalPath.communityProposals]" [routerLinkActive]="['is-active']" href="" class="flex flex-row">
       <span class="icon">
         <svg width="21" height="22" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -196,7 +198,7 @@
           </defs>
         </svg>
       </span>
-      <span class="menu-text">Community Proposals</span>
+      <div class="menu-text">Community Proposals</div>
     </a>
 
     <a [routerLink]="['/', proposalPath.root, proposalPath.myProposals]" [routerLinkActive]="['is-active']" href="">
@@ -210,7 +212,7 @@
           <path d="M18.5049 0H14.0492V2.07595H18.5049V0Z" fill="white"/>
         </svg>
       </span>
-      <span class="menu-text">My Proposals</span>
+      <div class="menu-text">My Proposals</div>
     </a>
 
     <a [routerLink]="['/', userPath.root, userPath.profile]" [routerLinkActive]="['is-active']">
@@ -220,7 +222,7 @@
           <path d="M13.1359 4.65233C13.1359 6.4001 12.1181 7.91526 10.6214 8.7137C9.90959 9.09091 9.08471 9.30467 8.21326 9.30467C7.33516 9.30467 6.51694 9.09091 5.80514 8.7137C4.30173 7.92154 3.28394 6.4001 3.28394 4.65233C3.28394 3.3195 3.87599 2.11241 4.83391 1.26367C5.38605 0.773293 6.05793 0.402364 6.80298 0.194895C7.24868 0.0691563 7.721 0 8.20661 0C8.69223 0 9.16454 0.0691563 9.61024 0.194895C10.3553 0.402364 11.0272 0.773293 11.5793 1.26367C12.5372 2.11241 13.1359 3.3195 13.1359 4.65233Z" fill="white"/>
         </svg>
       </span>
-      <span class="menu-text">My Profile</span>
+      <div class="menu-text">My Profile</div>
     </a>
 
     <span *ngIf="isUserInfoUpdated$ | async">
@@ -231,7 +233,7 @@
             <path d="M20 8.89189C20 5.04505 16.8944 1.89189 13.1056 1.89189C12.4845 1.89189 11.9255 1.95496 11.3665 2.14414V0.882883H10.3727V0H8.32298V0.81982H7.32919V9.01802H8.32298V10.027H10.3727V9.01802H11.3665V4.54054C11.9255 4.28829 12.4845 4.22523 13.1056 4.22523C15.6522 4.22523 17.764 6.30631 17.764 8.89189C17.764 10.4685 17.0186 11.7928 15.9006 12.6757L15.0932 11.6036C14.7826 11.1622 14.1615 11.1622 13.8509 11.6036L12.5466 13.4324H3.04348C2.67081 13.4324 2.42236 13.7477 2.42236 14.0631C2.42236 14.3784 2.73292 14.6937 3.04348 14.6937H11.5528L8.88199 18.4144H0V21H20V18.4144L17.205 14.5045C18.882 13.2432 20 11.2252 20 8.89189Z" fill="white"/>
           </svg>
         </span>
-        <span class="menu-text">Admin</span>
+        <div class="menu-text">Admin</div>
       </a>
       <a [routerLink]="['/', adminPath.root, adminPath.proposals]" #adminProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>
       <a [routerLink]="['/', adminPath.root, adminPath.users]" #userProposalActive="routerLinkActive" routerLinkActive="" class="hidden"></a>

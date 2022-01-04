@@ -1,11 +1,14 @@
 .admin-menu {
   @apply justify-center md:justify-start;
-  @apply gap-x-5;
+  @apply space-x-5;
   @apply md:mt-10;
   @apply md:text-2xl;
   a {
+    @apply block;
     &.is-active {
-      @apply text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450;
+      span {
+        @apply text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450;
+      }
       svg {
         @apply inline-flex;
         path {
@@ -13,7 +16,7 @@
         }
       }
     }
-    @apply py-2.5 px-4 flex content-center;
+    @apply py-2.5 px-4 content-center;
     svg {
       @apply ml-auto;
     }
@@ -21,7 +24,6 @@
       &.icon {
         @apply w-6 mr-3;
       }
-      @apply inline-flex;
     }
   }
 }

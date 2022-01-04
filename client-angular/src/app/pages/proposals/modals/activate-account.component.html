@@ -1,13 +1,16 @@
 <app-modal #modalComponent>
-  <h4 *ngIf="!isActivationSuccessful" class="font-bold text-transparent bg-clip-text bg-gradient-to-r
-  from-pink-450 to-orange-450 min-w-fit inline-flex">
-    Activate your account
-  </h4>
+  <div class="w-full justify-center items-center text-center">
+    <h4 *ngIf="!isActivationSuccessful"
+        class="block font-bold text-transparent
+    bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 min-w-fit justify-center">
+      Activate your account
+    </h4>
+  </div>
   <h4 *ngIf="isActivationSuccessful" class="font-bold text-transparent bg-clip-text bg-gradient-to-r
-  from-pink-450 to-orange-450 min-w-fit inline-flex">
+  from-pink-450 to-orange-450 min-w-fit block">
     Congrats !
   </h4>
-  <div class="max-w-[85%] mx-auto md:mx-0">
+  <div class="max-w-[95%] md:max-w-[85%] mx-auto md:mx-0">
 
     <p *ngIf="!isActivationSuccessful" class="w-full text-center md:text-left">Activate your account by providing verified identity credentials</p>
 
@@ -17,26 +20,24 @@
       <p class="mt-5 text-sm">This popup will close automatically in {{timeleft}} second<span *ngIf="timeleft > 1">s</span>.</p>
     </div>
 
-    <div *ngIf="!isActivationSuccessful" class="flex items-center flex-col md:items-start md:flex-row gap-x-3 mt-10 md:mt-5">
+    <div *ngIf="!isActivationSuccessful" class="flex items-center flex-col md:items-start md:flex-row space-3 space-y-5 md:space-y-0 mt-10 md:mt-5">
       <p *ngIf="!isActivationInProcess">Already have KYC credentials ?</p>
       <p *ngIf="isActivationInProcess">Please check your wallet</p>
 
       <button (click)=onClickProvideCredentials() [attr.disabled]="isActivationInProcess ? 'disabled' : null"
-              class="button-green-elab
-               h-9 px-10
-              w-[170px] px-[10px] mt-2 md:mt-0 md:ml-auto
-" type="button">
+              class="elab-button elab-button-green h-9 px-10 w-[170px] px-[10px] mt-2 md:mt-0 md:ml-auto"
+              type="button">
         <div *ngIf="isActivationInProcess" class="flex items-center justify-center ">
           <div class="w-6 h-6 border-l-2 border-pink-450 rounded-full animate-spin mr-2"></div>
         </div>
-        <div *ngIf="!isActivationInProcess" class="flex items-center justify-center">
+        <div *ngIf="!isActivationInProcess" class="flex items-center justify-end">
           Provide credentials
         </div>
       </button>
     </div>
 
     <div *ngIf="!isActivationSuccessful" class="flex mt-10
-    text-center md:text-left items-center md:items-start flex-col md:flex-row gap-x-3 md:mt-5">
+    text-center md:text-left items-center md:items-start flex-col md:flex-row space-3 space-y-5 md:space-y-0 md:mt-5">
       <div class="flex-inline">
         <p>No such credentials yet ?</p>
         <p>Verify your identity on KYC-me now</p>
@@ -58,7 +59,7 @@
     <button
       (click)="close()"
       type="button"
-      class="bg-transparent text-orange-450 pl-0 hover:text-pink-450 focus:outline-none text-sm
+      class="elab-button-transparent pl-0 text-sm
       "
     >
       <span *ngIf="!isActivationSuccessful">Cancel</span>

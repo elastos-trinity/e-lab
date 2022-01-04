@@ -8,11 +8,11 @@
 
 
 #sidebar, #mobile-menu {
-  @apply z-10 bg-blue-900 md:bg-gradient-to-b from-blue-800 to-blue-elabLightGradient;
+  @apply bg-blue-900 md:bg-gradient-to-b md:from-blue-800 md:to-blue-elabLightGradient;
 
   nav {
     svg {
-      @apply min-w-[34px] min-h-min
+      @apply min-w-[34px]
     }
 
     a {
@@ -28,9 +28,10 @@
       flex content-center;
 
       &:hover {
-        @apply text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab;
+        .menu-text {
+          @apply text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 min-w-fit;
+        }
         svg {
-          @apply inline-flex;
           path {
             fill: url(#grad2);
           }
@@ -49,8 +50,6 @@
           lg:w-5 lg:mr-5
           xl:w-6 xl:mr-3;
         }
-
-        @apply inline-flex;
       }
 
       .menu-text {
@@ -59,9 +58,10 @@
     }
 
     a.is-active {
-      @apply text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab;
+      .menu-text {
+        @apply text-transparent bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 min-w-fit;
+      }
       svg {
-        @apply inline-flex;
         path {
           fill: url(#grad2);
         }

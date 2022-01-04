@@ -4,6 +4,7 @@ import { AdminProposalsPage } from './pages/proposals/admin-proposals.page';
 import { AdminUsersPage } from './pages/users/admin-users.page';
 import { AdminRoutingModule } from "@pages/admin/admin-routing.module";
 import { CoreModule } from "@core/core.module";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { CoreModule } from "@core/core.module";
   imports: [
     CommonModule,
     AdminRoutingModule,
-    CoreModule
+    CoreModule,
+    FormsModule
   ]
 })
 export class AdminModule { }

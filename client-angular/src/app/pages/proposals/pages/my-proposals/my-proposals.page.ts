@@ -50,12 +50,12 @@ export class MyProposalsPage implements OnInit {
    */
   ngOnInit(): void {
     this.isLoading = true
-    this.route.data.subscribe(({ currentUser: user }) => {
-      this.currentUser = user
-      if (this.currentUser.isActive) {
-        this.getMyProposals();
+    this.userService.loggedInUser$.subscribe((user) => {
+      if (user) {
+        this.currentUser = user
       }
-    });
+    })
+    this.getMyProposals();
   }
 
   /**
@@ -83,12 +83,7 @@ export class MyProposalsPage implements OnInit {
     const { ActivateAccountComponent } = await import('../../modals/activate-account.component')
     const modalReference = await this.activateAccountProposalModalService.open(ActivateAccountComponent)
     modalReference.instance.accountNewlyActivatedEvent.subscribe(() => {
-      const loggedInUserSub = this.userService.fetchLoggedInUser()
-        .subscribe((newUserInfos) => {
-          this.currentUser = newUserInfos;
-          this.getMyProposals();
-          loggedInUserSub.unsubscribe();
-        });
+      this.userService.refreshUserData();
     })
   }
 
