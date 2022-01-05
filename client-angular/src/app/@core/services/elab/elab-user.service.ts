@@ -34,7 +34,7 @@ export class ElabUserService {
   }
 
   get(): Observable<ElabBackendUserListDataDto> {
-    return this.http.get<ElabBackendUserListDto>(ElabUserService.userURL + '/users/list').pipe(
+    return this.http.get<ElabBackendUserListDto>(ElabUserService.userURL + '/users/list?pageSize=40').pipe(
       map(userList => {
         return userList.data
       }))
