@@ -15,4 +15,7 @@
 }
 
 @layer utilities {
+  .translate-x-full-custom {
+    transform: translateX(-100%);
+  }
 }
