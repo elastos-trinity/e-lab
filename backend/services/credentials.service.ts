@@ -48,7 +48,7 @@ class CredentialsService {
     // Extract identity info from the credentials
     let lastName = nameCredential.getSubject().getProperty("lastName") || "";
     let firstNames = nameCredential.getSubject().getProperty("firstNames") || "";
-    let name = `${lastName} ${firstNames}`;
+    let name = `${lastName} ${firstNames}`.trim();
 
     let birthDate = birthDateCredential.getSubject().getProperty("birthDate") || "";
 
