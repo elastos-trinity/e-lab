@@ -23,10 +23,9 @@ export class HeaderComponent implements OnInit {
   }
 
   async onClickSignOut(): Promise<void> {
-    this.authService.signOut().then(() => {
-      const { root, signIn } = ROUTER_UTILS.config.auth;
-      return this.router.navigate(['/', root, signIn]);
-    })
+    await this.authService.signOut();
+    const { root, signIn } = ROUTER_UTILS.config.auth;
+    this.router.navigate(['/', root, signIn]);
   }
 
   ngOnInit(): void {

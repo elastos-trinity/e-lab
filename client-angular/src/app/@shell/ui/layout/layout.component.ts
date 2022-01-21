@@ -1,6 +1,6 @@
 import {
   ChangeDetectionStrategy, Component, ElementRef,
-  NgZone, ViewChild, Renderer2, OnInit, AfterViewInit
+  NgZone, ViewChild, Renderer2, OnInit, AfterViewInit, ChangeDetectorRef
 } from "@angular/core";
 import {
   ActivatedRoute,
@@ -17,7 +17,7 @@ import {
   styleUrls: ['./layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent implements AfterViewInit {
   @ViewChild('loaderElement')
   loaderElement!: ElementRef
 
@@ -27,54 +27,52 @@ export class LayoutComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private ngZone: NgZone,
+    private zone: NgZone,
     private renderer: Renderer2) {
   }
 
-  ngOnInit() {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    this.router.events.subscribe((event:RouterEvent) => {
-        if (event instanceof NavigationEnd) {
-          this._hideLoader()
-        } else if (event instanceof NavigationStart) {
+  /**
+   * On navigation start - Show loader and hide content
+   * On navigation end - Show content and hide loader
+   */
+  ngAfterViewInit(): void {
+    this.zone.run(() => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      this.router.events.subscribe((event:RouterEvent) => {
+        if (event instanceof NavigationStart) {
           this._showLoader()
+        } else if (event instanceof NavigationEnd) {
+          this._hideLoader()
         } else if (event instanceof NavigationError) {
           this._hideLoader()
         } else if (event instanceof NavigationCancel) {
           this._hideLoader()
         }
       })
+    })
   }
 
+  /**
+   * Show the ELAB loader
+   * Hide the content block
+   * @private
+   */
   private _showLoader(): void {
-    this.ngZone.runOutsideAngular(() => {
-      this.renderer.setStyle(
-        this.loaderElement.nativeElement,
-        'display',
-        'block'
-      );
-      this.renderer.setStyle(
-        this.contentElement.nativeElement,
-        'display',
-        'none'
-      )
-    })
+    this.contentElement.nativeElement.classList.add('hidden');
+    this.loaderElement.nativeElement.classList.remove('hidden');
   }
 
+  /**
+   * Hide the ELAB loader
+   * Display the content block
+   * @private
+   */
   private _hideLoader(): void {
-    this.ngZone.runOutsideAngular(() => {
-      this.renderer.setStyle(
-        this.loaderElement.nativeElement,
-        'display',
-        'none'
-      );
-      this.renderer.setStyle(
-        this.contentElement.nativeElement,
-        'display',
-        'block'
-      )
-    })
+    console.log(this.loaderElement);
+    this.loaderElement.nativeElement.classList.add('hidden');
+    console.log(this.loaderElement);
+    this.contentElement.nativeElement.classList.remove('hidden');
   }
 
 }

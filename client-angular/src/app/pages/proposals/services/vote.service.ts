@@ -15,15 +15,15 @@ export class VoteService {
    * Vote for a proposal
    * @param proposalId Proposal ID to add the vote for
    */
-  voteFor(proposalId: string): Promise<unknown> {
-    return this.elabVotingService.create(proposalId, 'for')
+  voteFor(proposalId: string) {
+    return this.elabVotingService.post(proposalId, 'for')
   }
 
   /**
    * Vote against a proposal
    * @param proposalId Proposal ID to add an AGAINST vote
    */
-  voteAgainst(proposalId: string): Promise<unknown> {
-    return this.elabVotingService.create(proposalId, 'against')
+  voteAgainst(proposalId: string) {
+    return this.elabVotingService.post(proposalId, 'against')
   }
 }

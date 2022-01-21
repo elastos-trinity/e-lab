@@ -5,17 +5,12 @@ import { ProposalsService } from "@pages/proposals/services/proposals.service";
 import { UserService } from "@pages/user/services/user.service";
 import { VoteService } from "@pages/proposals/services/vote.service";
 import { ROUTER_UTILS } from "@core/utils/router.utils";
-import { NgForm } from "@angular/forms";
-import { AdminService } from "@pages/admin/services/admin.service";
 import { VotingPeriodService } from "@pages/proposals/services/voting-period.service";
 
 @Component({
   templateUrl: './admin-proposals.page.html',
   styleUrls: ['../../../../app.component.scss','../admin.page.scss', 'admin-proposals.page.scss']
 })
-/**
- * The admin proposals.
- */
 export class AdminProposalsPage implements OnInit {
   adminPath = ROUTER_UTILS.config.admin
   currentUser!: User
@@ -115,7 +110,7 @@ export class AdminProposalsPage implements OnInit {
 
 
   /**
-   * On click on approve proposal.
+   * Approve a proposal.
    * Send the audit approve request.
    * @param proposalId Proposal ID.
    */
@@ -126,7 +121,7 @@ export class AdminProposalsPage implements OnInit {
   }
 
   /**
-   * On click on reject proposal.
+   * Reject a proposal.
    * Send the audit refused request.
    * @param proposalId Proposal ID.
    */
@@ -147,20 +142,32 @@ export class AdminProposalsPage implements OnInit {
     })
   }
 
-  async onClickGrant(id: string): Promise<void> {
-    await this.proposalService.grant(id).then(() => {
+  /**
+   * Grant a proposal
+   * @param proposalId Proposal ID
+   */
+  async onClickGrant(proposalId: string): Promise<void> {
+    await this.proposalService.grant(proposalId).then(() => {
       this.getAdminProposals()
     })
   }
 
-  async onClickDontGrant(id: string): Promise<void> {
-    await this.proposalService.dontGrant(id).then(() => {
+  /**
+   * Refuse a grant
+   * @param proposalId Proposal ID
+   */
+  async onClickDontGrant(proposalId: string): Promise<void> {
+    await this.proposalService.dontGrant(proposalId).then(() => {
       this.getAdminProposals()
     })
   }
 
-  async onClickCancelGrant(id: string): Promise<void> {
-    await this.proposalService.cancelGrant(id).then(() => {
+  /**
+   * Cancel the grant decision
+   * @param proposalId Proposal ID
+   */
+  async onClickCancelGrant(proposalId: string): Promise<void> {
+    await this.proposalService.cancelGrant(proposalId).then(() => {
       this.getAdminProposals()
     })
   }
@@ -177,7 +184,6 @@ export class AdminProposalsPage implements OnInit {
     });
   }
 
-
   /**
    * Set the voting period to a future date range (+1 month).
    */
@@ -190,6 +196,9 @@ export class AdminProposalsPage implements OnInit {
     });
   }
 
+  /**
+   * Reset the voting period to the 20th - 27th of the month
+   */
   resetVotingPeriod() {
     this.votingPeriodService.resetVotingPeriod().subscribe(() => {
       this.votingPeriodService.getCurrentVotingPeriod().subscribe((currentVotingPeriod) => {

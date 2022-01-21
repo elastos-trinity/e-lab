@@ -26,24 +26,46 @@ export class AuthService {
    * @see https://github.com/elastos/Elastos.DID.Method/blob/master/VerifiableClaims/Elastos-Verifiable-Claims-Specification_en.md
    */
   async signIn(): Promise<void> {
-    try {
-      const verifiablePresentation: VerifiablePresentation =
-        await this.elastosConnectivityService.getVerifiablePresentation();
-      if (!verifiablePresentation) {
-        return Promise.reject("User closed modal");
+    this.isLoggedIn$.next(false);
+    await new Promise<void>(async (resolve, reject) => {
+      let verifiablePresentation: VerifiablePresentation;
+      try {
+        verifiablePresentation = await this.elastosConnectivityService.getVerifiablePresentation();
+        if (!verifiablePresentation) {
+          return Promise.reject("User closed modal");
+        }
+      } catch (error) {
+        console.error("Error while getting the verifiable presentation", error);
+        try {
+          await this.elastosConnectivityService.disconnect();
+        } catch (error) {
+          console.error("Error while disconnecting the wallet", error);
+        }
+        reject()
       }
-      const accessToken: string = await this.elabService.login(verifiablePresentation);
-      setItem(StorageItem.AccessToken, accessToken);
-      setItem(StorageItem.DID, verifiablePresentation.getHolder().getMethodSpecificId());
-      await this.isLoggedIn$.next(true);
-      return Promise.resolve();
-    } catch (error) {
-      console.error("Error while getting credentials", error);
-      if (this.elastosConnectivityService.isAlreadyConnected()) {
-        await this.elastosConnectivityService.disconnect();
+
+      try {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        this.elabService.login(verifiablePresentation).subscribe((loginResponse) => {
+          setItem(StorageItem.AccessToken, loginResponse.data);
+          setItem(StorageItem.DID, verifiablePresentation.getHolder().getMethodSpecificId());
+          console.log("Logging done")
+          this.isLoggedIn$.next(true);
+          resolve();
+        });
+      } catch (error) {
+        console.error("Error while logging via ELAB backend", error)
+        try {
+          await this.elastosConnectivityService.disconnect();
+        } catch (error) {
+          console.error("Error while disconnecting the wallet", error);
+        }
+        reject()
       }
-      return Promise.reject()
-    }
+    })
+
+
   }
 
   /**
@@ -58,16 +80,20 @@ export class AuthService {
    * Sign out user
    */
   async signOut(): Promise<void> {
-    console.debug("Signing out...");
     removeItem(StorageItem.AccessToken);
-    try {
-      this.isLoggedIn$.next(false);
-      this.elastosConnectivityService.disconnect();
-      console.debug("Wallet session disconnected");
-      return Promise.resolve()
-    } catch (error) {
-      console.error(`Disconnect failed: ${error}`);
-      return Promise.reject(error);
-    }
+    removeItem(StorageItem.DID);
+    await new Promise<void>(async (resolve, reject) => {
+      try {
+        this.isLoggedIn$.next(false);
+        try {
+          this.elastosConnectivityService.disconnect();
+        } catch (error) {
+          console.error("Error while disconnecting the wallet", error);
+        }
+        resolve()
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 }

@@ -27,12 +27,8 @@ import { animate, style, transition, trigger } from "@angular/animations";
 export class ConfirmVoteComponent implements OnInit {
   loading = false;
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  @Input() proposalId: string;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  @Input() vote;
+  @Input() proposalId!: string;
+  @Input() vote!: string;
 
   @ViewChild('modalComponent') modal:
     | ModalComponent<ConfirmVoteComponent>
@@ -51,13 +47,18 @@ export class ConfirmVoteComponent implements OnInit {
   async confirmVote(): Promise<void> {
     this.loading = true;
     if (this.vote === 'for') {
-      await this.voteService.voteFor(this.proposalId)
+      this.voteService.voteFor(this.proposalId).subscribe((voteResponse) => {
+        this.loading = false;
+        this.voteEvent.emit()
+        this.close();
+      })
     } else if (this.vote === 'against') {
-      await this.voteService.voteAgainst(this.proposalId)
+      this.voteService.voteAgainst(this.proposalId).subscribe((voteResponse) => {
+        this.loading = false;
+        this.voteEvent.emit()
+        this.close();
+      })
     }
-    this.loading = false;
-    this.voteEvent.emit()
-    this.close();
   }
 
   async close(): Promise<void> {

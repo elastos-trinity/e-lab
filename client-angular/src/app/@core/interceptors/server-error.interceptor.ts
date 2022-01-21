@@ -24,22 +24,19 @@ export class ServerErrorInterceptor implements HttpInterceptor {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       catchError((error: HttpErrorResponse) => {
-        console.log("ERROR catched")
         if ([401, 403].includes(error.status)) {
+          console.error("Authorization refused", error)
           from(this.handle401Error())
-        } else if (error.status === 500) {
-          console.error(error)
-          return throwError(error)
         } else {
-          return throwError(error);
+          console.error("Server error", error)
+          return throwError(() => error)
         }
       }),
     );
   }
 
   private async handle401Error() {
-    this.authService.signOut()
-    console.log("redirecting...")
-    this.router.navigate([ROUTER_UTILS.config.auth.root, ROUTER_UTILS.config.auth.signIn])
+    await this.authService.signOut()
+    return this.router.navigate([ROUTER_UTILS.config.auth.root, ROUTER_UTILS.config.auth.signIn])
   }
 }
