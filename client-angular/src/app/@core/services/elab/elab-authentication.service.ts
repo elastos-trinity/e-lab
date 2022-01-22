@@ -2,6 +2,8 @@ import { environment } from "@env/environment";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import ElabBackendAuthDto from "@core/dtos/auth/elab-backend-auth.dto";
 
 /**
  * ELAB backend interaction service.
@@ -26,17 +28,8 @@ export class ElabAuthenticationService {
    * @param verifiablePresentation Verifiable presentation
    * @return Promise<string> Access token if success, error message otherwise.
    */
-  async login(verifiablePresentation: VerifiablePresentation): Promise<string> {
-    try {
-      const body = JSON.stringify(verifiablePresentation);
-      // todo: Create an access token dto ?
-      const accessToken = await this.http.post<any>(ElabAuthenticationService.loginUrl, body, this.httpOptions).toPromise();
-      if (accessToken === undefined) {
-        return Promise.reject("Returned token by ELAB backend service is null");
-      }
-      return Promise.resolve(accessToken.data);
-    } catch {
-      return Promise.reject("Call to ELAB backend service failed.");
-    }
+  login(verifiablePresentation: VerifiablePresentation): Observable<ElabBackendAuthDto> {
+    const body = JSON.stringify(verifiablePresentation);
+    return this.http.post<ElabBackendAuthDto>(ElabAuthenticationService.loginUrl, body, this.httpOptions);
   }
 }

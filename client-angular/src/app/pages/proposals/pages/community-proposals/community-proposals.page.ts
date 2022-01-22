@@ -5,7 +5,6 @@ import { ModalService } from "@core/services/modal/modal.service";
 import { ActivateAccountComponent } from "@pages/proposals/modals/activate-account.component";
 import { ProposalsService } from "@pages/proposals/services/proposals.service";
 import { UserService } from "@pages/user/services/user.service";
-import { ActivatedRoute } from "@angular/router";
 import { VoteService } from "@pages/proposals/services/vote.service";
 import { ConfirmVoteComponent } from "@pages/proposals/pages/community-proposals/modals/confirm-vote-component";
 import { VotingPeriodService } from "@pages/proposals/services/voting-period.service";

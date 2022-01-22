@@ -10,7 +10,6 @@ export class JwtInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
-    // todo: refactor this should use the IsLoggedIn
     const isLoggedIn = getItem(StorageItem.AccessToken) !== null;
     const token = getItem(StorageItem.AccessToken);
     const isApiUrl = request.url.startsWith(environment.elabApiUrl);

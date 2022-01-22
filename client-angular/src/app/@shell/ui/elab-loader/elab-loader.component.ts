@@ -15,12 +15,11 @@ export class ElabLoaderComponent implements AfterViewInit {
       duration: 10_000,
       loop: true,
       begin: function(anim) {
-        document
-          .querySelector('#elab-loader path')!
-          .setAttribute("stroke", "url(#stroke-gradient-loader)");
-        document
-          .querySelector('#elab-loader path')!
-          .setAttribute("fill", "url(#fill-gradient-loader)");
+        const elabLoaderPath = document.querySelector('#elab-loader path');
+        if (elabLoaderPath)
+          elabLoaderPath.setAttribute("stroke", "url(#stroke-gradient-loader)");
+        if (elabLoaderPath)
+          elabLoaderPath.setAttribute("fill", "url(#fill-gradient-loader)");
       },
     });
   }

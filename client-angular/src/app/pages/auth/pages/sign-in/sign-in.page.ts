@@ -103,6 +103,7 @@ export class SignInPage implements OnInit, AfterViewInit {
       } else {
         this.isLoading = true;
         await this.authService.signIn();
+        this.isLoading = false;
         return this.router.navigate([`/${ROUTER_UTILS.config.base.home}`]);
       }
     } catch {
@@ -213,11 +214,9 @@ export class SignInPage implements OnInit, AfterViewInit {
   };
 
   particlesLoaded(container: Container): void {
-    console.log(container);
   }
 
   particlesInit(main: Main): void {
-    console.log(main);
     loadGradientUpdater(main);
     loadLightInteraction(main);
   };

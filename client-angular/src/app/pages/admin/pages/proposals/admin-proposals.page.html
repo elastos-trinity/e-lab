@@ -149,10 +149,6 @@
 
             <button (click)="onClickCancelGrant(proposal.id)"
                     *ngIf="proposal.votingStatus === VotingStatus.ENDED && proposal.grant !== GrantStatus.UNDECIDED"
-                    class="elab-button elab-button-beige w-full h-9">Terminate</button>
-
-            <button (click)="onClickCancelGrant(proposal.id)"
-                    *ngIf="proposal.votingStatus === VotingStatus.ENDED && proposal.grant !== GrantStatus.UNDECIDED"
                     class="elab-button elab-button-beige w-full h-9">Cancel grant</button>
             <button (click)="onClickGrant(proposal.id)"
                     *ngIf="proposal.votingStatus === VotingStatus.ENDED && proposal.grant === GrantStatus.UNDECIDED"

@@ -44,27 +44,29 @@ export class ElastosConnectivityService {
    * Register the essential connector
    */
   public async registerConnector(): Promise<void> {
-    console.debug("Preparing the Elastos connectivity SDK");
     await connectivity.registerConnector(this._connector)
-    console.debug("essentialsConnector", this._connector)
-    console.debug("Wallet connect provider", this._connector.getWalletConnectProvider());
   }
 
   /**
    * Disconnect the wallet session
    */
-  public async disconnect():Promise<void> {
-    return this._connector.disconnectWalletConnect()
+  public async disconnect(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        return this.isAlreadyConnected() ? this._connector.disconnectWalletConnect() : resolve();
+      } catch (error) {
+        console.error("Error while disconnecting the wallet", error);
+        reject();
+      }
+    })
   }
 
   /**
    * Check if the user is already connected via essentials
    */
   public isAlreadyConnected(): boolean {
-    const isUsingEssentialsConnector = connectivity.getActiveConnector()
-      && connectivity.getActiveConnector()?.name === this._connector.name;
-    const isAlreadyConnected = <boolean>isUsingEssentialsConnector && this._connector.hasWalletConnectSession();
-    return isAlreadyConnected
+    const isUsingEssentialsConnector = connectivity.getActiveConnector() && connectivity.getActiveConnector()?.name === this._connector.name;
+    return <boolean>isUsingEssentialsConnector && this._connector.hasWalletConnectSession()
   }
 
   /**

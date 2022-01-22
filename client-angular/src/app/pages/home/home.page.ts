@@ -20,37 +20,32 @@ export class HomePage implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     // Wrap every letter in a span
-    const textWrapper = document.querySelector('#welcome');
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
 
     anime.timeline({loop: false})
       .add({
-        targets: '#welcome .letter',
+        targets: '#welcome',
         opacity: [0,1],
         easing: "easeInElastic",
-        duration: 200,
-        delay: (element, index) => 20 * (index+1)
+        duration: 200
       }).add(
       {
         targets: '#paragraph-1',
         opacity: [0,1],
-        duration: 1000,
+        duration: 500,
         easing: "easeInOutQuad",
         delay: 200
       }).add(
         {
       targets: '#paragraph-2',
       opacity: [0,1],
-      duration: 1000,
+      duration: 500,
       easing: "easeInOutQuad",
       delay: 200
     }).add(
       {
         targets: '#paragraph-3',
         opacity: [0,1],
-        duration: 1000,
+        duration: 500,
         easing: "easeInOutQuad",
         delay: 200
       })
@@ -58,7 +53,7 @@ export class HomePage implements OnInit, AfterViewInit {
       {
         targets: '#paragraph-4',
         opacity: [0,1],
-        duration: 1000,
+        duration: 500,
         easing: "easeInOutQuad",
         delay: 200
       })
