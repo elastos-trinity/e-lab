@@ -555,12 +555,14 @@ class DBService {
                 return { code: 403, message: 'Invalid user, or user not approved yet' };
             }
             // Make sure the vote choice is valid
-            if (voteChoice != 'for' && voteChoice != 'against') {
+            if (voteChoice != 'for' && voteChoice != 'against' && voteChoice != 'cancel') {
                 return { code: 403, message: 'Invalid vote value' };
             }
 
+            const hasAlreadyVoted = await this.hasUserAlreadyVotedForProposal(voter, proposalId);
+
             // Make sure user hasn't already voted for this proposal
-            if (!await this.hasUserAlreadyVotedForProposal(voter, proposalId)) {
+            if (!hasAlreadyVoted && voteChoice !== 'cancel') {
                 const votesCollection = this.client.db().collection('votes');
                 // Not voted yet, we can record the vote
                 let vote: Vote = {
@@ -571,6 +573,8 @@ class DBService {
                 }
                 await votesCollection.insertOne(vote);
                 return { code: 200, message: 'success' };
+            } else if (hasAlreadyVoted && voteChoice === 'cancel') {
+                await this.deleteVote(proposalId, voter);
             } else {
                 return { code: 403, message: 'Forbidden: already voted' };
             }
@@ -610,7 +614,8 @@ class DBService {
             // If we asked for the current voting period
             // And we are between the start day and the end day of the voting period.
             // We return the current period.
-            if (!next && now.date() >= startDay && now.date() <= endDay) {
+
+            if (!next && now.date() >= startDay && (now.date() <= endDay || endDay < startDay)) {
                 votingStartDate = now.clone().set('date', startDay).startOf('day');
             } else {
                 // We are outside of a vote period or we want to get the next voting period
@@ -620,7 +625,13 @@ class DBService {
                   .set('date', startDay);
             }
 
-            const votingEndDate = votingStartDate.clone().add((endDay - startDay), "days").endOf('day');
+            let votingEndDate;
+            if (endDay > startDay) {
+                votingEndDate = votingStartDate.clone().add((endDay - startDay), "days").endOf('day');
+            } else {
+                votingEndDate = votingStartDate.clone().add(1, "month").set('date', endDay).endOf('day');
+            }
+
 
             const todayCheck = moment().utc(false).toDate();
             const isTodayInVotingPeriod = todayCheck.getTime() >= votingStartDate.toDate().getTime() && todayCheck.getTime() <= votingEndDate.toDate().getTime()

@@ -24,11 +24,8 @@
   <div class="text-pink-450 font-bold">DID</div>
   <div class="break-all">{{ currentUser.did }}</div>
 
-  <div class="text-pink-450 font-bold">Name</div>
-  <div class="break-all">{{ currentUser.name | titlecase }}</div>
-
-  <div class="text-pink-450 font-bold">Email</div>
-  <div class="break-all">{{ currentUser.name }}</div>
+  <div class="text-pink-450 font-bold" *ngIf="currentUser.name">Name</div>
+  <div class="break-all" *ngIf="currentUser.name">{{ currentUser.name | titlecase }}</div>
 
   <div class="text-pink-450 font-bold">Type</div>
   <div class="font-bold break-all">{{ currentUser.type | titlecase }}</div>

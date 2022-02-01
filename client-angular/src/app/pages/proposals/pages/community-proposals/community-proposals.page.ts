@@ -111,10 +111,12 @@ export class CommunityProposalsPage implements OnInit {
    */
   public getActiveProposals(): void {
     this.isLoading = true;
-    this.proposalService.getActiveProposals(this.pageNum, this.pageSize)
+    this.proposalService
+      .getActiveProposals(this.pageNum, this.pageSize)
       .subscribe(activeProposalResponse => {
         this.isLoading = false;
         this.proposals = activeProposalResponse.proposals
+          .sort((proposalA, proposalB) => { return proposalB.score - proposalA.score })
         this.totalProposals = activeProposalResponse.total
         this.totalActiveProposals = activeProposalResponse.totalActive
       })
@@ -138,5 +140,20 @@ export class CommunityProposalsPage implements OnInit {
     const { ConfirmVoteComponent } = await import('./modals/confirm-vote-component')
     const modalReference = await this.confirmVoteModal.open(ConfirmVoteComponent, {vote: 'against', proposalId: id})
     modalReference.instance.voteEvent.subscribe(() => { this.getActiveProposals() })
+  }
+
+  isActiveAndHasNotBeenVotedByUser(proposal: Proposal): boolean {
+    return proposal.votingStatus === VotingStatus.ACTIVE && this.currentUser.isActive && !proposal.votedByUser
+  }
+
+  isActiveAndHasBeenVotedByUser(proposal: Proposal): boolean {
+    return proposal.votingStatus === VotingStatus.ACTIVE && this.currentUser.isActive && proposal.votedByUser
+  }
+
+  onClickVoteCancel(id: string) {
+    this.isLoading = true;
+    this.voteService.cancelVote(id).subscribe(() => {
+      this.getActiveProposals()
+    })
   }
 }
