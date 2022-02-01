@@ -22,3 +22,9 @@ button {
     background-size: 100%;
   }
 }
+
+a:not([href]):not([class]),
+a:not([href]):not([class]):hover {
+  color: initial;
+  text-decoration: none;
+}

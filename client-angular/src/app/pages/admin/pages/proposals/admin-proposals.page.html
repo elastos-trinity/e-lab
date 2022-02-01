@@ -98,21 +98,16 @@
       <div class="flex flex-col w-full p-3 rounded-xl bg-gradient-to-br from-blue-800 to-blue-900
       md:rounded-none md:p-0 md:pr-1 md:bg-none md:w-1/2">
         <!-- First column - Title - Status - Description -->
-        <div class="text-pink-elab font-bold md:hidden">Title</div>
-        <div class="flex flex-row">
-          <div class="inline mr-2 text-sm font-normal md:font-bold md:text-xl">{{proposal.title}}</div>
-          <ng-container [ngTemplateOutlet]="status" [ngTemplateOutletContext]="{ proposal: proposal }"></ng-container>
-        </div>
 
-        <div class="flex flex-col mt-4 md:mt-2">
-          <div class="text-pink-elab font-bold md:hidden">Description</div>
-          <div class="block text-sm md-text-base md:pr-2 break-words">{{proposal.description}}</div>
+        <div class="break-words" style="word-break: break-word;">
+          <div class="md:inline mr-2 font-bold md:text-xl">{{proposal.title}}</div>
+          <ng-container [ngTemplateOutlet]="status" [ngTemplateOutletContext]="{ proposal: proposal }"></ng-container>
+          <div class="mt-2 md:pr-2 text-sm md:text-base">{{proposal.description}}</div>
         </div>
 
         <!-- MOBILE - Link -->
-        <div class="md:hidden mt-4 text-green-elab break-all">
-          <div class="text-pink-elab font-bold md:hidden">Link</div>
-          <a [href]="proposal.link" target="_blank" class="text-sm hover:text-pink-elab">{{ proposal.link }}</a>
+        <div class="md:hidden mt-6 text-green-elab break-all">
+          <a [href]="proposal.link" target="_blank" class="text-sm">{{ proposal.link }}</a>
         </div>
 
         <!-- MOBILE - Proposer -->
@@ -211,7 +206,7 @@
       <!-- Desktop - 3rd column vote results -->
       <div *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === VotingStatus.ACTIVE"
            class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 md:w-[330px] px-3 lg:px-0">
-        <div class="align-middle my-auto opacity-100 md:min-w-[60px] ">
+        <div class="align-middle my-auto opacity-100 min-w-fit ">
           <span class="block text-pink-elab font-bold">
             <span class="md:hidden 2xl:inline">Vote</span> Result
           </span>
@@ -265,7 +260,7 @@
               Vote starting on {{ proposal.votingPeriodStartDate | date:'MMM d' }}
             </span>
             <button (click)="onClickCancelDecision(proposal.id)"
-                    class="elab-button elab-button-beige w-full h-9 hover:scale-100 hover:border-0" >
+                    class="elab-button elab-button-beige w-full h-9 hover:scale-100" >
               Cancel decision
             </button>
           </div>

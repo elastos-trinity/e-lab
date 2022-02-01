@@ -59,17 +59,6 @@ export class NewProposalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.proposalForm = this.fb.group({
-      title: new ElabFormControlModel(
-      {
-        label: 'Title',
-        placeholder: 'Proposal title (at least 20 characters)',
-        name: 'title',
-        validation: {
-          required: 'Please enter a title',
-          minlength: 'The title must be at least 20 characters'
-        }}, '',
-      [Validators.required, Validators.minLength(20)]
-      ),
       link: new ElabFormControlModel(
         {
           label: 'CR Link',
@@ -82,6 +71,17 @@ export class NewProposalComponent implements OnInit, OnDestroy {
         [Validators.required,
           Validators.pattern('(https?://)?(www\.)?(cyberrepublic.org/suggestion/)[a-z0-9].*')
         ]
+      ),
+      title: new ElabFormControlModel(
+        {
+          label: 'Title',
+          placeholder: 'Proposal title (at least 20 characters)',
+          name: 'title',
+          validation: {
+            required: 'Please enter a title',
+            minlength: 'The title must be at least 20 characters'
+          }}, '',
+        [Validators.required, Validators.minLength(20)]
       ),
       description: new ElabFormControlModel(
         {

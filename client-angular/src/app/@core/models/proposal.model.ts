@@ -29,6 +29,7 @@ export class Proposal {
 
   private readonly _votesFor: number
   private readonly _votesAgainst: number
+  private readonly _score: number
   private readonly _votingPeriodStartDate: Date
   private readonly _votingPeriodEndDate: Date
   private readonly _votedByUser: boolean
@@ -73,6 +74,7 @@ export class Proposal {
 
     this._votesFor = votesFor;
     this._votesAgainst = votesAgainst;
+    this._score = votesFor - votesAgainst;
     this._votingPeriodStartDate = votingPeriodStartDate
     this._votingPeriodEndDate = votingPeriodEndDate
     this._votedByUser = votedByUser;
@@ -164,6 +166,10 @@ export class Proposal {
 
   get votingPeriodStartDate(): Date {
     return this._votingPeriodStartDate;
+  }
+
+  get score(): number {
+    return this._score;
   }
 
 }

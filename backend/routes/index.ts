@@ -160,8 +160,8 @@ router.patch('/user/:did', async (req, res) => {
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/user/setUserType', async (req, res) => {
-    if (req.user.type !== 'superadmin') {
-        res.json({ code: 403, message: 'Admin with canManageAdmins permission only' });
+    if (req.user.type !== 'admin' && req.user.type !== 'superadmin') {
+        res.json({ code: 403, message: 'Admin only' });
         return;
     }
 
@@ -244,6 +244,11 @@ router.post('/user/wallet', async (req, res) => {
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/users/list', async (req, res) => {
+    if (req.user.type !== 'superadmin') {
+        res.json({ code: 403, message: 'forbidden' });
+        return;
+    }
+
     let pageNumStr = req.query.pageNum as string;
     let pageSizeStr = req.query.pageSize as string;
     let search = req.query.search as string;
@@ -259,7 +264,7 @@ router.get('/users/list', async (req, res) => {
 
         res.json(await dbService.listUsers(search, pageNum, pageSize));
     } catch (e) {
-        console.log(e);
+        console.error(e);
         res.json({ code: 400, message: 'bad request' });
         return;
     }
@@ -369,6 +374,10 @@ router.get('/voting-period', async (req, res) => {
 })
 
 router.put('/voting-period', async (req, res) => {
+    if (req.user.type !== 'superadmin') {
+        res.json({ code: 403, message: 'forbidden' });
+        return;
+    }
     try {
         if (!req.body.startDay || !req.body.endDay) {
             console.error('Error while trying to update the voting period starDay or endDay null')
@@ -399,7 +408,7 @@ router.get('/proposals/mine', async (req, res) => {
             return;
         }
     } catch (e) {
-        console.log(e);
+        console.error(e);
         res.json({ code: 400, message: 'bad request' });
         return;
     }
@@ -426,7 +435,7 @@ router.get('/proposals/all', async (req, res) => {
         res.json(await dbService.listProposals(title, false, userId, pageNum, pageSize));
 
     } catch (e) {
-        console.log(e);
+        console.error(e);
         res.json({ code: 400, message: 'bad request' });
         return;
     }
@@ -451,7 +460,7 @@ router.get('/proposals/active', async (req, res) => {
         res.json(await dbService.listProposals(title, true, userId, pageNum, pageSize));
 
     } catch (e) {
-        console.log(e);
+        console.error(e);
         res.json({ code: 400, message: 'bad request' });
         return;
     }
@@ -476,7 +485,7 @@ router.get('/proposals/:id', async (req, res) => {
     try {
         res.json(await dbService.findProposalById(req.params.id));
     } catch (e) {
-        console.log(e);
+        console.error(e);
         res.json({ code: 400, message: 'bad request' });
         return;
     }

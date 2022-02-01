@@ -26,4 +26,8 @@ export class VoteService {
   voteAgainst(proposalId: string) {
     return this.elabVotingService.post(proposalId, 'against')
   }
+
+  cancelVote(proposalId: string) {
+    return this.elabVotingService.post(proposalId, 'cancel')
+  }
 }
