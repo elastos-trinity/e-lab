@@ -1,4 +1,4 @@
-export class CrSuggestionModel {
+export class Crsuggestion {
 
   private _budget?: number;
   private _creatorDID: string;

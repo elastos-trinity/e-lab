@@ -10,7 +10,9 @@ import { ProposalStatus } from '../model/proposalstatus';
 import { User } from '../model/user';
 import { credentialsService } from '../services/credentials.service';
 import { dbService } from '../services/db.service';
+import { crService } from '../services/cr.service';
 import { apiError } from '../utils/api';
+import CrSuggestionResponseDto from "../dtos/crSuggestionResponse.dto";
 
 let router = Router();
 
@@ -346,13 +348,33 @@ router.post('/proposals', async (req, res) => {
 
     let { title, link, description } = req.body;
     if (!title || !link || !description) {
+        res.status(400)
         res.json({ code: 400, message: 'Missing title, description or link' });
+        return;
+    }
+
+    let budget: number;
+    try {
+        const crResponse = await crService.getSuggestion(link) as string;
+        const suggestion = JSON.parse(crResponse) as CrSuggestionResponseDto
+        budget = Number.parseFloat(suggestion.data.budgetAmount ? suggestion.data.budgetAmount : "0");
+        if (!budget || budget === 0) {
+            res.status(400)
+            res.json({ code: 400, message: 'The suggestion has no budget' });
+        }
+
+        console.log(suggestion);
+    } catch (e) {
+        res.status(400)
+        console.log(e);
+        res.json({ code: 400, message: 'Can not find the suggestion' });
         return;
     }
 
     let proposal: Proposal = {
         id: uuidV1(),
         title,
+        budget,
         link,
         description,
         creator: req.user.did,

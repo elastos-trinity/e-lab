@@ -39,6 +39,8 @@ export class Proposal {
   private readonly _votingStatus: VotingStatus
   private readonly _grant: GrantStatus
 
+  private readonly _budget: number
+
   /**
    * Proposal
    * @param id ID
@@ -64,7 +66,7 @@ export class Proposal {
               votingPeriodEndDate = new Date(0),
               votedByUser: boolean,
               userVote: string,
-              status: ProposalStatus, votingStatus: VotingStatus, grant: GrantStatus) {
+              status: ProposalStatus, votingStatus: VotingStatus, grant: GrantStatus, budget: number) {
     this._id = id;
     this._title = title;
     this._description = description;
@@ -83,6 +85,8 @@ export class Proposal {
     this._status = status;
     this._votingStatus = votingStatus;
     this._grant = grant;
+
+    this._budget = budget ? budget : 0;
   }
 
   /**
@@ -104,7 +108,8 @@ export class Proposal {
       elabProposal.userVote,
       elabProposal.status as ProposalStatus,
       elabProposal.votingStatus as VotingStatus,
-      elabProposal.grant as GrantStatus
+      elabProposal.grant as GrantStatus,
+      elabProposal.budget
       );
   }
 
@@ -170,6 +175,10 @@ export class Proposal {
 
   get score(): number {
     return this._score;
+  }
+
+  get budget(): number {
+    return this._budget;
   }
 
 }

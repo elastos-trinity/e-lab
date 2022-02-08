@@ -28,6 +28,17 @@ export class ElabFormControlModel extends FormControl implements IExtendedAbstra
               asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[]) {
     super(formState, validatorOrOptions, asyncValidator);
 
+    this.statusChanges.subscribe(() => {
+      this.errorMessages = [];
+      if (this.errors && this.dirty) {
+        for (const messageKey of Object.keys(this.errors)) {
+          if (this.validation && this.validation[messageKey]) {
+            this.errorMessages.push(this.validation[messageKey])
+          }
+        }
+      }
+    })
+
     this.sub = this.valueChanges.pipe(
       debounceTime(this.debounce)
     ).subscribe(() => {

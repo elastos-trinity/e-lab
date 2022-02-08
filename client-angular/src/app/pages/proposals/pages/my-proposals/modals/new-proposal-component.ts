@@ -13,6 +13,10 @@ import { ElabProposalService } from "@core/services/elab/elab-proposal.service";
 import { ElabFormControlModel } from "@core/models/elabform.model";
 import { ElabFormControlModule } from "@shell/ui/elab-form-control/elab-form-control.module";
 import { animate, style, transition, trigger } from "@angular/animations";
+import { crSuggestionValidator } from "@core/directives/cr-suggestion.directive";
+import { CrService } from "@core/services/cr/cr.service";
+import { UserService } from "@pages/user/services/user.service";
+import User from "@core/models/user.model";
 
 @Component({
   selector: 'app-new-proposal',
@@ -46,11 +50,19 @@ export class NewProposalComponent implements OnInit, OnDestroy {
   loading = false;
 
   public proposalForm!: FormGroup;
+  private currentUser!: User;
 
   constructor(
     public fb: FormBuilder,
-    private elabProposalService: ElabProposalService
+    private elabProposalService: ElabProposalService,
+    private crService: CrService,
+    private userService: UserService
   ) {
+    this.userService.loggedInUser$.subscribe((user) => {
+      if (user) {
+        this.currentUser = user
+      }
+    })
   }
 
   ngOnDestroy(): void {
@@ -66,11 +78,15 @@ export class NewProposalComponent implements OnInit, OnDestroy {
           name: 'link',
           validation: {
             required: 'Please enter the CR link',
-            pattern: 'The link must be a valid CR link'
+            pattern: 'The link must be a valid CR link',
+            suggestionDoesNotExist: 'Can not find the suggestion',
+            suggestionHasNoBudget: 'The suggestion must have a budget',
+            suggestionIsFromDifferentCreator: 'You must be the suggestion creator'
           }}, '',
         [Validators.required,
           Validators.pattern('(https?://)?(www\.)?(cyberrepublic.org/suggestion/)[a-z0-9].*')
-        ]
+        ],
+        crSuggestionValidator(this.crService, this.currentUser)
       ),
       title: new ElabFormControlModel(
         {

@@ -100,6 +100,12 @@
             <a [href]="proposal.link" target="_blank" class="text-sm">{{ proposal.link }}</a>
           </div>
 
+          <!-- MOBILE - Budget -->
+          <div class="mt-6 md:mt-4 md:hidden text-sm">
+            <span class="md:opacity-100 md:text-pink-elab font-bold">Suggested Budget</span>
+            <span class="md:opacity-50 block break-all pr-2">{{ proposal.budget |  number: '.1'}} ELA</span>
+          </div>
+
           <!-- DESKTOP - Proposer -->
           <div class="hidden md:block md:mt-auto">
             <div class="mt-4">
@@ -172,23 +178,35 @@
         </div>
 
         <!-- DESKTOP - Second column Link/Created at -->
-        <div class="hidden md:flex flex-col w-1/5 pr-2">
-          <div class="pt-4">
-            <span class="text-pink-450 font-bold">Link</span>
-            <span class="block break-all hover:text-pink-elab duration-300 text-green-elabLight">
-          <a href="{{ proposal.link }}" target="_blank">
-          <span class="hidden 2xl:inline">
-          {{ proposal.link }}
-          </span>
-
-          <span class="inline 2xl:hidden">
-          Click here
-          </span>
-          </a>
-          </span>
+        <div class="hidden md:flex flex-col w-1/5 pr-2 content-between justify-between">
+          <div class="font-bold">
+              <span class="text-pink-450 hidden 2xl:inline">
+                Suggested Budget:
+              </span>
+              <span class="text-pink-450 inline 2xl:hidden">
+                Budget:
+              </span>
+              <span class="font-bold inline-block">
+                {{ proposal.budget |  number: '.1'}} ELA
+              </span>
           </div>
 
-          <div class="mt-auto">
+          <div>
+            <span class="text-pink-450 font-bold">Link</span>
+            <span class="block break-all hover:text-pink-elab duration-300 text-green-elabLight">
+            <a href="{{ proposal.link }}" target="_blank">
+            <span class="hidden 2xl:inline">
+              {{ proposal.link }}
+            </span>
+
+            <span class="inline 2xl:hidden">
+              Click here
+            </span>
+            </a>
+            </span>
+          </div>
+
+          <div>
             <span class="text-pink-450 justify-end mt-auto font-bold">Created on</span>
             <span class="block opacity-50">{{proposal.createdAt | dateAgo}}</span>
           </div>
@@ -199,7 +217,7 @@
              class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 px-3 lg:px-0 min-w-fit">
           <div class="align-middle my-auto opacity-100 ">
             <div class="block text-pink-elab font-bold text-center">
-              <span class="md:hidden 2xl:inline">Vote</span> Result
+              <span class="md:hidden 2xl:inline">Vote</span> Score
               <span [ngClass]="{'text-green-elab': proposal.score > 0, 'text-white': proposal.score === 0, 'text-red-elab': proposal.score < 0 }" class="block text-2xl">{{ proposal.score }}</span>
             </div>
             <div class="justify-start mt-2">
@@ -217,7 +235,7 @@
           </div>
 
           <!-- Community proposal - Voting buttons -->
-          <div *ngIf="currentUser.isActive && !proposal.votedByUser" class="flex flex-col space-y-2 px-3 lg:px-12 justify-center">
+          <div *ngIf="currentUser.isActive && !proposal.votedByUser" class="flex flex-col space-y-2 pl-3 lg:pl-12 justify-center">
             <button class="elab-button elab-button-green h-9 px-2" (click)="onClickVoteFor(proposal.id)">Up Vote</button>
             <button class="elab-button elab-button-red h-9 px-2" (click)="onClickVoteAgainst(proposal.id)">Down Vote</button>
           </div>
@@ -234,7 +252,7 @@
           md:mr-5 min-h-max justify-between">
           <div></div>
           <div>
-            <span class="block font-bold text-pink-450">Vote Result: ended on {{ proposal.votingPeriodEndDate | date:'MMM d' }} </span>
+            <span class="block font-bold text-pink-450">Voting Score: ended on {{ proposal.votingPeriodEndDate | date:'MMM d' }} </span>
             <span [ngClass]="{'text-green-elab': proposal.score > 0, 'text-white': proposal.score === 0, 'text-red-elab': proposal.score < 0 }" class="block text-2xl">{{ proposal.score }}</span>
             <div class="mt-2">
               <span class="block text-green-elab">{{ proposal.votesFor }} Votes up</span>

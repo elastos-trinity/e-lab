@@ -83,8 +83,7 @@
         <div class="my-auto pr-4 md:my-0 md:pr-2 lg:pr-6 lg:pl-4 pt-0.5">#{{ pageSize * (pageNum - 1) + (indexOfElement + 1) }}</div>
 
         <!-- FIRST COLUMN -->
-        <div class="flex flex-col w-full p-3 rounded-xl bg-gradient-to-br from-blue-800 to-blue-900
-      md:rounded-none md:p-0 md:pr-1 md:bg-none md:w-1/2">
+        <div class="flex flex-col w-full p-3 rounded-xl bg-gradient-to-br from-blue-800 to-blue-900 md:rounded-none md:p-0 md:pr-1 md:bg-none md:w-1/2">
           <!-- First column - Title - Status - Description -->
           <div class="flex flex-row">
             <div class="text-pink-elab font-bold md:hidden">Title</div>
@@ -96,13 +95,14 @@
           </div>
 
           <!-- Title -->
-          <div class="flex flex-row break-words" style="word-break: break-word;">
+          <div class="flex md:flex-col 2xl:flex-row break-words" style="word-break: break-word;">
             <div class="inline mr-2 text-sm font-normal md:font-bold md:text-xl">{{proposal.title}}</div>
             <ng-container [ngTemplateOutlet]="status" [ngTemplateOutletContext]="{ proposal: proposal }"></ng-container>
           </div>
 
           <!-- Description -->
-          <div class="flex flex-col mt-4 md:mt-2">
+
+          <div class="flex flex-col mt-4 md:mt-2 break-words"  style="word-break: break-word;">
             <div class="text-pink-elab font-bold md:hidden">Description</div>
             <div class="block text-sm md-text-base md:pr-2 break-words">{{proposal.description}}</div>
           </div>
@@ -111,6 +111,12 @@
           <div class="md:hidden mt-4 text-green-elab break-all">
             <div class="text-pink-elab font-bold md:hidden">Link</div>
             <a [href]="proposal.link" target="_blank" class="text-sm text-pink-elab">{{ proposal.link }}</a>
+          </div>
+
+          <!-- MOBILE - Budget -->
+          <div class="mt-6 md:mt-4 md:hidden text-sm">
+            <span class="md:opacity-100 md:text-pink-elab font-bold">Suggested Budget</span>
+            <span class="md:opacity-50 block break-all pr-2">{{ proposal.budget |  number: '.1'}} ELA</span>
           </div>
 
           <!-- MOBILE - Created / Result -->
@@ -188,8 +194,20 @@
         </div>
 
         <!-- DESKTOP - Second column Link/Created at -->
-        <div class="hidden md:flex flex-col w-1/5 pr-2">
-          <div class="pt-4">
+
+        <div class="hidden md:flex flex-col w-1/5 pr-2 content-between justify-between">
+          <div class="font-bold">
+              <span class="text-pink-450 hidden 2xl:inline">
+                Suggested Budget:
+              </span>
+            <span class="text-pink-450 inline 2xl:hidden">
+                Budget:
+              </span>
+            <span class="font-bold inline-block">
+                {{ proposal.budget |  number: '.1'}} ELA
+              </span>
+          </div>
+          <div>
             <span class="text-pink-450 font-bold">Link</span>
             <span class="block break-all text-green-elabLight">
             <a href="{{ proposal.link }}" target="_blank" class="duration-300 hover:text-pink-elab">
@@ -204,7 +222,7 @@
           </span>
           </div>
 
-          <div class="mt-auto">
+          <div>
             <span class="text-pink-450 justify-end mt-auto font-bold">Created on</span>
             <span class="block opacity-50">{{proposal.createdAt | dateAgo}}</span>
           </div>
@@ -213,10 +231,10 @@
         <!-- DESKTOP - Voting status -->
 
         <div *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === VotingStatus.ACTIVE"
-             class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 md:w-[320px] px-3 lg:px-0">
+             class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 px-3 lg:px-0 min-w-fit">
           <div class="align-middle my-auto opacity-100 ">
             <div class="block text-pink-elab font-bold text-center">
-              <span class="md:hidden 2xl:inline">Vote</span> Result
+              <span class="md:hidden 2xl:inline">Vote</span> Score
               <span [ngClass]="{'text-green-elab': proposal.score > 0, 'text-white': proposal.score === 0, 'text-red-elab': proposal.score < 0 }" class="block text-2xl">{{ proposal.score }}</span>
             </div>
             <div class="justify-start mt-2">
@@ -232,13 +250,13 @@
         </div>
 
         <div *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === VotingStatus.NOT_STARTED"
-             class="hidden md:flex md:flex-row md:ml-auto md:mr-0 lg:mr-5 md:w-[320px]">
+             class="hidden md:flex md:flex-row md:ml-auto md:mr-0 lg:mr-5">
           <span class="align-middle my-auto block font-bold text-pink-450">Vote starting on {{ proposal.votingPeriodStartDate | date:'MMM d' }} </span>
         </div>
 
         <div *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === 'ended'"
              class="hidden md:flex md:flex-col md:ml-auto
-           md:mr-5 md:w-[320px] min-h-max justify-between">
+           md:mr-5 min-h-max justify-between">
           <div></div>
           <div>
             <span class="block font-bold text-pink-450">Vote Result: ended on {{ proposal.votingPeriodEndDate | date:'MMM d' }} </span>
@@ -302,7 +320,7 @@
   </div>
 
   <ng-template #status let-proposal="proposal">
-    <div class="hidden md:inline">
+    <div class="hidden md:block xl:inline">
     <span class="opacity-50 text-[12px]" *ngIf="proposal.status !== ProposalStatus.REJECTED && proposal.votingStatus === VotingStatus.NOT_APPROVED">
       AWAITING APPROVAL
     </span>
