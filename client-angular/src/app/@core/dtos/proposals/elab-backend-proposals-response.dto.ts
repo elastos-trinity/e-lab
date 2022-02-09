@@ -14,6 +14,7 @@ export interface ElabBackendProposalResult {
   votedByUser: boolean
   userVote: string
   votingStatus: string
+  budget: number
 }
 
 interface ElabBackendProposalResults {

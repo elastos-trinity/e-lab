@@ -7,7 +7,6 @@ export default interface CrSuggestionResponseDto {
 export interface Data {
   _id: string
   title: string
-  empty?: boolean
   budgetAmount?: string
   createdBy: CreatedBy2
   proposer: Proposer

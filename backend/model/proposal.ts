@@ -1,6 +1,7 @@
 export type Proposal = {
   id: string; // Our own custom unique identifier for the proposal
   title: string;
+  budget: number;
   link: string;
   description: string;
   creator: string; // User DID

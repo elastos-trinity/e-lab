@@ -1,32 +1,36 @@
-import { AbstractControl, NG_VALIDATORS, ValidationErrors, ValidatorFn } from "@angular/forms";
-import { Directive } from "@angular/core";
+import {
+  AbstractControl, AsyncValidatorFn,
+  ValidationErrors
+} from "@angular/forms";
 import { CrService } from "@core/services/cr/cr.service";
+import { Observable } from "rxjs";
+import { CrSuggestionModel } from "@core/models/cr-suggestion.model";
+import { map } from "rxjs/operators";
+import User from "@core/models/user.model";
 
-@Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
-  selector: '[validateCrLink][ngModel]',
-  providers: [{ provide: NG_VALIDATORS,
-    useValue: validateCrLink,
-    multi: true
-  }]
-})
-export class CrSuggestionDirective {
 
-  validator: Function;
 
-  constructor(crService: CrService) {
-    this.validator = validateCrLinkFactory(crService);
+export function crSuggestionValidator(crService: CrService, currentUser: User): AsyncValidatorFn {
+  return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+    const suggestionId = control.value.split(/\//).pop();
+    return crService.get(suggestionId)
+      .pipe(
+      map((crSuggestion: CrSuggestionModel | undefined) => {
+        if (!crSuggestion) {
+          return { suggestionDoesNotExist: true }
+        }
+
+        if (!crSuggestion.budget || crSuggestion.budget === 0) {
+          return { suggestionHasNoBudget: true }
+        }
+
+        if (crSuggestion.creatorDID !== currentUser.did) {
+          return { suggestionIsFromDifferentCreator: true }
+        }
+
+        return null;
+      }
+    ))
+
   }
-
-  validate(c: FormControl) {
-
-  }
-
-}
-export function crSuggestionValidator(nameRe: RegExp): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const forbidden = nameRe.test(control.value);
-    // eslint-disable-next-line unicorn/no-null
-    return forbidden ? {forbiddenName: {value: control.value}} : null;
-  };
 }

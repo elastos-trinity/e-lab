@@ -13,11 +13,17 @@ export class CrService {
 
   constructor(private http: HttpClient) { }
 
-  get(suggestionId: string): Observable<CrSuggestionModel> {
-    return this.http.get<CrSuggestionResponseDto>(`${CrService.crURL}/${suggestionId}'/show?incViewsNum=true`).pipe(
+  get(suggestionId: string): Observable<CrSuggestionModel | undefined> {
+    return this.http.get<CrSuggestionResponseDto>(`${CrService.crURL}/${suggestionId}/show?incViewsNum=true`).pipe(
       map(
         (response: CrSuggestionResponseDto) => {
-        return new CrSuggestionModel(Number.parseFloat(response.data.budgetAmount), response.data.proposer.did.id)
+          if (response.code === 1 && !response.data.empty) {
+            const crSuggestion = new CrSuggestionModel(Number.parseFloat(response.data.budgetAmount ? response.data.budgetAmount : "0"),
+              response.data.createdBy.did.id);
+            return crSuggestion;
+          } else {
+            return undefined;
+          }
       }))
   }
 }

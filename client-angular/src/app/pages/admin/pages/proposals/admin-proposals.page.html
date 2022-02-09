@@ -105,9 +105,16 @@
           <div class="mt-2 md:pr-2 text-sm md:text-base">{{proposal.description}}</div>
         </div>
 
+
         <!-- MOBILE - Link -->
         <div class="md:hidden mt-6 text-green-elab break-all">
           <a [href]="proposal.link" target="_blank" class="text-sm">{{ proposal.link }}</a>
+        </div>
+
+        <!-- MOBILE - Budget -->
+        <div class="mt-6 md:mt-4 md:hidden text-sm">
+          <span class="text-pink-elab font-bold">Suggested Budget</span>
+          <span class="block break-all pr-2">{{ proposal.budget |  number: '.1'}} ELA</span>
         </div>
 
         <!-- MOBILE - Proposer -->
@@ -181,11 +188,23 @@
       </div>
 
       <!-- DESKTOP - Second column Link/Created at -->
-      <div class="hidden md:flex flex-col w-1/5">
-        <div class="pt-4">
+
+      <div class="hidden md:flex flex-col w-1/5 pr-2 content-between justify-between">
+        <div class="font-bold">
+              <span class="text-pink-450 hidden 2xl:inline">
+                Suggested Budget:
+              </span>
+          <span class="text-pink-450 inline 2xl:hidden">
+                Budget:
+            </span>
+          <span class="font-bold inline-block">
+                {{ proposal.budget |  number: '.1'}} ELA
+              </span>
+        </div>
+        <div>
           <span class="text-pink-450 font-bold">Link</span>
-          <span class="block break-all duration-200 hover:text-pink-elab text-green-elabLight">
-            <a href="{{ proposal.link }}" class="hover:text-pink-elab" target="_blank">
+          <span class="block break-all text-green-elabLight">
+            <a href="{{ proposal.link }}" target="_blank" class="duration-300 hover:text-pink-elab">
               <span class="hidden 2xl:inline">
                 {{ proposal.link }}
               </span>
@@ -197,7 +216,7 @@
           </span>
         </div>
 
-        <div class="mt-auto">
+        <div>
           <span class="text-pink-450 justify-end mt-auto font-bold">Created on</span>
           <span class="block opacity-50">{{proposal.createdAt | dateAgo}}</span>
         </div>
@@ -205,7 +224,7 @@
 
       <!-- Desktop - 3rd column vote results -->
       <div *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === VotingStatus.ACTIVE"
-           class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 md:w-[330px] px-3 lg:px-0">
+           class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 px-3 lg:px-0">
         <div class="align-middle my-auto opacity-100 min-w-fit ">
           <span class="block text-pink-elab font-bold">
             <span class="md:hidden 2xl:inline">Vote</span> Result
@@ -227,7 +246,7 @@
         *ngIf="proposal.status === ProposalStatus.NEW
         || proposal.votingStatus === VotingStatus.NOT_STARTED
         || currentUser.type === 'superadmin'"
-           class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 md:w-[330px] px-3 lg:px-0">
+           class="hidden md:flex md:flex-row md:ml-auto mr-0 lg:mr-5 px-3 lg:px-0">
         <div *ngIf="proposal.status === ProposalStatus.NEW && proposal.grant === GrantStatus.UNDECIDED" class="align-middle my-auto opacity-100 md:min-w-[60px] ">
           <span class="block text-pink-elab font-bold">
             <span class="md:hidden 2xl:inline">Review required</span>
@@ -270,7 +289,7 @@
 
       <div *ngIf="proposal.status === ProposalStatus.APPROVED && proposal.votingStatus === 'ended'"
            class="hidden md:flex md:flex-col md:ml-auto
-           md:mr-5 md:w-[320px] min-h-max justify-between">
+           md:mr-5 min-h-max justify-between">
         <div></div>
 
         <div>
