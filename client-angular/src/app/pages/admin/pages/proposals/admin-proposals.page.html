@@ -320,12 +320,12 @@
       </p>
     </div>
     <div class="md:ml-16 inline-flex">
-      <button type="button" [ngClass]="{'cursor-not-allowed': !canDoPreviousPage()}" [attr.disabled]="!canDoPreviousPage() ? 'disabled' : null" (click)="decrementCurrentPage()">
+      <button type="button" [ngClass]="{'cursor-not-allowed': !canDoPreviousPage()}" [attr.disabled]="!canDoPreviousPage() ? 'disabled' : null" (click)="goToPreviousPage()">
         <svg xmlns="http://www.w3.org/2000/svg" [ngClass]="{'opacity-50': !canDoPreviousPage()}" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
       </button>
-      <button type="button" [ngClass]="{'cursor-not-allowed': !canDoNextPage()}" [attr.disabled]="!canDoNextPage() ? 'disabled' : null" (click)="incrementCurrentPage()">
+      <button type="button" [ngClass]="{'cursor-not-allowed': !canDoNextPage()}" [attr.disabled]="!canDoNextPage() ? 'disabled' : null" (click)="goToNextPage()">
         <svg xmlns="http://www.w3.org/2000/svg" [ngClass]="{'opacity-50': !canDoNextPage()}" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"  />
         </svg>
