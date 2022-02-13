@@ -614,8 +614,9 @@ class DBService {
             // If we asked for the current voting period
             // And we are between the start day and the end day of the voting period.
             // We return the current period.
-
-            if (!next && now.date() >= startDay && (now.date() <= endDay || endDay < startDay)) {
+            // If the today's day is inferior to start day return the current month.
+            if (!next && ((now.date() >= startDay && (now.date() <= endDay || endDay < startDay))
+              || now.date() <= startDay)) {
                 votingStartDate = now.clone().set('date', startDay).startOf('day');
             } else {
                 // We are outside of a vote period or we want to get the next voting period
