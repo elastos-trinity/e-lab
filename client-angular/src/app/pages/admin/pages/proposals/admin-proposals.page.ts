@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, ComponentRef, OnInit, ViewChild } from "@angular/core";
 import User from "@core/models/user.model";
 import { GrantStatus, Proposal, ProposalStatus, VotingStatus } from "@core/models/proposal.model";
 import { ProposalsService } from "@pages/proposals/services/proposals.service";
@@ -6,6 +6,8 @@ import { UserService } from "@pages/user/services/user.service";
 import { VoteService } from "@pages/proposals/services/vote.service";
 import { ROUTER_UTILS } from "@core/utils/router.utils";
 import { VotingPeriodService } from "@pages/proposals/services/voting-period.service";
+import { ModalService } from "@core/services/modal/modal.service";
+import { ChangeVotingPeriodComponent as ChangeVotingPeriodComponentType } from "@pages/admin/pages/proposals/modals/change-voting-period.component";
 
 @Component({
   templateUrl: './admin-proposals.page.html',
@@ -30,7 +32,8 @@ export class AdminProposalsPage implements OnInit {
   constructor (private proposalService: ProposalsService,
                private voteService: VoteService,
                private userService: UserService,
-               private votingPeriodService: VotingPeriodService) {
+               private votingPeriodService: VotingPeriodService,
+               private changeVotingPeriodModal: ModalService<ChangeVotingPeriodComponentType>) {
     this.pageSize = 10;
     this.pageNum = 1;
     this.totalProposals = 0;
@@ -169,6 +172,19 @@ export class AdminProposalsPage implements OnInit {
   async onClickCancelGrant(proposalId: string): Promise<void> {
     await this.proposalService.cancelGrant(proposalId).then(() => {
       this.getAdminProposals()
+    })
+  }
+
+  /**
+   * Display the voting period change modal
+   */
+  async openChangeVotingPeriodModal(): Promise<void> {
+    const { ChangeVotingPeriodComponent } = await import('./modals/change-voting-period.component')
+    const modalReference = await this.changeVotingPeriodModal.open(ChangeVotingPeriodComponent) as ComponentRef<ChangeVotingPeriodComponentType>
+    modalReference.instance.votingPeriodChangeEvent.subscribe(() => {
+      this.votingPeriodService.getCurrentVotingPeriod().subscribe((currentVotingPeriod) => {
+        this.currentVotingPeriod = currentVotingPeriod
+      })
     })
   }
 

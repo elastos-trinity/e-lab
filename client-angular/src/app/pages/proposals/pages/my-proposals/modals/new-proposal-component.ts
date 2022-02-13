@@ -46,7 +46,6 @@ export class NewProposalComponent implements OnInit, OnDestroy {
   @Output()
   modalCloseEvent = new EventEmitter()
 
-  message = '';
   loading = false;
 
   public proposalForm!: FormGroup;
