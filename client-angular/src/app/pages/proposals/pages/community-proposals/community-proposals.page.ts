@@ -89,18 +89,20 @@ export class CommunityProposalsPage implements OnInit {
   /**
    * Increment the current page number.
    */
-  incrementCurrentPage(): void {
+  goToNextPage(): void {
     if (this.canDoNextPage()) {
       this.pageNum += 1;
+      this.getActiveProposals()
     }
   }
 
   /**
    * Decrement the current page number.
    */
-  decrementCurrentPage(): void {
+  goToPreviousPage(): void {
     if (this.canDoPreviousPage()) {
       this.pageNum -= 1;
+      this.getActiveProposals()
     }
   }
 

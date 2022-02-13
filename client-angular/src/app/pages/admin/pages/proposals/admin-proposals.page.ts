@@ -85,18 +85,20 @@ export class AdminProposalsPage implements OnInit {
   /**
    * Increment the current page number.
    */
-  incrementCurrentPage(): void {
+  goToNextPage(): void {
     if (this.canDoNextPage()) {
       this.pageNum += 1;
+      this.getAdminProposals();
     }
   }
 
   /**
    * Decrement the current page number.
    */
-  decrementCurrentPage(): void {
+  goToPreviousPage(): void {
     if (this.canDoPreviousPage()) {
       this.pageNum -= 1;
+      this.getAdminProposals();
     }
   }
 

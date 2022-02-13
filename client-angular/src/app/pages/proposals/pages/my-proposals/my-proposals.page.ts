@@ -104,15 +104,21 @@ export class MyProposalsPage implements OnInit {
   /**
    * Increment the current page number.
    */
-  incrementCurrentPage(): void {
-    this.pageNum = this.canDoNextPage() ? this.pageNum + 1 : this.pageNum;
+  goToNextPage(): void {
+    if (this.canDoNextPage()) {
+      this.pageNum += 1;
+      this.getMyProposals();
+    }
   }
 
   /**
    * Decrement the current page number.
    */
-  decrementCurrentPage(): void {
-    this.pageNum = this.canDoPreviousPage() ? this.pageNum - 1 : this.pageNum;
+  goToPreviousPage(): void {
+    if (this.canDoPreviousPage()) {
+      this.pageNum -= 1;
+      this.getMyProposals();
+    }
   }
 
   /**
