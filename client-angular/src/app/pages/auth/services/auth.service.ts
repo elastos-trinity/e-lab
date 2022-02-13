@@ -32,7 +32,7 @@ export class AuthService {
       try {
         verifiablePresentation = await this.elastosConnectivityService.getVerifiablePresentation();
         if (!verifiablePresentation) {
-          return Promise.reject("User closed modal");
+          reject("User closed modal");
         }
       } catch (error) {
         console.error("Error while getting the verifiable presentation", error);
@@ -50,7 +50,6 @@ export class AuthService {
         this.elabService.login(verifiablePresentation).subscribe((loginResponse) => {
           setItem(StorageItem.AccessToken, loginResponse.data);
           setItem(StorageItem.DID, verifiablePresentation.getHolder().getMethodSpecificId());
-          console.log("Logging done")
           this.isLoggedIn$.next(true);
           resolve();
         });

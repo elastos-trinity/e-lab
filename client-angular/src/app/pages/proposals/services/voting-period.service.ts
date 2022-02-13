@@ -35,6 +35,10 @@ export class VotingPeriodService {
     return this.elabVotingPeriodService.put(startDay, endDay);
   }
 
+  setVotingPeriod(startDay: number, endDay: number): Observable<any> {
+    return this.elabVotingPeriodService.put(startDay, endDay);
+  }
+
   resetVotingPeriod() {
     return this.elabVotingPeriodService.put(20, 27);
   }

@@ -1,9 +1,9 @@
 <app-modal #modalComponent>
   <h4 class="block font-bold text-transparent bg-clip-text bg-gradient-to-r
   from-pink-450 to-orange-450 min-w-[300px]">
-    New proposal
+    Change voting period
   </h4>
-  <form [formGroup]="proposalForm" (ngSubmit)="createRecord()">
+  <form [formGroup]="votingPeriodForm" (ngSubmit)="saveVotingPeriod()">
     <app-elab-form-control *ngFor="let control of getControls()" [control]="control"></app-elab-form-control>
     <ng-container *ngTemplateOutlet="actions"></ng-container>
   </form>
@@ -17,7 +17,9 @@
     <button
       [attr.disabled]="loading ? 'disabled' : null"
       [@slideInFromBottom]="{ value: '', params: { delay: 250 + 'ms' } }"
-      *ngIf="proposalForm.valid"
+      *ngIf="votingPeriodForm.valid &&
+      (currentEndDay !== votingPeriodForm.get('endDay')?.value
+      || currentStartDay !== votingPeriodForm.get('startDay')?.value)"
       [ngClass]="{'elab-button-loading': loading, 'elab-button elab-button-green text-sm px-4 hover:pb-0.5': !loading}"
       type="submit"
       class="flex flex-row justify-center items-center">
@@ -29,7 +31,8 @@
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
         <path class="opacity-95" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
       </svg>
-      <p *ngIf="!loading">Create</p>
+      <p *ngIf="!loading">Save</p>
     </button>
+
   </div>
 </ng-template>

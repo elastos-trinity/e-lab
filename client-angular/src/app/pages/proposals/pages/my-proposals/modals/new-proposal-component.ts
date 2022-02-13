@@ -46,7 +46,6 @@ export class NewProposalComponent implements OnInit, OnDestroy {
   @Output()
   modalCloseEvent = new EventEmitter()
 
-  message = '';
   loading = false;
 
   public proposalForm!: FormGroup;
@@ -79,9 +78,9 @@ export class NewProposalComponent implements OnInit, OnDestroy {
           validation: {
             required: 'Please enter the CR link',
             pattern: 'The link must be a valid CR link',
-            suggestionDoesNotExist: 'Can not find the suggestion',
-            suggestionHasNoBudget: 'The suggestion must have a budget',
-            suggestionIsFromDifferentCreator: 'You must be the suggestion creator'
+            suggestionDoesNotExist: 'CR Suggestion does not exist',
+            suggestionHasNoBudget: 'CR Suggestion does not have a budget',
+            suggestionIsFromDifferentCreator: 'CR Suggestion creator DID does not match'
           }}, '',
         [Validators.required,
           Validators.pattern('(https?://)?(www\.)?(cyberrepublic.org/suggestion/)[a-z0-9].*')

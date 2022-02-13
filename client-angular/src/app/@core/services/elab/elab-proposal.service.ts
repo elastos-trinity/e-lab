@@ -38,7 +38,7 @@ export class ElabProposalService {
   find(proposalId: string): Observable<ElabBackendProposalResult> {
     return this.http
       .get<{code: number, message: string, data: ElabBackendProposalResult}>(`${ElabProposalService.proposalsUrl}/${proposalId}`)
-      .pipe(map(result => { console.log(result); return result.data }))
+      .pipe(map(result => { return result.data }))
   }
 
   /**

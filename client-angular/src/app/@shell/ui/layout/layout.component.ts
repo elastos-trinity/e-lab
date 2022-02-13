@@ -69,9 +69,7 @@ export class LayoutComponent implements AfterViewInit {
    * @private
    */
   private _hideLoader(): void {
-    console.log(this.loaderElement);
     this.loaderElement.nativeElement.classList.add('hidden');
-    console.log(this.loaderElement);
     this.contentElement.nativeElement.classList.remove('hidden');
   }
 
