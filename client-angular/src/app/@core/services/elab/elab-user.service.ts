@@ -25,6 +25,7 @@ export class ElabUserService {
         const user: User = {
           did: currentUserResponse.data.did,
           isActive: currentUserResponse.data.active,
+          discordId: currentUserResponse.data.discordId,
           canManageAdmin: currentUserResponse.data.canManageAdmins,
           type: currentUserResponse.data.type,
           name: currentUserResponse.data.name
@@ -34,7 +35,7 @@ export class ElabUserService {
   }
 
   get(): Observable<ElabBackendUserListDataDto> {
-    return this.http.get<ElabBackendUserListDto>(ElabUserService.userURL + '/users/list?pageSize=40').pipe(
+    return this.http.get<ElabBackendUserListDto>(ElabUserService.userURL + '/users/list').pipe(
       map(userList => {
         return userList.data
       }))
@@ -48,6 +49,17 @@ export class ElabUserService {
   setStatus(userDid: string, status: string): Observable<any> {
     return this.http.patch(`${ElabUserService.userURL}/user/${userDid}`, {
       status: status
+    })
+  }
+
+  /**
+   * Set the user status
+   * @param userDid
+   * @param status 'active' or 'inactive'
+   */
+  setDiscordId(userDid: string, discordId: string): Observable<any> {
+    return this.http.patch(`${ElabUserService.userURL}/user/${userDid}`, {
+      discordId: discordId
     })
   }
 }

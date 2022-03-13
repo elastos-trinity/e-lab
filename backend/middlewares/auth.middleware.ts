@@ -14,7 +14,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
                     res.status(403)
                     res.json({ code: 403, message: 'Token verify failed' })
                 } else {
-                    let user = await dbService.findUserByDID(decoded.did);
+                    let user = await dbService.findUserByDID((decoded as jwt.JwtPayload).did);
                     if (user) {
                         req.user = user;
                         next();

@@ -162,7 +162,7 @@ export class SignInPage implements OnInit, AfterViewInit {
     },
     particles: {
       collisions: {
-        enable: true,
+        enable: false,
         mode: "bounce" as const
       },
       move: {
@@ -197,13 +197,14 @@ export class SignInPage implements OnInit, AfterViewInit {
             {
               "stop":0,
               "value": {
-                value: "#FF66DD"
+                value: "#FF66DD",
+                opacity: 1
               }
             },
             {
               "stop": 1,
               "value": {
-                value: "#FF9838" as const
+                value: "#FF9838"
               }
             }
           ]
@@ -212,9 +213,6 @@ export class SignInPage implements OnInit, AfterViewInit {
     },
     detectRetina: true
   };
-
-  particlesLoaded(container: Container): void {
-  }
 
   particlesInit(main: Main): void {
     loadGradientUpdater(main);

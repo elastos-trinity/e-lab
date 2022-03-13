@@ -1,4 +1,5 @@
 interface currentUserDataDto {
+  discordId: string;
   did: string,
   type: string,
   name: string,

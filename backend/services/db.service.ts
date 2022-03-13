@@ -825,12 +825,39 @@ class DBService {
     }
 
     /**
+     * Patch user discord ID
+     * @param userDid User ID
+     * @param discordId
+     */
+    async patchDiscordId(userDid: string, discordId: string): Promise<number> {
+        try {
+            const collection = this.client.db().collection('users');
+            let updateDiscordId = {}
+            if (discordId) {
+                updateDiscordId = {
+                    discordId: discordId,
+                    pendingActivation: true
+                }
+            } else {
+                throw new Error("invalid discord ID")
+            }
+            await collection.updateOne({ did: userDid }, {
+                $set: updateDiscordId
+            });
+            return Promise.resolve(200)
+        } catch (err) {
+            logger.error(err);
+            return err
+        }
+    }
+
+    /**
      * Patch user
      * For now only update the status
      * @param userDid User ID
      * @param status user status
      */
-    async patchUser(userDid: string, status: string): Promise<number> {
+    async patchUserStatus(userDid: string, status: string): Promise<number> {
         try {
             const collection = this.client.db().collection('users');
             let updateStatus = {}

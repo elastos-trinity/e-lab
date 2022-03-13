@@ -5,6 +5,7 @@ import { AdminUsersPage } from './pages/users/admin-users.page';
 import { AdminRoutingModule } from "@pages/admin/admin-routing.module";
 import { CoreModule } from "@core/core.module";
 import { FormsModule } from "@angular/forms";
+import { DataTablesModule } from "angular-datatables";
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { FormsModule } from "@angular/forms";
     CommonModule,
     AdminRoutingModule,
     CoreModule,
-    FormsModule
+    FormsModule,
+    DataTablesModule
   ]
 })
 export class AdminModule { }

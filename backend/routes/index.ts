@@ -151,10 +151,15 @@ router.post('/user/setTelegramVerificationCode', async (req, res) => {
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.patch('/user/:did', async (req, res) => {
     let status = req.body.status as string;
+    let discordId = req.body.discordId as string;
     let userDid = req.params.did as string;
 
     try {
-        return res.status(await dbService.patchUser(userDid, status)).json({});
+        if (status && status.length > 0) {
+            return res.status(await dbService.patchUserStatus(userDid, status)).json({});
+        } else if (discordId && discordId.length > 0) {
+            return res.status(await dbService.patchDiscordId(userDid, discordId)).json({});
+        }
     } catch (e) {
         return res.sendStatus(500);
     }
@@ -257,7 +262,7 @@ router.get('/users/list', async (req, res) => {
 
     try {
         let pageNum: number = pageNumStr ? parseInt(pageNumStr) : 1;
-        let pageSize: number = pageSizeStr ? parseInt(pageSizeStr) : 10;
+        let pageSize: number = pageSizeStr ? parseInt(pageSizeStr) : 10000; //todo: refactor this to set appropriate
 
         if (pageNum < 1 || pageSize < 1) {
             res.json({ code: 400, message: 'Invalid page number or page size' })

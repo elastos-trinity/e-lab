@@ -27,3 +27,12 @@
     }
   }
 }
+
+label, .dataTables_info, a.paginate_button {
+  color: white !important;
+}
+
+.dataTables_empty {
+  @apply bg-blue-800;
+  color: white;
+}

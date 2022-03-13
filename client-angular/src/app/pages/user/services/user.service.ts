@@ -3,17 +3,22 @@ import { BehaviorSubject, Observable, Subject } from "rxjs";
 import User from "@core/models/user.model";
 import { ElabUserService } from "@core/services/elab/elab-user.service";
 import { KycService } from "@core/services/kyc/kyc.service";
+import {environment} from "@env/environment";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
+  private static readonly userURL = environment.elabApiUrl + '/v1/user';
+
   public loggedInUser$ = new BehaviorSubject<User>(
     {
       name: "",
       type: "",
       did: "",
       isActive: false,
+      discordId: "",
       canManageAdmin: false
     });
 
@@ -32,5 +37,9 @@ export class UserService {
   fetchLoggedInUser(): BehaviorSubject<User> {
     this.refreshUserData();
     return this.loggedInUser$;
+  }
+
+  activateByDiscord(userId: string, discordId: string): Observable<any> {
+    return this.elabUserService.setDiscordId(userId, discordId);
   }
 }

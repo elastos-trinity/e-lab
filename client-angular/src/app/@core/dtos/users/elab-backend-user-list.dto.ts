@@ -1,6 +1,8 @@
 export type UserType = 'admin' | 'user';
 
 export interface ElabUser {
+  pendingActivation: boolean;
+  discordId: string;
   did: string;
   name?: string; // User name, from his DID profile
   email?: string; // User email, from his DID profile

@@ -7,6 +7,8 @@ export type User = {
   type: UserType;
   //key: string; // What is this? Is this optional? Some DB insert don't set this.
   active?: boolean; // Whether this user is active, meaning "confirmed" - telegram verified)
+  discordId?: string;
+  pendingActivation?: boolean;
   telegramUserName?: string; // Telegram user name, purely informative as this can change.
   telegramUserId?: string; // Telegram user ID (not username)
   telegramVerificationCode?: string;

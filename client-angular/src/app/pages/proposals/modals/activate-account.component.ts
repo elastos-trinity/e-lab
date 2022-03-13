@@ -9,6 +9,7 @@ import { ModalModule } from "@shell/ui/modal/modal.module";
 import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastos-connectivity.service";
 import { KycService } from "@core/services/kyc/kyc.service";
 import { interval } from "rxjs";
+import {UserService} from "@pages/user/services/user.service";
 
 @Component({
   selector: 'app-activate-account',
@@ -20,15 +21,20 @@ export class ActivateAccountComponent implements OnDestroy {
     | ModalComponent<ActivateAccountComponent>
     | undefined;
 
+  discordId = this.userService.loggedInUser$.value.discordId;
   isActivationInProcess = false;
   isActivationSuccessful = false;
   timeleft = 5;
 
   @Output()
   accountNewlyActivatedEvent = new EventEmitter()
+  isDiscordIdSubmitted = !!this.userService.loggedInUser$.value.discordId;
 
-  constructor (private elastosConnectivityService: ElastosConnectivityService, private kycService: KycService) { }
-
+  constructor (
+    private elastosConnectivityService: ElastosConnectivityService,
+    private kycService: KycService,
+    private userService: UserService
+  ) { }
 
   async close(): Promise<void> {
     await this.modal?.close();
@@ -79,6 +85,13 @@ export class ActivateAccountComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.accountNewlyActivatedEvent.complete()
+  }
+
+  onClickProvideDiscordId() {
+    this.userService.activateByDiscord(this.userService.loggedInUser$.value.did, this.discordId).subscribe(() => {
+      this.isDiscordIdSubmitted = true;
+    });
+    return;
   }
 }
 
