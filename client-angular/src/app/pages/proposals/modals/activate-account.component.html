@@ -68,10 +68,14 @@
       <h6 *ngIf="!isActivationSuccessful"
           class="block font-bold text-transparent
     bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 min-w-fit justify-center">
-        Option 2 - Using Discord <span *ngIf="isDiscordIdSubmitted"> (Already submitted, waiting for admin review) </span>
+        Option 2 - Using Discord <span *ngIf="isDiscordIdSubmitted"> (Already submitted, waiting for Elastos Guardians review) </span>
       </h6>
-      <p *ngIf="isDiscordIdSubmitted" class="w-full text-center md:text-left font-bold">We have received your Discord ID, an admin will get in touch with you soon. Please be patient.</p>
-      <a target="_blank" href="https://www.remote.tools/remote-work/how-to-find-discord-id" *ngIf="!isDiscordIdSubmitted" class=" underline w-full text-center md:text-left font-bold text-pink-elab">Activate your account by sending us your Discord id. And a guardian will get in touch and activate your account ASAP.</a>
+      <p *ngIf="isDiscordIdSubmitted" class="w-full text-center md:text-left font-bold">
+        We have received your Discord ID, an admin will get in touch with you soon. Please be patient.
+      </p>
+      <a target="_blank" href="https://www.remote.tools/remote-work/how-to-find-discord-id" *ngIf="!isDiscordIdSubmitted" class=" underline w-full text-center md:text-left font-bold text-pink-elab">
+        Activate your account by providing your Discord ID. Elastos Guardians will get in touch with you and activate your account as soon as possible.
+      </a>
       <div *ngIf="!isActivationSuccessful" class="flex items-center flex-col md:items-start md:flex-row space-3 space-y-5 md:space-y-0 mt-10 md:mt-5">
         <div *ngIf="!isActivationInProcess">
           <input
@@ -94,10 +98,10 @@
             <div class="w-6 h-6 border-l-2 border-pink-450 rounded-full animate-spin mr-2"></div>
           </div>
           <div *ngIf="!isDiscordIdSubmitted && !isDiscordIdSubmitInProgress" class="flex items-center justify-center">
-            Provide my discord ID
+            Submit my Discord ID
           </div>
           <div *ngIf="isDiscordIdSubmitted && !isDiscordIdSubmitInProgress" class="flex items-center justify-center">
-            Update my discord ID
+            Update my Discord ID
           </div>
         </button>
       </div>
