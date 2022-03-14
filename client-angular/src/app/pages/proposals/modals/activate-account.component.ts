@@ -1,7 +1,9 @@
 import { Component, EventEmitter, NgModule, OnDestroy, Output, ViewChild } from "@angular/core";
 import {
+  FormBuilder, FormControl,
+  FormGroup,
   FormsModule,
-  ReactiveFormsModule,
+  ReactiveFormsModule, Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from "@shell/ui/modal/modal.component";
@@ -21,10 +23,13 @@ export class ActivateAccountComponent implements OnDestroy {
     | ModalComponent<ActivateAccountComponent>
     | undefined;
 
-  discordId = this.userService.loggedInUser$.value.discordId;
+  discordId = new FormControl(this.userService.loggedInUser$?.value?.discordId,
+    [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(18), Validators.maxLength(18)]);
+
   isActivationInProcess = false;
   isActivationSuccessful = false;
   timeleft = 5;
+  isDiscordIdSubmitInProgress =  false;
 
   @Output()
   accountNewlyActivatedEvent = new EventEmitter()
@@ -88,8 +93,10 @@ export class ActivateAccountComponent implements OnDestroy {
   }
 
   onClickProvideDiscordId() {
-    this.userService.activateByDiscord(this.userService.loggedInUser$.value.did, this.discordId).subscribe(() => {
+    this.isDiscordIdSubmitInProgress = true;
+    this.userService.activateByDiscord(this.userService.loggedInUser$.value.did, this.discordId.value).subscribe(() => {
       this.isDiscordIdSubmitted = true;
+      this.isDiscordIdSubmitInProgress = false;
     });
     return;
   }
