@@ -71,8 +71,7 @@
         Option 2 - Using Discord <span *ngIf="isDiscordIdSubmitted"> (Already submitted, waiting for admin review) </span>
       </h6>
       <p *ngIf="isDiscordIdSubmitted" class="w-full text-center md:text-left font-bold">We have received your Discord ID, an admin will get in touch with you soon. Please be patient.</p>
-      <p *ngIf="!isDiscordIdSubmitted" class="w-full text-center md:text-left font-bold">Activate your account by sending us your Discord id. And a guardian will get in touch and activate your account ASAP.</p>
-      <a target="_blank" href="https://www.remote.tools/remote-work/how-to-find-discord-id" *ngIf="!isDiscordIdSubmitted" class="w-full text-center md:text-left font-bold text-pink-elab">How to get my Discord ID ?</a>
+      <a target="_blank" href="https://www.remote.tools/remote-work/how-to-find-discord-id" *ngIf="!isDiscordIdSubmitted" class=" underline w-full text-center md:text-left font-bold text-pink-elab">Activate your account by sending us your Discord id. And a guardian will get in touch and activate your account ASAP.</a>
       <div *ngIf="!isActivationSuccessful" class="flex items-center flex-col md:items-start md:flex-row space-3 space-y-5 md:space-y-0 mt-10 md:mt-5">
         <div *ngIf="!isActivationInProcess">
           <input
