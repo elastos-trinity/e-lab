@@ -34,7 +34,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/theme/styles.scss"
+              "src/theme/styles.scss",
+              "node_modules/datatables.net-dt/css/jquery.dataTables.min.css"
             ],
             "allowedCommonJsDependencies": [
               "@walletconnect/web3-provider",
@@ -44,7 +45,10 @@
               "@walletconnect/encoding",
               "query-string"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/datatables.net/js/jquery.dataTables.min.js"
+            ]
           },
           "configurations": {
             "production": {

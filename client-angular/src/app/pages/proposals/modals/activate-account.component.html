@@ -12,47 +12,97 @@
   </h4>
   <div class="max-w-[95%] md:max-w-[85%] mx-auto md:mx-0">
 
-    <p *ngIf="!isActivationSuccessful" class="w-full text-center md:text-left">Activate your account by providing verified identity credentials</p>
 
-    <div *ngIf="isActivationSuccessful" class="w-full justify-center">
-      <p>Congrats, your account is active.</p>
-      <p>You can now vote and create new proposal !</p>
-      <p class="mt-5 text-sm">This popup will close automatically in {{timeleft}} second<span *ngIf="timeleft > 1">s</span>.</p>
-    </div>
+    <div>
+      <h6 *ngIf="!isActivationSuccessful"
+          class="block font-bold text-transparent
+    bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 min-w-fit justify-center">
+        Option 1 - Using KYC-ME
+      </h6>
+      <p *ngIf="!isActivationSuccessful" class="w-full text-center md:text-left font-bold">Activate your account by providing verified identity credentials (instant activation)</p>
 
-    <div *ngIf="!isActivationSuccessful" class="flex items-center flex-col md:items-start md:flex-row space-3 space-y-5 md:space-y-0 mt-10 md:mt-5">
-      <p *ngIf="!isActivationInProcess">Already have KYC credentials ?</p>
-      <p *ngIf="isActivationInProcess">Please check your wallet</p>
-
-      <button (click)=onClickProvideCredentials() [attr.disabled]="isActivationInProcess ? 'disabled' : null"
-              class="elab-button elab-button-green h-9 px-10 w-[170px] px-[10px] mt-2 md:mt-0 md:ml-auto"
-              type="button">
-        <div *ngIf="isActivationInProcess" class="flex items-center justify-center ">
-          <div class="w-6 h-6 border-l-2 border-pink-450 rounded-full animate-spin mr-2"></div>
-        </div>
-        <div *ngIf="!isActivationInProcess" class="flex items-center justify-end">
-          Provide credentials
-        </div>
-      </button>
-    </div>
-
-    <div *ngIf="!isActivationSuccessful" class="flex mt-10
-    text-center md:text-left items-center md:items-start flex-col md:flex-row space-3 space-y-5 md:space-y-0 md:mt-5">
-      <div class="flex-inline">
-        <p>No such credentials yet ?</p>
-        <p>Verify your identity on KYC-me now</p>
+      <div *ngIf="isActivationSuccessful" class="w-full justify-center">
+        <p>Congrats, your account is active.</p>
+        <p>You can now vote and create new proposal !</p>
+        <p class="mt-5 text-sm">This popup will close automatically in {{timeleft}} second<span *ngIf="timeleft > 1">s</span>.</p>
       </div>
 
-      <button (click)=goToKycMe() class="h-9 px-10 rounded-full w-[170px] mt-2
+      <div *ngIf="!isActivationSuccessful" class="flex items-center flex-col md:items-start md:flex-row space-3 space-y-5 md:space-y-0 mt-10 md:mt-5">
+        <p *ngIf="!isActivationInProcess">Already have KYC credentials ?</p>
+        <p *ngIf="isActivationInProcess">Please check your wallet</p>
+
+        <button (click)=onClickProvideCredentials() [attr.disabled]="isActivationInProcess ? 'disabled' : null"
+                class="elab-button elab-button-green h-9 px-10 w-[170px] px-[10px] mt-2 md:mt-0 md:ml-auto"
+                type="button">
+          <div *ngIf="isActivationInProcess" class="flex items-center justify-center ">
+            <div class="w-6 h-6 border-l-2 border-pink-450 rounded-full animate-spin mr-2"></div>
+          </div>
+          <div *ngIf="!isActivationInProcess" class="flex items-center justify-end">
+            Provide credentials
+          </div>
+        </button>
+      </div>
+
+      <div *ngIf="!isActivationSuccessful" class="flex mt-10
+    text-center md:text-left items-center md:items-start flex-col md:flex-row space-3 space-y-5 md:space-y-0 md:mt-5">
+        <div class="flex-inline">
+          <p>No such credentials yet ?</p>
+          <p>Verify your identity on KYC-me now</p>
+        </div>
+
+        <button (click)=goToKycMe() class="h-9 px-10 rounded-full w-[170px] mt-2
       transition ease-in-out delay-50 hover:scale-110 duration-200 hover:text-white
       md:ml-auto md:mt-auto kyc-button" type="button">
-        <svg width="22" height="15" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto">
-          <path d="M10.761 0C10.1321 0 9.61816 0.510053 9.61816 1.14283V13.246C9.61816 13.875 10.1282 14.3889 10.761 14.3889C11.3899 14.3889 11.9038 13.8788 11.9038 13.246V1.14283C11.9038 0.510053 11.3938 0 10.761 0Z" fill="#4AB4F0"/>
-          <path d="M15.7041 7.19443L20.9466 1.94817C21.3914 1.50331 21.3914 0.778502 20.9466 0.333644C20.5017 -0.111215 19.7769 -0.111215 19.332 0.333644L13.2804 6.38525C12.8356 6.83011 12.8356 7.55492 13.2804 7.99978L19.332 14.0514C19.5545 14.2738 19.8459 14.385 20.1412 14.385C20.4365 14.385 20.7241 14.2738 20.9504 14.0514C21.3952 13.6065 21.3952 12.8817 20.9504 12.4369L15.7041 7.19443Z" fill="#4AB4F0"/>
-          <path d="M1.14283 0C0.510053 0 0 0.510053 0 1.14283C0 1.7756 0.510053 2.28565 1.14283 2.28565C3.85032 2.28565 6.05544 4.48693 6.05544 7.19443C6.05544 9.90193 3.85032 12.107 1.14283 12.107C0.510053 12.1032 0 12.6133 0 13.246C0 13.8788 0.510053 14.3889 1.14283 14.3889C5.11203 14.3889 8.33726 11.1598 8.33726 7.19443C8.33726 3.22522 5.1082 0 1.14283 0Z" fill="#4AB4F0"/>
-        </svg>
-      </button>
+          <svg width="22" height="15" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto">
+            <path d="M10.761 0C10.1321 0 9.61816 0.510053 9.61816 1.14283V13.246C9.61816 13.875 10.1282 14.3889 10.761 14.3889C11.3899 14.3889 11.9038 13.8788 11.9038 13.246V1.14283C11.9038 0.510053 11.3938 0 10.761 0Z" fill="#4AB4F0"/>
+            <path d="M15.7041 7.19443L20.9466 1.94817C21.3914 1.50331 21.3914 0.778502 20.9466 0.333644C20.5017 -0.111215 19.7769 -0.111215 19.332 0.333644L13.2804 6.38525C12.8356 6.83011 12.8356 7.55492 13.2804 7.99978L19.332 14.0514C19.5545 14.2738 19.8459 14.385 20.1412 14.385C20.4365 14.385 20.7241 14.2738 20.9504 14.0514C21.3952 13.6065 21.3952 12.8817 20.9504 12.4369L15.7041 7.19443Z" fill="#4AB4F0"/>
+            <path d="M1.14283 0C0.510053 0 0 0.510053 0 1.14283C0 1.7756 0.510053 2.28565 1.14283 2.28565C3.85032 2.28565 6.05544 4.48693 6.05544 7.19443C6.05544 9.90193 3.85032 12.107 1.14283 12.107C0.510053 12.1032 0 12.6133 0 13.246C0 13.8788 0.510053 14.3889 1.14283 14.3889C5.11203 14.3889 8.33726 11.1598 8.33726 7.19443C8.33726 3.22522 5.1082 0 1.14283 0Z" fill="#4AB4F0"/>
+          </svg>
+        </button>
+      </div>
     </div>
+
+    <div class="my-5 h-1 border border-2 border-orange-elab"> </div>
+
+    <div>
+      <h6 *ngIf="!isActivationSuccessful"
+          class="block font-bold text-transparent
+    bg-clip-text bg-gradient-to-r from-pink-450 to-orange-450 min-w-fit justify-center">
+        Option 2 - Using Discord <span *ngIf="isDiscordIdSubmitted"> (Already submitted, waiting for admin review) </span>
+      </h6>
+      <p *ngIf="isDiscordIdSubmitted" class="w-full text-center md:text-left font-bold">We have received your Discord ID, an admin will get in touch with you soon. Please be patient.</p>
+      <a target="_blank" href="https://www.remote.tools/remote-work/how-to-find-discord-id" *ngIf="!isDiscordIdSubmitted" class=" underline w-full text-center md:text-left font-bold text-pink-elab">Activate your account by sending us your Discord id. And a guardian will get in touch and activate your account ASAP.</a>
+      <div *ngIf="!isActivationSuccessful" class="flex items-center flex-col md:items-start md:flex-row space-3 space-y-5 md:space-y-0 mt-10 md:mt-5">
+        <div *ngIf="!isActivationInProcess">
+          <input
+            [formControl]="discordId"
+            type="text"
+            id="discordId"
+            class="block w-full p-2 text-white bg-blue-800 text-sm appearance-none focus:border-pink-450
+                 rounded-full focus:shadow-inner effect-9 ng-untouched ng-pristine ng-invalid ng-star-inserted"
+                 minlength="18" maxlength="18" placeholder="Your discord ID">
+          <p *ngIf="!discordId.valid && discordId.dirty"
+             class="text-sm text-red mt-2">Must be 18 numerical characters.</p>
+
+          <a *ngIf="!discordId.valid && discordId.dirty" target="_blank" href="https://www.remote.tools/remote-work/how-to-find-discord-id" class="mt-2 w-full text-center md:text-left font-bold text-pink-elab text-sm">How to get my Discord ID ?</a>
+        </div>
+        <button (click)="onClickProvideDiscordId()"
+                *ngIf="discordId.valid"
+                class="elab-button elab-button-green h-9 px-10 w-[170px] px-[10px] mt-2 md:mt-0 md:ml-auto"
+                type="button">
+          <div *ngIf="isDiscordIdSubmitInProgress" class="flex items-center justify-center ">
+            <div class="w-6 h-6 border-l-2 border-pink-450 rounded-full animate-spin mr-2"></div>
+          </div>
+          <div *ngIf="!isDiscordIdSubmitted && !isDiscordIdSubmitInProgress" class="flex items-center justify-center">
+            Provide my discord ID
+          </div>
+          <div *ngIf="isDiscordIdSubmitted && !isDiscordIdSubmitInProgress" class="flex items-center justify-center">
+            Update my discord ID
+          </div>
+        </button>
+      </div>
+    </div>
+
   </div>
 
   <div class="flex mt-10">

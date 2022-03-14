@@ -1,7 +1,9 @@
 import { Component, EventEmitter, NgModule, OnDestroy, Output, ViewChild } from "@angular/core";
 import {
+  FormBuilder, FormControl,
+  FormGroup,
   FormsModule,
-  ReactiveFormsModule,
+  ReactiveFormsModule, Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from "@shell/ui/modal/modal.component";
@@ -9,6 +11,7 @@ import { ModalModule } from "@shell/ui/modal/modal.module";
 import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastos-connectivity.service";
 import { KycService } from "@core/services/kyc/kyc.service";
 import { interval } from "rxjs";
+import {UserService} from "@pages/user/services/user.service";
 
 @Component({
   selector: 'app-activate-account',
@@ -20,15 +23,23 @@ export class ActivateAccountComponent implements OnDestroy {
     | ModalComponent<ActivateAccountComponent>
     | undefined;
 
+  discordId = new FormControl(this.userService.loggedInUser$?.value?.discordId,
+    [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(18), Validators.maxLength(18)]);
+
   isActivationInProcess = false;
   isActivationSuccessful = false;
   timeleft = 5;
+  isDiscordIdSubmitInProgress =  false;
 
   @Output()
   accountNewlyActivatedEvent = new EventEmitter()
+  isDiscordIdSubmitted = !!this.userService.loggedInUser$.value.discordId;
 
-  constructor (private elastosConnectivityService: ElastosConnectivityService, private kycService: KycService) { }
-
+  constructor (
+    private elastosConnectivityService: ElastosConnectivityService,
+    private kycService: KycService,
+    private userService: UserService
+  ) { }
 
   async close(): Promise<void> {
     await this.modal?.close();
@@ -79,6 +90,16 @@ export class ActivateAccountComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.accountNewlyActivatedEvent.complete()
+  }
+
+  onClickProvideDiscordId() {
+    this.isDiscordIdSubmitInProgress = true;
+    this.userService.activateByDiscord(this.userService.loggedInUser$.value.did, this.discordId.value).subscribe(() => {
+      this.isDiscordIdSubmitted = true;
+      this.userService.loggedInUser$.value.discordId = this.discordId.value;
+      this.isDiscordIdSubmitInProgress = false;
+    });
+    return;
   }
 }
 

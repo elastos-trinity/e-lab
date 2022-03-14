@@ -3,7 +3,6 @@ import { ElabUserService } from "@core/services/elab/elab-user.service";
 import { Observable } from "rxjs";
 import { ElabBackendUserListDataDto } from "@core/dtos/users/elab-backend-user-list.dto";
 import { ElabVotingPeriodService } from "@core/services/elab/elab-voting-period.service";
-import moment from "moment";
 
 /**
  * This act as our verifier.
