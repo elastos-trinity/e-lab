@@ -96,6 +96,7 @@ export class ActivateAccountComponent implements OnDestroy {
     this.isDiscordIdSubmitInProgress = true;
     this.userService.activateByDiscord(this.userService.loggedInUser$.value.did, this.discordId.value).subscribe(() => {
       this.isDiscordIdSubmitted = true;
+      this.userService.loggedInUser$.value.discordId = this.discordId.value;
       this.isDiscordIdSubmitInProgress = false;
     });
     return;
