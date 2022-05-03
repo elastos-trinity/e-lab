@@ -1,4 +1,5 @@
 import { Response } from "express";
+import logger from "../logger";
 import { DataOrError, ErrorType } from "../model/dataorerror";
 
 const errorTypeToHttpStatus = (dataOrError: DataOrError<unknown>) => {
@@ -12,5 +13,9 @@ const errorTypeToHttpStatus = (dataOrError: DataOrError<unknown>) => {
 }
 
 export const apiError = (res: Response, dataOrError: DataOrError<unknown>) => {
-  res.status(errorTypeToHttpStatus(dataOrError)).send(dataOrError.error);
+  let status = errorTypeToHttpStatus(dataOrError);
+
+  logger.error("API error:", status, dataOrError.error);
+
+  res.status(status).send(dataOrError.error);
 }

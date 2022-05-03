@@ -57,16 +57,14 @@ class CredentialsService {
     let identityMd5 = createHash('md5').update(composedIdentity).digest("hex");
 
     // Make sure this hash isn't already used by another user who would use different DIDs
-    // to gt KYC-ed multiple times.
+    // to get KYC-ed multiple times.
     let existingUserWithIdentityHash = await dbService.findUserByKYCIdentityHash(identityMd5);
     if (existingUserWithIdentityHash) {
-      if (existingUserWithIdentityHash.did === authenticatedDID)
-        return { errorType: ErrorType.INVALID_PARAMETER, error: 'KYC information already saved earlier for this user' };
-      else
+      if (existingUserWithIdentityHash.did !== authenticatedDID)
         return { errorType: ErrorType.INVALID_PARAMETER, error: 'A user with the same KYC-ed information already exists' };
     }
 
-    // Update user with the identity hash info and make him active
+    // Update user with the identity hash info and make him active. It's ok if the user was already active.
     await dbService.activateUserFromKYC(authenticatedDID, identityMd5);
 
     return {};

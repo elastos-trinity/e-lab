@@ -1,4 +1,6 @@
 import { JSONObject } from "@elastosfoundation/did-js-sdk";
+import dayjs from "dayjs";
+import moment from "moment";
 import { MongoClient } from "mongodb";
 import { SecretConfig } from "../config/env-secret";
 import logger from "../logger";
@@ -8,8 +10,6 @@ import { ProposalStatus } from "../model/proposalstatus";
 import { CommonResponse } from "../model/response";
 import { User, UserType } from "../model/user";
 import { Vote, VoteChoice } from "../model/vote";
-import moment from "moment";
-import dayjs from "dayjs";
 
 class DBService {
     private client!: MongoClient;
@@ -23,12 +23,12 @@ class DBService {
 
         try {
             this.client = new MongoClient(mongoConnectionUrl,
-              {
-                  //useNewUrlParser: true,
-                  //useUnifiedTopology: true,
-                  minPoolSize: 10,
-                  maxPoolSize: 50
-              }
+                {
+                    //useNewUrlParser: true,
+                    //useUnifiedTopology: true,
+                    minPoolSize: 10,
+                    maxPoolSize: 50
+                }
             )
             await this.client.connect();
             return Promise.resolve();
@@ -295,16 +295,18 @@ class DBService {
                 return { code: 400, message: 'can not cancel a decision for a proposal already in a voting period' }
             }
             const votingPeriod = !now ?
-              await this.getVotingPeriod(true):
-              await this.getVotingPeriod(false) // Always set the next voting period when approving a proposal
+                await this.getVotingPeriod(true) :
+                await this.getVotingPeriod(false) // Always set the next voting period when approving a proposal
             const result = await collection.updateOne({ id },
-              { $set: {
-                      status,
-                      operator,
-                      operatedTime: Date.now(),
-                      votingPeriodStartDate: status === 'new' ? null : votingPeriod.startDate, // reset the date if we cancel the decision
-                      votingPeriodEndDate: status === 'new' ? null : votingPeriod.endDate
-                  } });
+                {
+                    $set: {
+                        status,
+                        operator,
+                        operatedTime: Date.now(),
+                        votingPeriodStartDate: status === 'new' ? null : votingPeriod.startDate, // reset the date if we cancel the decision
+                        votingPeriodEndDate: status === 'new' ? null : votingPeriod.endDate
+                    }
+                });
             if (result.matchedCount === 1) {
                 return { code: 200, message: 'success' };
             } else {
@@ -341,7 +343,7 @@ class DBService {
             return { code: 400, message: 'The proposal description do not match requirements (more than 50 chars and less than 150)' };
         }
         if (!/^(https?:\/\/)?(www\.)?(cyberrepublic\.org\/suggestion\/)[a-z0-9].*$/.test(proposal.link)) {
-            return { code: 400, message: 'Invalid CR link'};
+            return { code: 400, message: 'Invalid CR link' };
         }
 
         try {
@@ -411,7 +413,8 @@ class DBService {
     }
 
     public async listProposals(title: string, activeOnly: boolean, userId: string, pageNum: number, pageSize: number) {
-        let query: object;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let query: any;
         if (activeOnly) { // Active proposals are defined both by an approved status and a voting period set for the proposal.
             query = {
                 status: "approved",
@@ -423,7 +426,6 @@ class DBService {
         }
 
         if (title) {
-            // @ts-ignore
             query.title = title;
         }
 
@@ -595,56 +597,51 @@ class DBService {
      * The voting period will start on the 15 at 00:00:00am and end the 21st at 23:59:59pm
      * todo: set voting period in the backend and configurable start/end days
      */
-    public async getVotingPeriod(next: boolean = false): Promise<{ startDate: Date, endDate: Date, isTodayInVotingPeriod: boolean}> {
-        try {
-
-            const votingPeriodCollection = this.client.db().collection('votingperiod');
-            let currentVotingPeriod = await votingPeriodCollection.findOne();
-            if (!currentVotingPeriod) { // Insert a default voting period in case the config is not init yet
-                const defaultVotingPeriod = { startDay: 20, endDay: 27 }
-                await votingPeriodCollection.insertOne(defaultVotingPeriod);
-                currentVotingPeriod = await votingPeriodCollection.findOne()
-            }
-            const startDay = currentVotingPeriod?.startDay as number;
-            const endDay = currentVotingPeriod?.endDay as number;
-
-            const now = moment().utc(false);
-
-            let votingStartDate;
-            // If we asked for the current voting period
-            // And we are between the start day and the end day of the voting period.
-            // We return the current period.
-            // If the today's day is inferior to start day return the current month.
-            if (!next && ((now.date() >= startDay && (now.date() <= endDay || endDay < startDay))
-              || now.date() <= startDay)) {
-                votingStartDate = now.clone().set('date', startDay).startOf('day');
-            } else {
-                // We are outside of a vote period or we want to get the next voting period
-                votingStartDate = now.clone()
-                  .startOf("month")
-                  .add(1, "month")
-                  .set('date', startDay);
-            }
-
-            let votingEndDate;
-            if (endDay > startDay) {
-                votingEndDate = votingStartDate.clone().add((endDay - startDay), "days").endOf('day');
-            } else {
-                votingEndDate = votingStartDate.clone().add(1, "month").set('date', endDay).endOf('day');
-            }
-
-
-            const todayCheck = moment().utc(false).toDate();
-            const isTodayInVotingPeriod = todayCheck.getTime() >= votingStartDate.toDate().getTime() && todayCheck.getTime() <= votingEndDate.toDate().getTime()
-
-            return {
-                startDate: votingStartDate.toDate(),
-                endDate: votingEndDate.toDate(),
-                isTodayInVotingPeriod: isTodayInVotingPeriod
-            };
-        } catch (e) {
-            throw e;
+    public async getVotingPeriod(next = false): Promise<{ startDate: Date, endDate: Date, isTodayInVotingPeriod: boolean }> {
+        const votingPeriodCollection = this.client.db().collection('votingperiod');
+        let currentVotingPeriod = await votingPeriodCollection.findOne();
+        if (!currentVotingPeriod) { // Insert a default voting period in case the config is not init yet
+            const defaultVotingPeriod = { startDay: 20, endDay: 27 }
+            await votingPeriodCollection.insertOne(defaultVotingPeriod);
+            currentVotingPeriod = await votingPeriodCollection.findOne()
         }
+        const startDay = currentVotingPeriod?.startDay as number;
+        const endDay = currentVotingPeriod?.endDay as number;
+
+        const now = moment().utc(false);
+
+        let votingStartDate;
+        // If we asked for the current voting period
+        // And we are between the start day and the end day of the voting period.
+        // We return the current period.
+        // If the today's day is inferior to start day return the current month.
+        if (!next && ((now.date() >= startDay && (now.date() <= endDay || endDay < startDay))
+            || now.date() <= startDay)) {
+            votingStartDate = now.clone().set('date', startDay).startOf('day');
+        } else {
+            // We are outside of a vote period or we want to get the next voting period
+            votingStartDate = now.clone()
+                .startOf("month")
+                .add(1, "month")
+                .set('date', startDay);
+        }
+
+        let votingEndDate;
+        if (endDay > startDay) {
+            votingEndDate = votingStartDate.clone().add((endDay - startDay), "days").endOf('day');
+        } else {
+            votingEndDate = votingStartDate.clone().add(1, "month").set('date', endDay).endOf('day');
+        }
+
+
+        const todayCheck = moment().utc(false).toDate();
+        const isTodayInVotingPeriod = todayCheck.getTime() >= votingStartDate.toDate().getTime() && todayCheck.getTime() <= votingEndDate.toDate().getTime()
+
+        return {
+            startDate: votingStartDate.toDate(),
+            endDate: votingEndDate.toDate(),
+            isTodayInVotingPeriod: isTodayInVotingPeriod
+        };
     }
 
     /**
@@ -718,8 +715,8 @@ class DBService {
         // If the current time is superior to the proposal voting start date, and inferior to the proposal voting period end date
         // We check that the voting period end date is inside the current voting period.
         if (now.getTime() >= proposalVotingStartDate && now.getTime() <= proposalVotingEndDate
-          && proposalVotingEndDate >= currentVotingPeriod.startDate.getTime()
-          && proposalVotingEndDate <= currentVotingPeriod.endDate.getTime()) {
+            && proposalVotingEndDate >= currentVotingPeriod.startDate.getTime()
+            && proposalVotingEndDate <= currentVotingPeriod.endDate.getTime()) {
             return Promise.resolve("active")
         } else if (now.getTime() > proposalVotingEndDate || proposalVotingEndDate < currentVotingPeriod.endDate.getTime()) { // Already ended
             return Promise.resolve("ended")
@@ -740,11 +737,13 @@ class DBService {
     private async isProposalInVotingPeriod(proposalId: string) {
         const collectionProposal = this.client.db().collection('proposals');
         const now = moment().utc(false).toDate();
-        const result = await collectionProposal.countDocuments({ $and: [
+        const result = await collectionProposal.countDocuments({
+            $and: [
                 { id: proposalId },
                 { votingPeriodStartDate: { $lte: now } },
                 { votingPeriodEndDate: { $gte: now } },
-            ]}, {limit: 1});
+            ]
+        }, { limit: 1 });
         return result > 0
     }
 
@@ -759,7 +758,7 @@ class DBService {
         const isUserAllowedToVote = await usersCollection.countDocuments({
             did: userId,
             active: true
-        }, {limit: 1});
+        }, { limit: 1 });
         return isUserAllowedToVote > 0;
     }
 
@@ -774,7 +773,7 @@ class DBService {
         const hasAlreadyVoted = await votesCollection.countDocuments({
             voter: userId,
             proposalId: proposalId
-        }, {limit: 1});
+        }, { limit: 1 });
         return hasAlreadyVoted > 0
     }
 
@@ -790,11 +789,12 @@ class DBService {
                 await votingPeriodCollection.insertOne(votingPeriod);
             } else {
                 await votingPeriodCollection.updateOne({}, {
-                      $set: {
-                          "startDay": votingPeriod.startDay,
-                          "endDay": votingPeriod.endDay
-                      }},
-                  { upsert: true }
+                    $set: {
+                        "startDay": votingPeriod.startDay,
+                        "endDay": votingPeriod.endDay
+                    }
+                },
+                    { upsert: true }
                 );
             }
             return Promise.resolve();
@@ -804,15 +804,17 @@ class DBService {
         }
     }
 
-    async patchProposal(proposalId: string, proposal: {votingPeriodStartDate: string, votingPeriodEndDate: string}) {
+    async patchProposal(proposalId: string, proposal: { votingPeriodStartDate: string, votingPeriodEndDate: string }) {
         try {
             const collection = this.client.db().collection('proposals');
 
             const result = await collection.updateOne({ id: proposalId },
-              { $set: {
-                      votingPeriodStartDate: moment(proposal.votingPeriodStartDate).utc(false).toDate(),
-                      votingPeriodEndDate: moment(proposal.votingPeriodEndDate).utc(false).toDate()
-                  } });
+                {
+                    $set: {
+                        votingPeriodStartDate: moment(proposal.votingPeriodStartDate).utc(false).toDate(),
+                        votingPeriodEndDate: moment(proposal.votingPeriodEndDate).utc(false).toDate()
+                    }
+                });
             if (result.matchedCount === 1) {
                 return 200;
             } else {

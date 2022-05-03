@@ -1,17 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, NgModule, OnDestroy, Output, ViewChild } from "@angular/core";
 import {
-  FormBuilder, FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule, Validators,
+  FormControl, FormsModule,
+  ReactiveFormsModule, Validators
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { ModalComponent } from "@shell/ui/modal/modal.component";
-import { ModalModule } from "@shell/ui/modal/modal.module";
 import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastos-connectivity.service";
 import { KycService } from "@core/services/kyc/kyc.service";
+import { VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
+import { UserService } from "@pages/user/services/user.service";
+import { ModalComponent } from "@shell/ui/modal/modal.component";
+import { ModalModule } from "@shell/ui/modal/modal.module";
 import { interval } from "rxjs";
-import {UserService} from "@pages/user/services/user.service";
 
 @Component({
   selector: 'app-activate-account',
@@ -29,16 +28,16 @@ export class ActivateAccountComponent implements OnDestroy {
   isActivationInProcess = false;
   isActivationSuccessful = false;
   timeleft = 5;
-  isDiscordIdSubmitInProgress =  false;
+  isDiscordIdSubmitInProgress = false;
 
   @Output()
   accountNewlyActivatedEvent = new EventEmitter()
   isDiscordIdSubmitted = !!this.userService.loggedInUser$.value.discordId;
 
-  constructor (
+  constructor(
     private elastosConnectivityService: ElastosConnectivityService,
     private kycService: KycService,
-    private userService: UserService
+    private userService: UserService,
   ) { }
 
   async close(): Promise<void> {
@@ -48,7 +47,7 @@ export class ActivateAccountComponent implements OnDestroy {
   async onClickProvideCredentials(): Promise<void> {
     this.isActivationInProcess = true
 
-    let kycVerifiablePresentation
+    let kycVerifiablePresentation: VerifiablePresentation
     try {
       kycVerifiablePresentation = await this.elastosConnectivityService.requestKYCCredentials();
 
@@ -72,7 +71,7 @@ export class ActivateAccountComponent implements OnDestroy {
       this.accountNewlyActivatedEvent.emit()
       const timeSubscription = interval(1000).subscribe(second => {
         this.timeleft -= second
-        if (this.timeleft <= 0 ) {
+        if (this.timeleft <= 0) {
           timeSubscription.unsubscribe();
           this.close();
         }
@@ -110,6 +109,6 @@ export class ActivateAccountComponent implements OnDestroy {
     ReactiveFormsModule,
     ModalModule,
   ],
-  declarations: [ ActivateAccountComponent ],
+  declarations: [ActivateAccountComponent],
 })
-export class ActivateAccountComponentModule {}
+export class ActivateAccountComponentModule { }

@@ -2,6 +2,9 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+// regular style toast
+@import '~ngx-toastr/toastr';
+
 @layer base {
   @import '01-base/font';
   @import '01-base/document';

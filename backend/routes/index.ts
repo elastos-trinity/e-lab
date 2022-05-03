@@ -3,16 +3,16 @@ import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import { v1 as uuidV1 } from 'uuid';
 import { SecretConfig } from '../config/env-secret';
+import CrSuggestionResponseDto from "../dtos/crSuggestionResponse.dto";
 import logger from '../logger';
 import { Proposal } from '../model/proposal';
 import { ProposalGrant } from '../model/proposalgrant';
 import { ProposalStatus } from '../model/proposalstatus';
 import { User } from '../model/user';
+import { crService } from '../services/cr.service';
 import { credentialsService } from '../services/credentials.service';
 import { dbService } from '../services/db.service';
-import { crService } from '../services/cr.service';
 import { apiError } from '../utils/api';
-import CrSuggestionResponseDto from "../dtos/crSuggestionResponse.dto";
 
 let router = Router();
 
@@ -390,6 +390,7 @@ router.post('/proposals', async (req, res) => {
     res.json(await dbService.addProposal(proposal));
 })
 
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/voting-period', async (req, res) => {
     try {
         const votingPeriod = await dbService.getVotingPeriod()
@@ -400,6 +401,7 @@ router.get('/voting-period', async (req, res) => {
     }
 })
 
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.put('/voting-period', async (req, res) => {
     if (req.user.type !== 'superadmin') {
         res.json({ code: 403, message: 'forbidden' });
