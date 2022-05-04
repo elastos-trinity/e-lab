@@ -209,9 +209,17 @@ router.post('/user/kycactivation', async (req, res) => {
     let vp;
     let response;
     try {
-        console.log(presentation)
+        if (typeof presentation === "string")
+            console.log("pres from str", presentation)
+        else {
+            try {
+                console.log("pres from object", JSON.stringify(presentation))
+            } catch (e) {
+                console.warn("pres is not a string, but can't be stringified", presentation);
+            }
+        }
+
         vp = VerifiablePresentation.parse(presentation)
-        console.log(vp)
         response = await credentialsService.prepareKycActivationFromPresentation(did, vp);
 
         if (response.error) {
