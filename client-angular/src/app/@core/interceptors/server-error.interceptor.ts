@@ -30,7 +30,7 @@ export class ServerErrorInterceptor implements HttpInterceptor {
           from(this.handle401Error())
         } else if (error.status === 403) {
           console.log("Server 403 error", error)
-          this.toastService.error("Server error: " + error.error)
+          this.toastService.error("Server error: " + JSON.stringify(error.error))
           return throwError(() => error)
         } else {
           console.error("Server error", error)

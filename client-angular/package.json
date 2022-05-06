@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "^13.1.0",
     "@angular/router": "^13.1.0",
     "@elastosfoundation/did-js-sdk": "^2.2.6",
-    "@elastosfoundation/elastos-connectivity-sdk-js": "^1.0.20",
+    "@elastosfoundation/elastos-connectivity-sdk-js": "^1.0.22",
     "@elastosfoundation/essentials-connector-client-browser": "^1.0.37",
     "@walletconnect/web3-provider": "^1.7.0",
     "angular-datatables": "^13.0.1",
