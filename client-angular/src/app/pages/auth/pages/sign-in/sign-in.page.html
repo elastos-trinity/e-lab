@@ -1,6 +1,6 @@
 <div class="h-full px-5 sm:px-0" id="sign-in">
   <div class="flex flex-col h-full relative w-full sm:w-fit sm:px-20">
-    <div class="mx-auto pt-[10%] md:pt-[15%] sm:py-0 sm:mx-0 sm:pt-10">
+    <div class="mx-auto pt-[10%] md:pt-[5%] sm:py-0 sm:mx-0 sm:pt-10">
       <svg
         fill="none"
         height="71"
@@ -67,23 +67,19 @@
         />
       </svg>
     </div>
-    <div class="pt-[15%] sm:pt-0 md:pt-[2%] mt-[15%] lg:pt-[2%] sm:max-w-3xl">
+    <div class="pt-[15%] sm:pt-0 md:pt-[2%] mt-[8%] lg:pt-[2%] sm:max-w-3xl">
       <div class="px-5 sm:px-0">
-        <!-- <p class="text-[30px] opacity-0 welcome-message sm:text-[43px] sm:leading-[51.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r
-  from-pink-elab to-orange-elab">Welcome,</p>
-        <p class="text-[30px] opacity-0 welcome-message sm:text-[43px] sm:leading-[51.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r
-  from-pink-elab to-orange-elab">Cyber Republic user</p> -->
         <p
           class="text-[27px] opacity-0 welcome-message sm:text-[80px] sm:leading-[97.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
         >
           Kickstarting Web3
         </p>
         <p
-          class="text-[27px] opacity-0 welcome-message sm:text-[80px] sm:leading-[97.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+          class="text-[27px] opacity-0 welcome-message sm:text-[80px] sm:leading-[97.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab mb-8"
         >
           projects on Elastos
         </p>
-        <p class="text-white opacity-50 mt-3 sm:ml-2">
+        <p class="text-white opacity-50 mt-3 sm:ml-2 font-normal text-2xl mb-9">
           Community-driven grant program that supports developers wanting to
           build using Elastos Web3 technology
         </p>
@@ -92,7 +88,7 @@
             <button
               [ngClass]="{'cursor-not-allowed': isLoading}"
               [attr.disabled]="isLoading ? 'disabled' : null"
-              class="inline-block h-12 scale-[1%] mt-6 py-2 w-auto sm:my-6 sm:min-w-min transition-all font-bold text-blue-900 bg-gradient-to-r from-pink-elab to-orange-elab rounded-full focus:outline-none hover:text-green-elabLight duration-300 hover:bg-none hover:border-2"
+              class="inline-block h-12 scale-[1%] py-2 w-auto sm:my-6 sm:min-w-min transition-all font-bold text-blue-900 bg-gradient-to-r from-pink-elab to-orange-elab rounded-full focus:outline-none hover:text-green-elabLight duration-300 hover:bg-none hover:border-2"
               (click)="onClickSignIn()"
             >
               <div *ngIf="isLoading" class="flex items-center justify-center">
@@ -102,13 +98,13 @@
               </div>
               <div
                 *ngIf="!isLoading"
-                class="flex items-center justify-center font-bold"
+                class="flex items-center justify-center font-bold text-white"
               >
                 Sign in
               </div>
             </button>
             <button
-              class="inline-block h-12 scale-[1%] mt-6 py-2 w-auto sm:my-6 sm:min-w-min transition-all font-semibold rounded-full focus:outline-none text-white duration-300 bg-none border-2"
+              class="inline-block h-12 scale-[1%] py-2 w-auto sm:my-6 sm:min-w-min transition-all font-semibold rounded-full focus:outline-none text-white duration-300 bg-none border-2"
             >
               <div
                 class="text-[13px] flex items-center justify-center font-bold sm:text-[16px]"
@@ -119,26 +115,551 @@
           </div>
         </div>
       </div>
-
-      <!-- 
-      <div class="mt-10 sm:max-w-lg text-[15px] how-to-sign-in opacity-0">
-        <p class="text-orange-elab font-bold">How to sign in ?</p>
-        <p class="text-white opacity-50 mt-3 sm:ml-2">
-          1. Either by opening this dApp from Elastos Essentials dApp browser.
+    </div>
+    <div class="grid grid-cols-4 gap-4 mt-[190px] mb-[300px]">
+      <div class="col-span-4 sm:col-span-1 my-8 sm:my-0">
+        <p
+          class="flex items-center justify-center text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl"
+        >
+          <span
+            class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+            >8</span
+          >
         </p>
-        <p class="mt-2 text-white opacity-50 sm:ml-2">
-          2. Or by scanning the Wallet Connect QR code using the Elastos
-          Essentials scanner.
+        <p
+          class="flex items-center justify-center text-[15px] font-medium text-white mt-3"
+        >
+          ACTIVE PROPOSALS
+        </p>
+      </div>
+      <div class="col-span-4 sm:col-span-1 my-8 sm:my-0">
+        <p
+          class="flex items-center justify-center text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl"
+        >
+          <span
+            class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+            >2</span
+          >
+        </p>
+        <p
+          class="flex items-center justify-center text-[15px] font-medium text-white mt-3"
+        >
+          PROJECTS COMPLETED
+        </p>
+      </div>
+      <div class="col-span-4 sm:col-span-1 my-8 sm:my-0">
+        <p
+          class="flex items-center justify-center text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl"
+        >
+          <span
+            class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+            >153</span
+          >
+        </p>
+        <p
+          class="flex items-center justify-center text-[15px] font-medium text-white mt-3"
+        >
+          ACTIVATED ACCOUNTS
+        </p>
+      </div>
+      <div class="col-span-4 sm:col-span-1 my-8 sm:my-0">
+        <p
+          class="flex items-center justify-center text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl"
+        >
+          <span
+            class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+            >$10k</span
+          >
+        </p>
+        <p
+          class="flex items-center justify-center text-[15px] font-medium text-white mt-3"
+        >
+          GRANTS DISTRIBUTED
         </p>
       </div>
     </div>
 
-    <div
-      class="opacity-50 justify-end text-center sm:text-left align-bottom mt-auto pt-5 mb-8"
-    >
-      &copy; 2021 Elastos. All rights reserved.
+    <div class="grid grid-cols-12 mb-[300px]">
+      <div class="col-span-12 sm:col-span-7">
+        <p
+          class="flex items-center justify-center sm:items-start mb-[64px] sm:justify-start text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+        >
+          What is E-lab?
+        </p>
+        <div class="flex">
+          <p
+            class="flex items-start text-[27px] sm:text-[20px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+          >
+            |||
+          </p>
+          <p
+            class="text-[12px] sm:text-[24px] text-white opacity-50 ml-8 mb-12"
+          >
+            E-lab is a community-driven grant program based on the passed Cyber
+            Republic proposal.
+          </p>
+        </div>
+        <div class="flex">
+          <p
+            class="flex items-start text-[27px] sm:text-[20px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+          >
+            |||
+          </p>
+          <p class="text-[12px] sm:text-[24px] text-white opacity-50 ml-8">
+            The main goal of E-Lab is to fast-track project development of dApps
+            utilizing Elastos infrastructure through community grant instead of
+            requesting funds from the Cyber Republic DAO.
+          </p>
+        </div>
+      </div>
+      <div class="col-span-12 sm:col-span-5 flex justify-end">
+        <div>
+          <div class="flex flex-row items-center">
+            <img
+              src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
+              class="h-[138px] w-[138px] ml-[84px] rounded-full"
+            />
+            <span
+              class="ml-6 font-medium text-[#CC0505] text-[25px] leading-[39px]"
+              >Image 1</span
+            >
+          </div>
+          <div class="flex flex-row items-center">
+            <span
+              class="mr-6 font-medium text-[#05CC9A] text-[30px] leading-[46px]"
+              >Image 2</span
+            >
+            <img
+              src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+              class="h-[200px] w-[200px] rounded-full mt-[-48px]"
+            />
+          </div>
+          <div class="flex flex-row items-center">
+            <img
+              src="https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"
+              class="h-[100px] w-[100px] rounded-full ml-[122px] mt-[36px]"
+            />
+            <span
+              class="ml-6 font-medium text-[#05CC9A] text-[20px] leading-[31px]"
+              >Image 3</span
+            >
+          </div>
+        </div>
+      </div>
     </div>
-  </div> -->
+
+    <div class="col-span-4 sm:col-span-1 my-8 mb-[400px]">
+      <p
+        class="flex items-center justify-center text-[27px] opacity-0 welcome-message sm:text-[120px] sm:leading-[140px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-t from-black to-white"
+      >
+        10,000 ELA
+      </p>
+      <p
+        class="flex items-center justify-center text-[20px] font-semibold text-white mt-3"
+      >
+        to be rewarded by the community every month!
+      </p>
+    </div>
+
+    <div class="grid grid-cols-12 mb-[300px]">
+      <div class="col-span-5">
+        <div class="flex flex-col">
+          <div
+            class="flex flex-col items-center justify-center sm:items-start mb-[64px] sm:justify-start text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+          >
+            <p>Building</p>
+            <p>on Elastos</p>
+          </div>
+          <a
+            href="#"
+            class="inline-flex items-center py-2 w-[185px] justify-center text-transparent text-white font-semibold border border-white rounded-full text-base ml-5"
+            >Learn more</a
+          >
+        </div>
+      </div>
+      <div class="col-span-4">
+        <div class="flex flex-col">
+          <div class="flex flex-row items-center mb-10">
+            <div
+              class="h-20 w-20 flex justify-center items-center rounded-2xl bg-[#101E42]"
+            >
+              <svg
+                class="w-[35px] h-[35px]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"
+                ></path>
+              </svg>
+            </div>
+            <span
+              class="text-[20px] ml-[20px] leading-[24px] font-normal text-white"
+              >Data Ownership</span
+            >
+          </div>
+          <div class="flex flex-row items-center mb-10">
+            <div
+              class="h-20 w-20 flex justify-center items-center rounded-2xl bg-[#101E42]"
+            >
+              <svg
+                class="w-[35px] h-[35px]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"
+                ></path>
+              </svg>
+            </div>
+            <span
+              class="text-[20px] ml-[20px] leading-[24px] font-normal text-white"
+              >Bitcoin Hashpower</span
+            >
+          </div>
+          <div class="flex flex-row items-center mb-10">
+            <div
+              class="h-20 w-20 flex justify-center items-center rounded-2xl bg-[#101E42]"
+            >
+              <svg
+                class="w-[35px] h-[35px]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"
+                ></path>
+              </svg>
+            </div>
+            <span
+              class="text-[20px] ml-[20px] leading-[24px] font-normal text-white"
+              >Smart Contract Chain</span
+            >
+          </div>
+        </div>
+      </div>
+      <div class="col-span-3">
+        <div class="flex flex-row items-center mb-10">
+          <div
+            class="h-20 w-20 flex justify-center items-center rounded-2xl bg-[#101E42]"
+          >
+            <svg
+              class="w-[35px] h-[35px]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"
+              ></path>
+            </svg>
+          </div>
+          <span
+            class="text-[20px] ml-[20px] leading-[24px] font-normal text-white"
+            >Sidechain Scalability</span
+          >
+        </div>
+        <div class="flex flex-row items-center mb-10">
+          <div
+            class="h-20 w-20 flex justify-center items-center rounded-2xl bg-[#101E42]"
+          >
+            <svg
+              class="w-[35px] h-[35px]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"
+              ></path>
+            </svg>
+          </div>
+          <span
+            class="text-[20px] ml-[20px] leading-[24px] font-normal text-white"
+            >Decentralized Components</span
+          >
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="px-5 sm:px-0">
+        <p
+          class="flex items-center justify-center sm:items-start mb-[64px] sm:justify-start text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl"
+        >
+          <span
+            class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+            >Grant Process</span
+          >
+        </p>
+        <div class="button mt-[100px] ml-[2%]">
+          <ol
+            class="relative border-l-4 border-l-orange-600 dark:border-r-orange-600"
+          >
+            <li class="mb-11 ml-6">
+              <span
+                class="flex absolute -left-6 justify-center items-center w-12 h-12 bg-white rounded-full ring-white dark:ring-white text-black font-bold text-3xl"
+              >
+                1
+              </span>
+              <div>
+                <p
+                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] items-center font-bold text-gray-900 dark:text-white md:ml-[5%] font-inter"
+                >
+                  Download Elastos Essentials
+                </p>
+                <p
+                  class="my-5 text-base text-[12px] sm:text-[24px] sm:leading-[29px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                >
+                  Download and install Elastos Essentials (EE) super wallet.
+                </p>
+                <a
+                  href="#"
+                  class="inline-flex items-center py-2 w-[185px] justify-center text-transparent text-white font-semibold border border-white rounded-full text-base mx-5 md:ml-[5%]"
+                  >iOS</a
+                >
+                <a
+                  href="#"
+                  class="inline-flex items-center py-2 w-[185px] justify-center text-transparent text-white font-semibold border border-white rounded-full text-base ml-5"
+                  >Android</a
+                >
+              </div>
+            </li>
+            <li class="mb-11 ml-6">
+              <span
+                class="flex absolute -left-6 justify-center items-center w-12 h-12 bg-white rounded-full ring-white dark:ring-white text-black font-bold text-3xl"
+              >
+                2
+              </span>
+              <div>
+                <p
+                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                >
+                  Create a DID (Decentralized Identifier)
+                </p>
+                <p
+                  class="my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                >
+                  A DID (decentralized identity/identifier) will be
+                  automatically created during EE wallet onboarding. By issuing
+                  Decentralized Identities (DIDs) to everyone on the internet, a
+                  blockchain automates trust. In a blockchain-based system of
+                  exchange, transactions occur only between individuals, thereby
+                  removing the need for central authorities and intermediaries.
+                </p>
+              </div>
+            </li>
+            <li class="mb-16 ml-6">
+              <span
+                class="flex absolute -left-6 justify-center items-center w-12 h-12 bg-white rounded-full ring-white dark:ring-white text-black font-bold text-3xl"
+              >
+                3
+              </span>
+              <div>
+                <p
+                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] items-center font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                >
+                  Create and submit proposal on Cyber Republic
+                </p>
+                <p
+                  class="my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                >
+                  You must first create a proposal on Cyber Republic (CR)
+                  website in order to create a proposal on E-lab. More info on
+                  how to create a proposal on CR here.
+                </p>
+              </div>
+            </li>
+            <li class="mb-16 ml-6">
+              <span
+                class="flex absolute -left-6 justify-center items-center w-12 h-12 bg-white rounded-full ring-white dark:ring-white text-black font-bold text-3xl"
+              >
+                4
+              </span>
+              <div>
+                <p
+                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                >
+                  Sign in to E-lab
+                </p>
+                <p
+                  class="my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                >
+                  Sign in to E-lab by scanning the QR code from EE super wallet.
+                </p>
+              </div>
+            </li>
+            <li class="mb-16 ml-6">
+              <span
+                class="flex absolute -left-6 justify-center items-center w-12 h-12 bg-white rounded-full ring-white dark:ring-white text-black font-bold text-3xl"
+              >
+                5
+              </span>
+              <div>
+                <p
+                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                >
+                  Activate account
+                </p>
+                <p
+                  class="my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                >
+                  Activate account either through KYC-me or Discord
+                  verification.
+                </p>
+              </div>
+            </li>
+            <li class="mb-16 ml-6">
+              <span
+                class="flex absolute -left-6 justify-center items-center w-12 h-12 bg-white rounded-full ring-white dark:ring-white text-black font-bold text-3xl"
+              >
+                6
+              </span>
+              <div>
+                <p
+                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                >
+                  Create community proposal
+                </p>
+                <p
+                  class="my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                >
+                  Create a community proposal by linking the original proposal
+                  from the Cyber Republic website.
+                </p>
+              </div>
+            </li>
+            <li class="mb-11 ml-6">
+              <span
+                class="flex absolute -left-6 justify-center items-center w-12 h-12 bg-white rounded-full ring-white dark:ring-white text-black font-bold text-3xl"
+              >
+                7
+              </span>
+              <div>
+                <p
+                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                >
+                  Voting period
+                </p>
+                <p
+                  class="my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                >
+                  7-day period community vote on active proposals. Developers
+                  are also encouraged to promote their proposals to community
+                  members using social media platforms.
+                </p>
+              </div>
+            </li>
+            <li class="mb-11 ml-6">
+              <span
+                class="flex absolute -left-6 justify-center items-center w-12 h-12 bg-white rounded-full ring-white dark:ring-white text-black font-bold text-3xl"
+              >
+                8
+              </span>
+              <div>
+                <p
+                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                >
+                  Start building!
+                </p>
+                <p
+                  class="my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                >
+                  Grant distributed to winning proposal and developers can start
+                  building on Elastos!
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="text-center mt-[5%]">
+        <a
+          href="#"
+          class="inline-flex items-center py-2 w-[185px] justify-center text-transparent text-white font-semibold border border-white rounded-full text-base ml-5"
+          >Learn more</a
+        >
+      </div>
+    </div>
+    <div class="pt-[10%] sm:pt-0 md:pt-[10%] lg:pt-[15%]">
+      <div class="px-5 sm:px-0 mx-[10%]">
+        <p
+          class="text-[27px] opacity-0 welcome-message sm:text-[43px] sm:leading-[51.6px] text-3xl text-center"
+        >
+          <span
+            class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+            >FAQs</span
+          >
+        </p>
+        <div class="button mt-[10%] ml-[2%]">
+          <select
+            id="large"
+            class="block py-4 px-6 w-full text-base text-white bg-[#101E42] rounded-full mb-4"
+          >
+            <option selected>How do I get started?</option>
+            <option value="US">United States</option>
+          </select>
+          <select
+            id="large"
+            class="block py-4 px-6 w-full text-base text-white bg-[#101E42] rounded-full mb-4"
+          >
+            <option selected>What is Cyber Republic?</option>
+            <option value="US">United States</option>
+          </select>
+          <select
+            id="large"
+            class="block py-4 px-6 w-full text-base text-white bg-[#101E42] rounded-full mb-4"
+          >
+            <option selected>Why do I have to get KYC-ed/verified?</option>
+            <option value="US">United States</option>
+          </select>
+          <select
+            id="large"
+            class="block py-4 px-6 w-full text-base text-white bg-[#101E42] rounded-full mb-4"
+          >
+            <option selected>How much funds can I receive?</option>
+            <option value="US">United States</option>
+          </select>
+          <select
+            id="large"
+            class="block py-4 px-6 w-full text-base text-white bg-[#101E42] rounded-full mb-4"
+          >
+            <option selected>When do I receive the funds?</option>
+            <option value="US">United States</option>
+          </select>
+          <select
+            id="large"
+            class="block py-4 px-6 w-full text-base text-white bg-[#101E42] rounded-full mb-4"
+          >
+            <option selected>
+              How much votes are needed in order to get funded?
+            </option>
+            <option value="US">United States</option>
+          </select>
+        </div>
+      </div>
     </div>
 
     <ng-particles
@@ -146,107 +667,5 @@
       [options]="particlesOptions"
       (particlesInit)="particlesInit($event)"
     ></ng-particles>
-  </div>
-
-  <div class="grid grid-cols-4 gap-4 sm:mx-20 sm: my-20">
-    <div class="col-span-4 sm:col-span-1 my-8 sm:my-0">
-      <p
-        class="flex items-center justify-center text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
-      >
-        8
-      </p>
-      <p
-        class="flex items-center justify-center text-[15px] font-medium text-white mt-3"
-      >
-        ACTIVE PROPOSALS
-      </p>
-    </div>
-    <div class="col-span-4 sm:col-span-1 my-8 sm:my-0">
-      <p
-        class="flex items-center justify-center text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
-      >
-        2
-      </p>
-      <p
-        class="flex items-center justify-center text-[15px] font-medium text-white mt-3"
-      >
-        PROJECTS COMPLETED
-      </p>
-    </div>
-    <div class="col-span-4 sm:col-span-1 my-8 sm:my-0">
-      <p
-        class="flex items-center justify-center text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
-      >
-        153
-      </p>
-      <p
-        class="flex items-center justify-center text-[15px] font-medium text-white mt-3"
-      >
-        ACTIVATED ACCOUNTS
-      </p>
-    </div>
-    <div class="col-span-4 sm:col-span-1 my-8 sm:my-0">
-      <p
-        class="flex items-center justify-center text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
-      >
-        $10k
-      </p>
-      <p
-        class="flex items-center justify-center text-[15px] font-medium text-white mt-3"
-      >
-        GRANTS DISTRIBUTED
-      </p>
-    </div>
-  </div>
-
-  <div class="grid grid-cols-5 gap-4 sm:mx-20 sm:my-40">
-    <div class="col-span-5 sm:col-span-3">
-      <p
-        class="flex items-center justify-center sm:items-start sm:justify-start text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
-      >
-        What is E-lab?
-      </p>
-      <div class="grid grid-cols-8 gap-4">
-        <p
-          class="col-span-8 sm:col-span-1 flex items-center justify-center mt-8 sm:mt-0 text-[27px] opacity-0 welcome-message sm:text-[20px] sm:leading-[66.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
-        >
-          |||
-        </p>
-        <p
-          class="col-span-8 sm:col-span-7 flex items-center justify-center sm:items-start sm:justify-start text-white opacity-50 sm:mt-6"
-        >
-          E-lab is a community-driven grant program based on the passed Cyber
-          Republic proposal.
-        </p>
-      </div>
-      <div class="grid grid-cols-8 gap-4">
-        <p
-          class="col-span-8 sm:col-span-1 flex items-center justify-center mt-8 sm:mt-0 text-[27px] opacity-0 welcome-message sm:text-[20px] sm:leading-[66.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
-        >
-          |||
-        </p>
-        <p
-          class="col-span-8 sm:col-span-7 flex items-center justify-center sm:items-start sm:justify-start text-white opacity-50 sm:mt-14"
-        >
-          The main goal of E-Lab is to fast-track project development of dApps
-          utilizing Elastos infrastructure through community grant instead of
-          requesting funds from the Cyber Republic DAO.
-        </p>
-      </div>
-    </div>
-    <div class="col-span-5 sm:col-span-2">1</div>
-  </div>
-
-  <div class="col-span-4 sm:col-span-1 my-8 sm:my-0">
-    <p
-      class="flex items-center justify-center text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
-    >
-      10,000 ELA
-    </p>
-    <p
-      class="flex items-center justify-center text-[20px] font-semibold text-white mt-3"
-    >
-      to be rewarded by the community every month!
-    </p>
   </div>
 </div>

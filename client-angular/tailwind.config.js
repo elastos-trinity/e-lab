@@ -5,6 +5,10 @@ module.exports = {
     content: ['./src/**/*.{html,ts}', './projects/**/*.{html,ts}'],
   },
   darkMode: 'class',
+  content: [
+    './src/**/*.{html,js}',
+    './node_modules/tw-elements/dist/js/**/*.js',
+  ],
   theme: {
     fontFamily: {
       display: ['Bio Sans', 'Oswald', 'sans-serif'],
@@ -18,34 +22,34 @@ module.exports = {
       colors: {
         pink: {
           elab: '#FF66DD',
-          450: '#FF66DD'
+          450: '#FF66DD',
         },
         orange: {
           elab: '#FF9838',
-          450: '#FF9838'
+          450: '#FF9838',
         },
         red: {
           DEFAULT: '#CC0505',
           elab: '#CC0505',
-          elabLight: '#FFAAAA'
+          elabLight: '#FFAAAA',
         },
         grey: {
-          DEFAULT: '#7D7D7D'
+          DEFAULT: '#7D7D7D',
         },
         green: {
           100: '#AAFFEA',
           DEFAULT: '#05CC9A',
           elab: '#05CC9A',
-          elabLight: '#AAFFEA'
+          elabLight: '#AAFFEA',
         },
         blue: {
           elabLightGradient: 'rgba(16, 30, 66, 0)',
           800: '#101E42',
-          900: '#000B26'
+          900: '#000B26',
         },
         beige: {
-          elab: '#FAFAFA'
-        }
+          elab: '#FAFAFA',
+        },
       },
       color: {
         inherit: 'inherit',
@@ -53,5 +57,5 @@ module.exports = {
     },
   },
   variants: {},
-  plugins: [],
+  plugins: [require('tw-elements/dist/plugin')],
 };
