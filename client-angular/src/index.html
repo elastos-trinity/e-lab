@@ -11,7 +11,6 @@
       href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@100;300;600&display=swap"
       rel="stylesheet"
     />
-    <script src="./node_modules/tw-elements/dist/js/index.min.js"></script>
     <!-- Twitter universal website tag code -->
     <script>
       !(function (e, t, n, s, u, a) {
@@ -68,8 +67,34 @@
 
       gtag('config', 'AW-10856996512');
     </script>
+    <!-- <script src="./TW-ELEMENTS-PATH/dist/js/index.min.js"></script> -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/index.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          },
+        },
+      };
+    </script>
   </head>
   <body class="app">
     <app-root></app-root>
+    <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"></script>
   </body>
 </html>
