@@ -70,24 +70,24 @@
     <div class="pt-[15%] sm:pt-0 md:pt-[2%] mt-[8%] lg:pt-[2%] sm:max-w-3xl">
       <div class="px-5 sm:px-0">
         <p
-          class="flex items-center justify-center sm:items-start sm:justify-start text-[30px] opacity-0 welcome-message sm:text-[80px] sm:leading-[97.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+          class="flex items-center justify-center sm:items-start sm:justify-start text-3xl opacity-0 welcome-message sm:text-7xl sm:leading-[96px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
         >
           Kickstarting Web3
         </p>
         <p
-          class="flex items-center justify-center sm:items-start sm:justify-start text-[30px] opacity-0 welcome-message sm:text-[80px] sm:leading-[97.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab mb-8"
+          class="flex items-center justify-center sm:items-start sm:justify-start opacity-0 welcome-message sm:text-7xl sm:leading-[96px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab mb-8"
         >
           projects on Elastos
         </p>
         <p
-          class="flex items-center justify-center text-center sm:text-left sm:items-start sm:justify-start text-[12px] sm:text-[24px] text-white opacity-50 ml-8 sm:ml-0 mr-5 leading-[20px] sm:leading-[35px] mb-12"
+          class="flex items-center justify-center text-center sm:text-left sm:items-start sm:justify-start text-xs sm:text-2xl text-white opacity-50 ml-8 sm:ml-0 mr-5 leading-[20px] sm:leading-[35px] mb-12"
         >
           Community-driven grant program that supports developers wanting to
           build using Elastos Web3 technology
         </p>
 
         <div class="button opacity-0">
-          <div class="grid grid-cols-2 gap-4 sm:w-[50%]">
+          <div class="grid grid-cols-2 gap-4 sm:w-1/2">
             <button
               [ngClass]="{'cursor-not-allowed': isLoading}"
               [attr.disabled]="isLoading ? 'disabled' : null"
@@ -101,7 +101,7 @@
               </div>
               <div
                 *ngIf="!isLoading"
-                class="flex items-center justify-center font-bold text-white"
+                class="text-xs sm:text-base flex items-center justify-center font-bold text-white"
               >
                 Sign in
               </div>
@@ -110,7 +110,7 @@
               class="inline-block h-12 scale-[1%] py-2 w-auto sm:my-6 sm:min-w-min transition-all font-semibold rounded-full focus:outline-none text-white duration-300 bg-none border-2"
             >
               <div
-                class="text-[13px] flex items-center justify-center font-bold sm:text-[16px]"
+                class="text-xs sm:text-base flex items-center justify-center font-bold"
               >
                 Create Proposal
               </div>
@@ -119,10 +119,10 @@
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-4 gap-4 mt-[190px] mb-[190px]">
+    <div class="grid grid-cols-4 gap-4 my-48">
       <div class="col-span-4 sm:col-span-1 my-8 sm:my-0">
         <p
-          class="flex items-center justify-center opacity-0 welcome-message text-[60px] leading-[66.6px] text-3xl"
+          class="flex items-center justify-center opacity-0 welcome-message text-6xl"
         >
           <span
             class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
@@ -130,14 +130,14 @@
           >
         </p>
         <p
-          class="flex items-center justify-center text-[15px] font-medium text-white mt-3"
+          class="flex items-center tracking-widest justify-center text-sm font-medium text-white mt-3"
         >
           ACTIVE PROPOSALS
         </p>
       </div>
       <div class="col-span-4 sm:col-span-1 my-8 sm:my-0">
         <p
-          class="flex items-center justify-center opacity-0 welcome-message text-[60px] leading-[66.6px] text-3xl"
+          class="flex items-center justify-center opacity-0 welcome-message text-6xl"
         >
           <span
             class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
@@ -145,14 +145,14 @@
           >
         </p>
         <p
-          class="flex items-center justify-center text-[15px] font-medium text-white mt-3"
+          class="flex items-center tracking-widest justify-center text-sm font-medium text-white mt-3"
         >
           PROJECTS COMPLETED
         </p>
       </div>
       <div class="col-span-4 sm:col-span-1 my-8 sm:my-0">
         <p
-          class="flex items-center justify-center opacity-0 welcome-message text-[60px] leading-[66.6px] text-3xl"
+          class="flex items-center justify-center opacity-0 welcome-message text-6xl"
         >
           <span
             class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
@@ -160,14 +160,14 @@
           >
         </p>
         <p
-          class="flex items-center justify-center text-[15px] font-medium text-white mt-3"
+          class="flex items-center justify-center tracking-widest text-sm font-medium text-white mt-3"
         >
           ACTIVATED ACCOUNTS
         </p>
       </div>
       <div class="col-span-4 sm:col-span-1 my-8 sm:my-0">
         <p
-          class="flex items-center justify-center opacity-0 welcome-message text-[60px] leading-[66.6px] text-3xl"
+          class="flex items-center justify-center opacity-0 welcome-message text-6xl"
         >
           <span
             class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
@@ -175,28 +175,28 @@
           >
         </p>
         <p
-          class="flex items-center justify-center text-[15px] font-medium text-white mt-3"
+          class="flex items-center justify-center tracking-widest text-sm font-medium text-white mt-3"
         >
           GRANTS DISTRIBUTED
         </p>
       </div>
     </div>
 
-    <div class="grid grid-cols-12 mb-[200px]">
-      <div class="col-span-12 sm:col-span-7 mb-[50px]">
+    <div class="grid grid-cols-12 mb-48">
+      <div class="col-span-12 sm:col-span-7 mb-12">
         <p
-          class="flex items-center justify-center sm:items-start sm:justify-start mb-[64px] text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+          class="flex items-center justify-center sm:items-start sm:justify-start mb-12 text-3xl sm:text-6xl opacity-0 welcome-message font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
         >
           What is E-lab?
         </p>
         <div class="grid grid-cols-12">
           <p
-            class="col-span-12 sm:col-span-1 flex items-center justify-center sm:items-start sm:justify-start text-[27px] mb-4 sm:text-[20px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+            class="col-span-12 sm:col-span-1 flex items-center justify-center sm:items-start sm:justify-start text-base mb-4 sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
           >
             |||
           </p>
           <p
-            class="col-span-12 sm:col-span-11 flex text-center sm:text-left px-4 sm:px-0 items-center justify-center sm:items-start sm:justify-start text-[12px] sm:text-[24px] leading-[15px] sm:leading-[29px] text-white opacity-50 mb-12"
+            class="col-span-12 sm:col-span-11 flex text-center sm:text-left px-4 sm:px-0 items-center justify-center sm:items-start sm:justify-start text-xs sm:text-2xl text-white opacity-50 mb-12"
           >
             E-lab is a community-driven grant program based on the passed Cyber
             Republic proposal.
@@ -204,12 +204,12 @@
         </div>
         <div class="grid grid-cols-12">
           <p
-            class="col-span-12 sm:col-span-1 flex items-center justify-center sm:items-start sm:justify-start mb-4 text-[27px] sm:text-[20px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+            class="col-span-12 sm:col-span-1 flex items-center justify-center sm:items-start sm:justify-start mb-4 text-base sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
           >
             |||
           </p>
           <p
-            class="col-span-12 sm:col-span-11 flex text-center sm:text-left px-4 sm:px-0 items-center justify-center sm:items-start sm:justify-start text-[12px] sm:text-[24px] leading-[15px] sm:leading-[29px] text-white opacity-50 mb-12"
+            class="col-span-12 sm:col-span-11 flex text-center sm:text-left px-4 sm:px-0 items-center justify-center sm:items-start sm:justify-start text-xs sm:text-2xl text-white opacity-50 mb-12"
           >
             The main goal of E-Lab is to fast-track project development of dApps
             utilizing Elastos infrastructure through community grant instead of
@@ -233,21 +233,21 @@
             class="flex flex-row items-center ml-4 mt-[-60px] sm:ml-0 sm:mt-[-75px]"
           >
             <span
-              class="mr-[-12px] font-medium not-italic font-sans text-[#05CC9A] text-[20px] sm:text-[30px] leading-[31px]"
+              class="-mr-3 font-medium not-italic font-sans text-[#05CC9A] text-xl sm:text-3xl"
               >Voted Up</span
             >
             <img
               src="assets/img/voted2.png"
-              class="h-[230px] w-[230px] rounded-full mr-10 sm:mr-0"
+              class="h-[230px] w-[230px] rounded-full -mr-3 sm:mr-0"
             />
           </div>
-          <div class="flex flex-row items-center mt-[20px]">
+          <div class="flex flex-row items-center mt-5">
             <img
               src="assets/img/voted3.png"
-              class="h-[100px] w-[100px] rounded-full ml-[110px]"
+              class="h-[100px] w-[100px] rounded-full ml-28"
             />
             <span
-              class="ml-5 not-italic font-medium font-sans text-[#05CC9A] text-[12px] sm:text-[20px] leading-[19px]"
+              class="ml-5 not-italic font-medium font-sans text-[#05CC9A] text-xs sm:text-xl"
               >Voted Up</span
             >
           </div>
@@ -255,14 +255,14 @@
       </div>
     </div>
 
-    <div class="col-span-4 sm:col-span-1 my-8 mb-[200px]">
+    <div class="col-span-4 sm:col-span-1 my-8 mb-48">
       <p
-        class="flex items-center justify-center text-[50px] leading-[60px] opacity-0 welcome-message sm:text-[120px] sm:leading-[140px] font-bold text-transparent bg-clip-text bg-gradient-to-t from-black to-white"
+        class="flex items-center justify-center text-5xl opacity-0 welcome-message sm:text-[120px] sm:leading-[140px] font-bold text-transparent bg-clip-text bg-gradient-to-t from-black to-white"
       >
         10,000 ELA
       </p>
       <p
-        class="flex items-center justify-center text-[12px] sm:text-[30px] font-medium text-white sm:ml-[60px] mt-3"
+        class="flex items-center justify-center text-xs sm:text-3xl font-medium text-white mt-3"
       >
         to be rewarded by the community every month!
       </p>
@@ -272,14 +272,14 @@
       <div class="col-span-12 sm:col-span-5">
         <div class="flex flex-col">
           <div
-            class="flex flex-col items-start justify-start mb-[64px] text-[30px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
+            class="flex flex-col items-start justify-start mb-16 opacity-0 welcome-message sm:text-6xl text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
           >
             <p>Building</p>
             <p>on Elastos</p>
           </div>
           <a
             href="#"
-            class="hidden sm:block py-2 w-[185px] text-transparent text-white font-semibold border border-white rounded-full text-base"
+            class="hidden sm:block py-2 w-48 text-transparent text-white font-semibold border border-white rounded-full text-xs sm:text-base"
             ><span class="flex items-center justify-center">
               Learn more
             </span></a
@@ -293,189 +293,62 @@
               <div
                 class="h-[60px] w-[60px] sm:h-[80px] sm:w-[80px] flex justify-center items-center rounded-2xl bg-[#101E42]"
               >
-                <svg
-                  width="37"
-                  height="39"
-                  viewBox="0 0 28 30"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M17.7687 14.7089C18.5959 15.568 19.0641 16.61 19.4024 18.0493L19.5501 18.7329L19.8145 20.1528C19.946 20.82 20.0479 21.1903 20.1897 21.5141C20.6329 22.5231 21.4158 23.5591 22.5458 24.6101C22.6558 24.7091 22.7453 24.8293 22.8091 24.9638C22.8728 25.0982 22.9096 25.2442 22.9173 25.3932C22.9249 25.5422 22.9033 25.6912 22.8536 25.8316C22.8039 25.9721 22.7272 26.1011 22.6279 26.2111C22.5286 26.3211 22.4087 26.41 22.2752 26.4725C22.1418 26.5351 21.9974 26.57 21.8505 26.5753C21.7036 26.5807 21.5571 26.5563 21.4196 26.5036C21.282 26.4509 21.1562 26.3709 21.0494 26.2683C19.7082 25.0209 18.7451 23.7451 18.166 22.4302C17.9459 21.9294 17.8115 21.4556 17.6549 20.661L17.3447 19.0118L17.3241 18.9219C17.0582 17.6475 16.7273 16.8454 16.1837 16.2801C15.1305 15.1856 12.702 15.475 12.0521 16.517C11.2219 17.8499 11.0107 20.1093 11.6695 22.3882C12.1791 24.1484 12.8542 25.8815 13.6962 27.5862C13.7675 27.7187 13.8119 27.8645 13.8265 28.0148C13.8412 28.165 13.8259 28.3168 13.7815 28.4609C13.7371 28.6051 13.6646 28.7386 13.5682 28.8537C13.4719 28.9688 13.3537 29.063 13.2207 29.1307C13.0877 29.1984 12.9426 29.2382 12.7941 29.2477C12.6456 29.2573 12.4968 29.2364 12.3564 29.1863C12.216 29.1362 12.0871 29.0579 11.9772 28.9561C11.8673 28.8543 11.7787 28.731 11.7168 28.5937C10.8294 26.806 10.1021 24.9409 9.54388 23.0209C8.71372 20.1543 8.98847 17.2277 10.1791 15.3146C11.5868 13.0567 15.7066 12.5649 17.7687 14.7089ZM14.2737 18.1797C14.4192 18.1747 14.5643 18.1989 14.7006 18.2508C14.8369 18.3027 14.9618 18.3814 15.0681 18.4824C15.1744 18.5833 15.2601 18.7045 15.3202 18.8391C15.3803 18.9737 15.4138 19.119 15.4185 19.2667C15.4944 21.5827 16.2358 23.8257 17.5515 25.7196L17.8411 26.1184L18.2842 26.7031C18.4542 26.928 18.5342 27.2097 18.5083 27.4919C18.4824 27.7742 18.3525 28.036 18.1445 28.2251C17.9365 28.4143 17.6658 28.5167 17.3866 28.5119C17.1074 28.5072 16.8403 28.3955 16.6387 28.1994L16.5293 28.075L16.0862 27.4903C14.3093 25.147 13.3013 22.297 13.2043 19.3417C13.1943 19.0436 13.3014 18.7538 13.5019 18.5359C13.7025 18.318 13.9801 18.1899 14.2737 18.1797ZM8.79496 10.5589C11.9147 8.21548 15.9946 8.34291 18.7392 10.1331C20.1129 11.0296 21.1543 12.0746 21.8456 13.2711C21.9945 13.5283 22.0366 13.8351 21.9626 14.1238C21.8886 14.4126 21.7047 14.6597 21.4512 14.8108C21.1977 14.9619 20.8955 15.0046 20.611 14.9296C20.3265 14.8545 20.0831 14.6678 19.9342 14.4105C19.429 13.5349 18.6372 12.7388 17.5412 12.0252C15.5293 10.7118 12.445 10.6158 10.1141 12.367C7.693 14.1856 6.67377 17.3011 6.97806 20.5861C7.14793 22.4257 7.693 24.2848 8.62213 26.1694C8.75068 26.4359 8.77023 26.7431 8.67655 27.0242C8.58286 27.3053 8.38352 27.5373 8.12198 27.6699C7.86043 27.8024 7.55787 27.8247 7.28024 27.7318C7.0026 27.6389 6.7724 27.4383 6.63979 27.1739C5.59249 25.0494 4.96765 22.9204 4.77119 20.796C4.4019 16.7929 5.67226 12.9052 8.79496 10.5589ZM22.3552 17.0073C22.6484 16.9922 22.9355 17.0958 23.1535 17.2954C23.3715 17.495 23.5025 17.7742 23.5178 18.0718C23.5636 18.9773 23.7836 19.7165 24.1707 20.3117C24.4956 20.811 24.7822 21.0988 25.0023 21.2113L25.0924 21.2472C25.3737 21.3335 25.6097 21.5297 25.7485 21.7926C25.8873 22.0555 25.9175 22.3636 25.8325 22.6491C25.7474 22.9346 25.5542 23.1741 25.2952 23.315C25.0361 23.4558 24.7326 23.4865 24.4513 23.4002C23.6433 23.1528 22.9491 22.5186 22.3198 21.5486C21.7068 20.6041 21.3715 19.4766 21.305 18.1887C21.2974 18.0412 21.3185 17.8937 21.3671 17.7545C21.4158 17.6153 21.4909 17.4872 21.5883 17.3775C21.6857 17.2678 21.8034 17.1787 21.9347 17.1151C22.0661 17.0516 22.2085 17.0149 22.3538 17.0073H22.3552ZM11.346 5.62921C11.4057 5.76397 11.4387 5.90935 11.443 6.05706C11.4474 6.20476 11.423 6.35188 11.3713 6.49001C11.3196 6.62813 11.2415 6.75456 11.1416 6.86206C11.0417 6.96956 10.922 7.05602 10.7891 7.1165C8.07115 8.35791 6.07109 10.1271 4.7579 12.436C3.11382 15.3266 2.6692 18.7045 3.03849 21.5516C3.0575 21.6981 3.0479 21.8469 3.01023 21.9897C2.97256 22.1324 2.90757 22.2662 2.81896 22.3834C2.64 22.6201 2.37572 22.775 2.08425 22.814C1.93992 22.8333 1.79327 22.8235 1.65266 22.7853C1.51205 22.7471 1.38023 22.6811 1.26473 22.5912C1.03148 22.4095 0.878876 22.1413 0.840483 21.8455C0.415062 18.5455 0.921726 14.6819 2.83907 11.3115C4.39452 8.5813 6.75206 6.4958 9.88215 5.06548C10.0148 5.00481 10.158 4.97126 10.3034 4.96676C10.4489 4.96226 10.5938 4.98688 10.7299 5.03923C10.866 5.09158 10.9905 5.17063 11.0965 5.27186C11.2025 5.37309 11.2878 5.49452 11.3475 5.62921H11.346ZM14.807 4.44927C17.5102 4.50475 20.2015 5.76565 22.8708 8.17649C25.5636 10.6083 27.1855 13.9143 27.7365 18.0418C27.7595 18.1896 27.7531 18.3406 27.7178 18.4859C27.6825 18.6312 27.6189 18.7679 27.5309 18.888C27.4429 19.0081 27.3321 19.1091 27.2051 19.1851C27.0781 19.2612 26.9375 19.3108 26.7914 19.3309C26.6453 19.3511 26.4966 19.3414 26.3543 19.3025C26.2119 19.2636 26.0786 19.1963 25.9622 19.1044C25.8457 19.0126 25.7486 18.8981 25.6763 18.7676C25.6041 18.6371 25.5582 18.4933 25.5415 18.3446C25.0584 14.7284 23.6788 11.9172 21.398 9.85719C19.0937 7.77618 16.8853 6.74168 14.7627 6.6982C14.6172 6.69525 14.4737 6.66324 14.3404 6.604C14.2071 6.54476 14.0866 6.45945 13.9858 6.35295C13.885 6.24645 13.8058 6.12083 13.7528 5.98327C13.6998 5.84572 13.674 5.69891 13.677 5.55125C13.6799 5.40358 13.7114 5.25794 13.7698 5.12265C13.8281 4.98735 13.9122 4.86505 14.0171 4.76272C14.122 4.66039 14.2458 4.58004 14.3813 4.52626C14.5169 4.47248 14.6615 4.44632 14.807 4.44927ZM4.65745 4.47026C4.75448 4.58055 4.82914 4.70918 4.87713 4.84879C4.92513 4.98839 4.94552 5.13624 4.93715 5.28385C4.92878 5.43147 4.89181 5.57596 4.82836 5.70906C4.7649 5.84216 4.6762 5.96124 4.56734 6.0595C4.16999 6.41633 3.75491 6.84363 3.32063 7.33989C2.91293 7.80767 2.49342 8.41338 2.07095 9.15852C1.99874 9.28744 1.90212 9.40058 1.78665 9.49144C1.67117 9.5823 1.53914 9.64908 1.39814 9.68793C1.25714 9.72679 1.10995 9.73695 0.965068 9.71783C0.820181 9.69872 0.680451 9.65071 0.553921 9.57656C0.427391 9.50241 0.316561 9.40359 0.227811 9.28579C0.139062 9.16799 0.0741459 9.03354 0.0368011 8.89017C-0.000543691 8.7468 -0.00958 8.59735 0.0102128 8.45042C0.0300057 8.30349 0.0782364 8.16199 0.152128 8.03406C0.582666 7.25603 1.0889 6.52372 1.66326 5.84811C2.1522 5.28737 2.62932 4.79861 3.09314 4.37881C3.20177 4.28055 3.3284 4.20497 3.4658 4.15639C3.60321 4.1078 3.7487 4.08717 3.89396 4.09566C4.03922 4.10415 4.18142 4.14161 4.31242 4.20588C4.44342 4.27016 4.56066 4.35999 4.65745 4.47026ZM14.3845 0.0233883C17.6239 0.177814 20.3374 1.07738 22.5532 2.81356C22.7859 2.99587 22.9377 3.26455 22.9752 3.56048C23.0128 3.85641 22.933 4.15536 22.7533 4.39155C22.5737 4.62775 22.309 4.78184 22.0174 4.81994C21.7259 4.85804 21.4313 4.77702 21.1986 4.5947C19.3596 3.15239 17.0848 2.40425 14.2811 2.27081C11.4701 2.13588 9.16868 2.69661 7.31781 3.73861C6.75058 4.05796 6.11392 3.89754 5.79338 3.36829C5.71523 3.2431 5.66261 3.10326 5.63865 2.95706C5.61469 2.81086 5.61988 2.66126 5.6539 2.51713C5.68792 2.373 5.75008 2.23726 5.83671 2.11795C5.92334 1.99864 6.03268 1.89819 6.15824 1.82253C8.42567 0.467176 11.154 -0.129539 14.386 0.0233883H14.3845Z"
-                    fill="url(#paint0_linear_5325_732)"
-                  />
-                  <defs>
-                    <linearGradient
-                      id="paint0_linear_5325_732"
-                      x1="13.875"
-                      y1="0"
-                      x2="13.875"
-                      y2="29.25"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop stop-color="#FF9838" />
-                      <stop offset="1" stop-color="#FF66DD" />
-                    </linearGradient>
-                  </defs>
-                </svg>
+                <img src="assets/img/data-ico.svg" alt="" />
               </div>
-              <span
-                class="sm:text-[20px] sm:leading-[24px] text-3 leading-[15px] ml-[20px] text-white"
+              <span class="sm:text-xl text-xs ml-5 text-white"
                 >Data Ownership</span
               >
             </div>
-            <div class="flex flex-row items-center mb-[35px] sm:mb-10">
+            <div class="flex flex-row items-center mb-9 sm:mb-10">
               <div
                 class="h-[60px] w-[60px] sm:h-[80px] sm:w-[80px] flex justify-center items-center rounded-2xl bg-[#101E42]"
               >
-                <svg
-                  width="37"
-                  height="39"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M20 40C8.95375 40 0 31.0463 0 20C0 8.95375 8.95375 0 20 0C31.0463 0 40 8.95375 40 20C40 31.0463 31.0463 40 20 40ZM28.9862 17.525C29.3787 14.905 27.3825 13.4963 24.655 12.5563L25.54 9.00625L23.38 8.46875L22.5175 11.925C21.95 11.7825 21.3675 11.65 20.7863 11.5175L21.655 8.03875L19.495 7.5L18.61 11.0487C18.14 10.9412 17.6775 10.8363 17.23 10.7238L17.2325 10.7125L14.2525 9.96875L13.6775 12.2763C13.6775 12.2763 15.2813 12.6438 15.2475 12.6663C16.1225 12.885 16.28 13.4638 16.2538 13.9238L15.2462 17.9675C15.3062 17.9825 15.3837 18.005 15.4712 18.0387L15.2425 17.9825L13.83 23.6475C13.7225 23.9125 13.4513 24.3112 12.8387 24.16C12.8612 24.1912 11.2688 23.7688 11.2688 23.7688L10.1962 26.2413L13.0087 26.9425C13.5312 27.0738 14.0437 27.2113 14.5475 27.34L13.6538 30.93L15.8125 31.4675L16.6975 27.9175C17.2875 28.0763 17.86 28.2238 18.42 28.3638L17.5375 31.8987L19.6975 32.4362L20.5912 28.8538C24.2762 29.5513 27.0463 29.27 28.2125 25.9375C29.1525 23.255 28.1663 21.7063 26.2275 20.6975C27.64 20.3725 28.7025 19.4438 28.9862 17.525ZM24.0487 24.4475C23.3825 27.1313 18.8638 25.68 17.3988 25.3163L18.5863 20.56C20.0513 20.9263 24.7475 21.65 24.0487 24.4475ZM24.7175 17.4862C24.1088 19.9275 20.3488 18.6863 19.13 18.3825L20.205 14.07C21.4237 14.3737 25.3525 14.94 24.7175 17.4862Z"
-                    fill="url(#paint0_linear_5226_2229)"
-                  />
-                  <defs>
-                    <linearGradient
-                      id="paint0_linear_5226_2229"
-                      x1="20"
-                      y1="0"
-                      x2="20"
-                      y2="40"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop stop-color="#FF9838" />
-                      <stop offset="1" stop-color="#FF66DD" />
-                    </linearGradient>
-                  </defs>
-                </svg>
+                <img src="assets/img/bitcoin-ico.svg" alt="" />
               </div>
-              <span
-                class="sm:text-[20px] sm:leading-[24px] text-3 leading-[15px] ml-[20px] text-white"
+              <span class="sm:text-xl text-xs ml-5 text-white"
                 >Bitcoin Hashpower</span
               >
             </div>
-            <div class="flex flex-row items-center mb-[35px] sm:mb-10">
+            <div class="flex flex-row items-center mb-9 sm:mb-10">
               <div
                 class="h-[60px] w-[60px] sm:h-[80px] sm:w-[80px] flex justify-center items-center rounded-2xl bg-[#101E42]"
               >
-                <svg
-                  width="37"
-                  height="39"
-                  viewBox="0 0 29 35"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M28.7386 16.7852L15.4513 0.447747C15.3383 0.308269 15.1939 0.195468 15.0291 0.117892C14.8643 0.0403156 14.6833 0 14.5 0C14.3167 0 14.1357 0.0403156 13.9709 0.117892C13.8061 0.195468 13.6617 0.308269 13.5487 0.447747L0.261402 16.7852C0.0922576 16.9876 0 17.2399 0 17.5C0 17.7601 0.0922576 18.0124 0.261402 18.2148L13.5487 34.5523C13.6617 34.6917 13.8061 34.8045 13.9709 34.8821C14.1357 34.9597 14.3167 35 14.5 35C14.6833 35 14.8643 34.9597 15.0291 34.8821C15.1939 34.8045 15.3383 34.6917 15.4513 34.5523L28.7386 18.2148C28.9077 18.0124 29 17.7601 29 17.5C29 17.2399 28.9077 16.9876 28.7386 16.7852ZM15.7079 4.53212L25.8848 17.0478L15.7079 21.526V4.53212ZM13.2921 21.526L3.11516 17.0478L13.2921 4.53212V21.526ZM13.2921 24.0933V30.4679L5.22906 20.5487L13.2921 24.0933ZM15.7079 24.0933L23.7709 20.5487L15.7079 30.4679V24.0933Z"
-                    fill="url(#paint0_linear_5325_740)"
-                  />
-                  <defs>
-                    <linearGradient
-                      id="paint0_linear_5325_740"
-                      x1="14.5"
-                      y1="0"
-                      x2="14.5"
-                      y2="35"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop stop-color="#FF9838" />
-                      <stop offset="1" stop-color="#FF66DD" />
-                    </linearGradient>
-                  </defs>
-                </svg>
+                <img src="assets/img/contract-ico.svg" alt="" />
               </div>
-              <span
-                class="sm:text-[20px] sm:leading-[24px] text-3 leading-[15px] ml-[20px] text-white"
+              <span class="sm:text-xl text-xs ml-5 text-white"
                 >Smart Contract Chain</span
               >
             </div>
           </div>
         </div>
         <div class="col-span-8 sm:col-span-4">
-          <div class="flex flex-row items-center mb-[35px] sm:mb-10">
+          <div class="flex flex-row items-center mb-9 sm:mb-10">
             <div
               class="h-[60px] w-[60px] sm:h-[80px] sm:w-[80px] flex justify-center items-center rounded-2xl bg-[#101E42]"
             >
-              <svg
-                width="37"
-                height="39"
-                viewBox="0 0 29 33"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M6.35637 9.15035V7.56745C8.54426 7.0081 10.1666 5.05285 10.1666 2.72305L10.1677 0L7.62754 0.00110005L7.627 2.72415C7.62646 3.663 7.09211 4.47315 6.31394 4.9016C6.01804 3.7257 4.14968 3.72515 3.85646 4.9027C3.07776 4.47425 2.54394 3.66355 2.54502 2.72415L2.54287 0H0.001074V2.72415C0.00161103 5.0534 1.62561 7.01085 3.81404 7.568V9.1498C1.62507 9.7086 0.000537037 11.6655 0 13.9942L0.001074 19.0042C0.001074 21.3334 1.62346 23.2909 3.81243 23.8508L3.81296 25.4326C1.62454 25.9908 0.00161121 27.9477 0.00214825 30.277L0.00161099 33L2.54126 32.9989L2.54233 30.277C2.54233 29.3376 3.07669 28.5269 3.85593 28.0984C4.1513 29.2749 6.02018 29.2748 6.31233 28.0973C7.09104 28.5252 7.62539 29.3359 7.62539 30.2747V33L10.1672 32.9989V30.2759C10.1666 27.9472 8.54265 25.9892 6.35422 25.432V23.8508C8.54372 23.292 10.1677 21.3345 10.1677 19.0053V13.9953C10.1683 11.6655 8.54533 9.70915 6.35637 9.15035ZM6.31287 21.1838C6.01857 20.0073 4.15022 20.0074 3.85431 21.1833C3.07615 20.7542 2.54287 19.943 2.54287 19.0047V13.9959C2.54341 13.0565 3.07776 12.2452 3.85646 11.8173C4.15291 12.9943 6.01965 12.9937 6.31394 11.8179C7.09265 12.2463 7.62646 13.0565 7.62539 13.9959L7.62646 19.0047C7.62539 19.9441 7.09157 20.7548 6.31287 21.1838ZM25.1881 17.297V15.7031C27.376 15.1404 28.9979 13.1698 28.9979 10.824L28.9989 5.77885C29.0011 3.4342 27.3765 1.463 25.1854 0.90035V0.00110005L22.6447 0V0.90035C20.4563 1.4619 18.8328 3.43365 18.8328 5.77885V10.8251C18.8339 13.1703 20.4563 15.142 22.6447 15.7042V17.297C20.4568 17.8591 18.8328 19.8297 18.8317 22.1749L18.8328 27.2212C18.8328 29.5675 20.4557 31.5381 22.6452 32.1007L22.6447 32.9989L25.1865 33V32.1007C27.376 31.5381 29 29.5674 29 27.2222V22.1771C29 19.8302 27.3776 17.8602 25.1881 17.297ZM21.3762 10.8251L21.3751 5.77885C21.3746 4.8433 21.8961 4.03425 22.6608 3.5992C22.83 4.9929 25.0023 4.9918 25.1704 3.59865C25.9357 4.0337 26.4577 4.8433 26.4593 5.78105L26.4582 10.8257C26.4577 11.7711 25.9239 12.5868 25.1457 13.0185C24.8498 11.8349 22.9809 11.8349 22.6871 13.019C21.909 12.5868 21.3757 11.7705 21.3762 10.8251ZM25.1693 29.4025C25.0012 28.0082 22.83 28.0082 22.6603 29.4014C21.8961 28.9658 21.3741 28.1562 21.3746 27.2212V22.1771C21.3751 21.2305 21.909 20.4144 22.6877 19.9832C22.9852 21.1673 24.8514 21.1668 25.1457 19.9826C25.9239 20.4144 26.4577 21.2311 26.4561 22.1771L26.4571 27.2212C26.4577 28.1573 25.9346 28.9674 25.1693 29.4025Z"
-                  fill="url(#paint0_linear_5325_742)"
-                />
-                <defs>
-                  <linearGradient
-                    id="paint0_linear_5325_742"
-                    x1="14.5"
-                    y1="0"
-                    x2="14.5"
-                    y2="33"
-                    gradientUnits="userSpaceOnUse"
-                  >
-                    <stop stop-color="#FF9838" />
-                    <stop offset="1" stop-color="#FF66DD" />
-                  </linearGradient>
-                </defs>
-              </svg>
+              <img src="assets/img/sidechain-ico.svg" alt="" />
             </div>
-            <span
-              class="sm:text-[20px] sm:leading-[24px] text-3 leading-[15px] ml-[20px] text-white"
+            <span class="sm:text-xl text-xs ml-5 text-white"
               >Sidechain Scalability</span
             >
           </div>
-          <div class="flex flex-row items-center mb-[35px] sm:mb-10">
+          <div class="flex flex-row items-center mb-9 sm:mb-10">
             <div
               class="h-[60px] w-[60px] sm:h-[80px] sm:w-[80px] flex justify-center items-center rounded-2xl bg-[#101E42]"
             >
-              <svg
-                width="37"
-                height="39"
-                viewBox="0 0 29 23"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13.0439 6.76233C13.0947 7.07493 13.1224 7.39673 13.1224 7.68175C13.1224 8.04952 13.0947 8.37131 13.0439 8.68392L14.0686 9.59414C14.3917 9.88376 14.5255 10.3021 14.3547 10.7434C14.2486 10.9457 14.1332 11.2261 14.004 11.456L13.8609 11.7042C13.6809 11.9341 13.5701 12.1547 13.4086 12.3708C13.1455 12.7202 12.6839 12.8351 12.2685 12.6972L10.9623 12.2697C10.4684 12.6788 9.90532 13.0052 9.29145 13.235L8.97297 14.5682C8.9222 14.9957 8.58988 15.3359 8.15601 15.3911C7.84677 15.4279 7.53291 15.4462 7.21443 15.4462C6.89596 15.4462 6.5821 15.4279 6.27285 15.3911C5.83899 15.3359 5.46513 14.9957 5.41435 14.5682L5.09588 13.235C4.52355 13.0052 3.96044 12.6788 3.46427 12.2697L2.16175 12.6972C1.74681 12.8351 1.28433 12.7202 1.02124 12.3708C0.857847 12.1547 0.705532 11.9295 0.565219 11.6996L0.425828 11.456C0.297053 11.2261 0.179909 10.9871 0.0752279 10.7434C-0.0957334 10.3021 0.0352569 9.88376 0.36121 9.59414L1.38495 8.68392C1.33325 8.37131 1.26494 8.04952 1.26494 7.68175C1.26494 7.39673 1.33325 7.07493 1.38495 6.76233L0.36121 5.85211C0.0352569 5.52111 -0.0957334 5.10278 0.0752279 4.70283C0.179909 4.41781 0.297053 4.21968 0.425366 3.98844L0.56568 3.74709C0.705532 3.51494 0.857847 3.2906 1.02124 3.075C1.28433 2.72792 1.74681 2.61253 2.16175 2.7486L3.46427 3.17613C3.96044 2.76975 4.52355 2.44244 5.09588 2.2135L5.41435 0.877126C5.46513 0.450516 5.83899 0.108951 6.27285 0.0565904C6.58528 0.0188478 6.89971 -5.0073e-05 7.21443 9.96395e-08C7.53291 9.96395e-08 7.84677 0.0192159 8.15601 0.0565444C8.58988 0.108951 8.9222 0.450516 8.97297 0.877126L9.29145 2.2135C9.90532 2.44244 10.4684 2.76975 10.9623 3.17613L12.2685 2.7486C12.6839 2.61253 13.1455 2.72792 13.4086 3.075C13.5701 3.28968 13.6809 3.5131 13.8609 3.74388L14.004 3.99166C14.1332 4.22197 14.2486 4.45918 14.3547 4.70283C14.5255 5.10278 14.3917 5.52111 14.0686 5.85211L13.0439 6.76233ZM7.21443 5.47514C5.9913 5.47514 4.99895 6.50489 4.99895 7.68175C4.99895 8.94135 5.9913 9.88836 7.21443 9.88836C8.43756 9.88836 9.42991 8.94135 9.42991 7.68175C9.42991 6.50489 8.43756 5.47514 7.21443 5.47514ZM22.2105 21.6201C21.8966 21.6707 21.5735 21.6983 21.2458 21.6983C20.9181 21.6983 20.595 21.6707 20.2812 21.6201L19.3673 22.6407C19.035 22.9625 18.6149 23.0958 18.2134 22.9257C17.9688 22.82 17.7287 22.7051 17.498 22.5763L17.2487 22.4338C17.0179 22.2545 16.7964 22.1442 16.5795 21.9833C16.2287 21.7213 16.1133 21.2616 16.2518 20.8478L16.681 19.5469C16.2702 19.055 15.9425 18.4941 15.7117 17.8827L14.3732 17.5655C13.944 17.5149 13.6024 17.184 13.547 16.7518C13.5101 16.4438 13.4916 16.1312 13.4916 15.814C13.4916 15.4968 13.5101 15.1842 13.547 14.8762C13.6024 14.4441 13.944 14.0717 14.3732 14.0211L15.7117 13.7039C15.9425 13.1339 16.2702 12.5731 16.681 12.0812L16.2518 10.7802C16.1133 10.3665 16.2287 9.90675 16.5795 9.64471C16.7964 9.48381 17.0226 9.29073 17.2533 9.1896L17.498 9.05169C17.7287 8.92297 17.9272 8.80804 18.2134 8.70231C18.6149 8.53221 19.035 8.66553 19.3673 8.98733L20.2812 10.0079C20.595 9.95731 20.9181 9.92973 21.2458 9.92973C21.5735 9.92973 21.8966 9.95731 22.2105 10.0079L23.1244 8.98733C23.4151 8.66553 23.8352 8.53221 24.2783 8.70231C24.5229 8.80804 24.7629 8.92297 24.9937 9.05169L25.2383 9.1896C25.4691 9.29073 25.6952 9.48381 25.9122 9.64471C26.263 9.90675 26.3783 10.3665 26.2399 10.7802L25.8106 12.0812C26.2214 12.5731 26.5491 13.1339 26.7799 13.7039L28.1184 14.0211C28.5477 14.0717 28.8892 14.4441 28.9446 14.8762C28.9815 15.1842 29 15.4968 29 15.814C29 16.1312 28.9815 16.4438 28.9446 16.7518C28.8892 17.184 28.5477 17.5149 28.1184 17.5655L26.7799 17.8827C26.5491 18.4941 26.2214 19.055 25.8106 19.5469L26.2399 20.8478C26.3783 21.2616 26.263 21.7213 25.9122 21.9833C25.6952 22.1442 25.4737 22.2545 25.2429 22.4338L24.9937 22.5763C24.7629 22.7051 24.4813 22.82 24.2783 22.9257C23.8352 23.0958 23.4151 22.9625 23.1244 22.6407L22.2105 21.6201ZM23.4613 15.814C23.4613 14.5958 22.4689 13.6074 21.2458 13.6074C20.0227 13.6074 19.0303 14.5958 19.0303 15.814C19.0303 17.0322 20.0227 18.0206 21.2458 18.0206C22.4689 18.0206 23.4613 17.0322 23.4613 15.814Z"
-                  fill="url(#paint0_linear_5325_744)"
-                />
-                <defs>
-                  <linearGradient
-                    id="paint0_linear_5325_744"
-                    x1="14.5"
-                    y1="0"
-                    x2="14.5"
-                    y2="23"
-                    gradientUnits="userSpaceOnUse"
-                  >
-                    <stop stop-color="#FF9838" />
-                    <stop offset="1" stop-color="#FF66DD" />
-                  </linearGradient>
-                </defs>
-              </svg>
+              <img src="assets/img/decentralized-ico.svg" alt="" />
             </div>
-            <span
-              class="sm:text-[20px] sm:leading-[24px] text-3 leading-[15px] ml-[20px] text-white"
+            <span class="sm:text-xl text-xs ml-5 text-white"
               >Decentralized Components</span
             >
           </div>
         </div>
       </div>
     </div>
-    <div class="flex items-center justify-center sm:hidden mb-[200px]">
+    <div class="flex items-center justify-center sm:hidden mb-48">
       <a
         href="#"
-        class="inline-flex items-center py-2 w-[185px] justify-center text-transparent text-white font-semibold border border-white rounded-full text-base sm:ml-5"
+        class="inline-flex items-center py-2 w-36 justify-center text-transparent text-white font-semibold border border-white rounded-full text-xs sm:text-base sm:ml-5"
       >
         Learn more</a
       >
@@ -483,26 +356,26 @@
     <div class="sm:mt-[260px]">
       <div>
         <p
-          class="flex items-center justify-center sm:items-start mb-[64px] sm:justify-start text-[27px] opacity-0 welcome-message sm:text-[60px] sm:leading-[66.6px] text-3xl"
+          class="flex items-center justify-center sm:items-start mb-16 sm:justify-start opacity-0 welcome-message sm:text-6xl text-3xl"
         >
           <span
             class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
             >Grant Process</span
           >
         </p>
-        <div class="button mt-[82px] sm:mt-[100px] ml-[2%]">
+        <div class="button mt-[82px] sm:mt-24 ml-[2%]">
           <ol class="relative">
             <li
               class="border-l-4 border-l-orange-600 dark:border-r-orange-600 pb-11 pl-8 sm:pl-12 md:pl-2"
             >
               <span
-                class="flex absolute -left-[10px] sm:-left-6 justify-center items-center w-6 sm:w-12 h-6 sm:h-12 bg-white rounded-full ring-white dark:ring-white text-black font-bold text-[12px] sm:text-3xl"
+                class="flex absolute -left-[10px] sm:-left-6 justify-center items-center w-6 sm:w-12 h-6 sm:h-12 bg-white rounded-full ring-white dark:ring-white text-black font-bold text-xs sm:text-3xl"
               >
                 1
               </span>
               <div>
                 <p
-                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] items-center font-bold text-gray-900 dark:text-white md:ml-[5%] font-inter"
+                  class="flex text-xl sm:text-4xl items-center font-bold text-gray-900 dark:text-white md:ml-[5%] font-inter"
                 >
                   Download Elastos Essentials
                 </p>
@@ -533,17 +406,17 @@
               </span>
               <div>
                 <p
-                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                  class="flex text-xl sm:text-4xl font-bold text-gray-900 dark:text-white md:ml-[5%]"
                 >
                   Create a DID
                   <span
-                    class="text-[12px] sm:text-[40px] flex self-end mt-[2px] ml-[4px] sm:mt-0"
+                    class="text-xs sm:text-4xl flex self-end mt-[2px] ml-[4px] sm:mt-0"
                   >
                     (Decentralized Identifier)</span
                   >
                 </p>
                 <p
-                  class="my-2.5 sm:my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                  class="my-2.5 sm:my-5 text-xs sm:text-2xl font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
                 >
                   A DID (decentralized identity/identifier) will be
                   automatically created during EE wallet onboarding. By issuing
@@ -564,12 +437,12 @@
               </span>
               <div>
                 <p
-                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] items-center font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                  class="flex text-xl sm:text-4xl items-center font-bold text-gray-900 dark:text-white md:ml-[5%]"
                 >
                   Create and submit proposal on Cyber Republic
                 </p>
                 <p
-                  class="my-2.5 sm:my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                  class="my-2.5 sm:my-5 text-xs sm:text-2xl font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
                 >
                   You must first create a proposal on Cyber Republic (CR)
                   website in order to create a proposal on E-lab. More info on
@@ -587,12 +460,12 @@
               </span>
               <div>
                 <p
-                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                  class="flex text-xl sm:text-4xl font-bold text-gray-900 dark:text-white md:ml-[5%]"
                 >
                   Sign in to E-lab
                 </p>
                 <p
-                  class="my-2.5 sm:my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                  class="my-2.5 sm:my-5 text-xs sm:text-2xl font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
                 >
                   Sign in to E-lab by scanning the QR code from EE super wallet.
                 </p>
@@ -608,12 +481,12 @@
               </span>
               <div>
                 <p
-                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                  class="flex text-xl sm:text-4xl font-bold text-gray-900 dark:text-white md:ml-[5%]"
                 >
                   Activate account
                 </p>
                 <p
-                  class="my-2.5 sm:my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                  class="my-2.5 sm:my-5 text-xs sm:text-2xl font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
                 >
                   Activate account either through KYC-me or Discord
                   verification.
@@ -630,12 +503,12 @@
               </span>
               <div>
                 <p
-                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                  class="flex text-xl sm:text-4xl font-bold text-gray-900 dark:text-white md:ml-[5%]"
                 >
                   Create community proposal
                 </p>
                 <p
-                  class="my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                  class="my-5 text-xs sm:text-2xl font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
                 >
                   Create a community proposal by linking the original proposal
                   from the Cyber Republic website.
@@ -652,12 +525,12 @@
               </span>
               <div>
                 <p
-                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                  class="flex text-xl sm:text-4xl font-bold text-gray-900 dark:text-white md:ml-[5%]"
                 >
                   Voting period
                 </p>
                 <p
-                  class="my-2.5 sm:my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                  class="my-2.5 sm:my-5 text-xs sm:text-2xl font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
                 >
                   7-day period community vote on active proposals. Developers
                   are also encouraged to promote their proposals to community
@@ -673,12 +546,12 @@
               </span>
               <div>
                 <p
-                  class="flex text-[20px] sm:text-[40px] leading-[24px] sm:leading-[48px] font-bold text-gray-900 dark:text-white md:ml-[5%]"
+                  class="flex text-xl sm:text-4xl font-bold text-gray-900 dark:text-white md:ml-[5%]"
                 >
                   Start building!
                 </p>
                 <p
-                  class="my-2.5 sm:my-5 text-base text-[12px] sm:text-[24px] font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
+                  class="my-2.5 sm:my-5 text-xs sm:text-2xl font-normal text-gray-400 dark:text-gray-500 md:ml-[5%]"
                 >
                   Grant distributed to winning proposal and developers can start
                   building on Elastos!
@@ -688,10 +561,10 @@
           </ol>
         </div>
       </div>
-      <div class="text-center mt-[5px] sm:mt-[25px]">
+      <div class="text-center mt-1 sm:mt-6">
         <a
           href="#"
-          class="inline-flex items-center py-2 w-[185px] justify-center text-transparent text-white font-semibold border border-white rounded-full text-base ml-0 sm:ml-5"
+          class="inline-flex items-center py-2 w-36 justify-center text-transparent text-white font-semibold border border-white rounded-full text-xs sm:text-base ml-0 sm:ml-5"
           >Learn more</a
         >
       </div>
@@ -700,7 +573,7 @@
     <div class="pt-48 sm:pt-0 md:pt-[10%] lg:pt-[18%]">
       <div class="md:px-[68px] sm:px-0">
         <p
-          class="text-[27px] opacity-0 welcome-message sm:text-[43px] sm:leading-[51.6px] text-3xl text-center font-bold"
+          class="opacity-0 welcome-message sm:text-[43px] sm:leading-[51.6px] text-3xl text-center font-bold"
         >
           <span
             class="text-transparent bg-clip-text bg-gradient-to-r from-pink-elab to-orange-elab"
@@ -727,7 +600,7 @@
               aria-labelledby="heading1"
             >
               <div
-                class="accordion-body flex py-4 text-xs sm:text-base pl-[14px] sm:pl-[55px] pr-5 text-left text-white"
+                class="accordion-body flex py-4 text-xs sm:text-base pl-4 sm:pl-14 pr-5 text-left text-white"
               >
                 Grant distributed to winning proposal and developers can start
                 building on Elastos!
@@ -753,7 +626,7 @@
               aria-labelledby="heading2"
             >
               <div
-                class="accordion-body flex py-4 text-xs sm:text-base pl-[14px] sm:pl-[55px] pr-5 text-left text-white"
+                class="accordion-body flex py-4 text-xs sm:text-base pl-4 sm:pl-14 pr-5 text-left text-white"
               >
                 Grant distributed to winning proposal and developers can start
                 building on Elastos!
@@ -779,7 +652,7 @@
               aria-labelledby="heading3"
             >
               <div
-                class="accordion-body flex py-4 text-xs sm:text-base pl-[14px] sm:pl-[55px] pr-5 text-left text-white"
+                class="accordion-body flex py-4 text-xs sm:text-base pl-4 sm:pl-14 pr-5 text-left text-white"
               >
                 Grant distributed to winning proposal and developers can start
                 building on Elastos!
@@ -805,7 +678,7 @@
               aria-labelledby="heading4"
             >
               <div
-                class="accordion-body flex py-4 text-xs sm:text-base pl-[14px] sm:pl-[55px] pr-5 text-left text-white"
+                class="accordion-body flex py-4 text-xs sm:text-base pl-4 sm:pl-14 pr-5 text-left text-white"
               >
                 Grant distributed to winning proposal and developers can start
                 building on Elastos!
@@ -831,7 +704,7 @@
               aria-labelledby="heading5"
             >
               <div
-                class="accordion-body flex py-4 text-xs sm:text-base pl-[14px] sm:pl-[55px] pr-5 text-left text-white"
+                class="accordion-body flex py-4 text-xs sm:text-base pl-4 sm:pl-14 pr-5 text-left text-white"
               >
                 Grant distributed to winning proposal and developers can start
                 building on Elastos!
@@ -857,7 +730,7 @@
               aria-labelledby="heading6"
             >
               <div
-                class="accordion-body flex py-4 text-xs sm:text-base pl-[14px] sm:pl-[55px] pr-5 text-left text-white"
+                class="accordion-body flex py-4 text-xs sm:text-base pl-4 sm:pl-14 pr-5 text-left text-white"
               >
                 Grant distributed to winning proposal and developers can start
                 building on Elastos!
@@ -867,9 +740,7 @@
         </div>
       </div>
 
-      <div
-        class="mt-[200px] sm:mt-[370px] pb-[2%] justify-end text-center sm:text-left"
-      >
+      <div class="mt-48 sm:mt-96 pb-[2%] justify-end text-center sm:text-left">
         <div class="grid sm:grid-cols-0 md:grid-cols-3 sm:gap-0 md:gap-4">
           <div class="">
             <div class="ml-[25%]">
