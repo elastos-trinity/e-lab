@@ -58,3 +58,8 @@ a:not([href]):not([class]):hover {
   color: initial;
   text-decoration: none;
 }
+
+.module-border-wrap {
+   border-left: 4px solid;
+    border-image: linear-gradient(#FF9838,#FF66DD) 0 100%;
+}
