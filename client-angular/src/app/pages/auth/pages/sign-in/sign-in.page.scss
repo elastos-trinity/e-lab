@@ -59,7 +59,6 @@ a:not([href]):not([class]):hover {
 }
 
 .animate__hover__zoomIn{
-  cursor: pointer;
   &:hover .animate__animated {
     animation-name: zoomIn;
     animation-duration: 1s;
