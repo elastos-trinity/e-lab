@@ -1,18 +1,22 @@
-import { AfterViewInit, Component, OnInit, ViewEncapsulation } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ElastosConnectivityService } from '@core/services/elastos-connectivity/elastos-connectivity.service';
 import { ROUTER_UTILS } from '@core/utils/router.utils';
+import anime from 'animejs';
+import { GradientType, Main } from 'tsparticles';
+import { loadLightInteraction } from 'tsparticles-interaction-light';
+import { loadGradientUpdater } from 'tsparticles-updater-gradient';
 import { AuthService } from '../../services/auth.service';
-import { ElastosConnectivityService } from "@core/services/elastos-connectivity/elastos-connectivity.service";
-import { Container, GradientType, Main } from "tsparticles";
-import { loadGradientUpdater } from "tsparticles-updater-gradient";
-import { loadLightInteraction } from "tsparticles-interaction-light";
-import anime from "animejs";
-
 
 @Component({
   templateUrl: './sign-in.page.html',
   styleUrls: ['sign-in.page.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 /**
  * The sign-in page.
@@ -25,8 +29,8 @@ export class SignInPage implements OnInit, AfterViewInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private elastosConnectivityService: ElastosConnectivityService,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+  ) {}
 
   ngAfterViewInit(): void {
     anime({
@@ -34,65 +38,65 @@ export class SignInPage implements OnInit, AfterViewInit {
       strokeDashoffset: [anime.setDashoffset, 0],
       easing: 'linear',
       duration: 6000,
-      begin: function(anim) {
+      begin: function (anim) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         document
           .querySelector('#sign-in path')
-          .setAttribute("stroke", "url(#outside)");
+          .setAttribute('stroke', 'url(#outside)');
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         document
           .querySelector('#sign-in path')
-          .setAttribute("fill", "url(#inside)");
+          .setAttribute('fill', 'url(#inside)');
       },
     });
-
 
     anime({
       targets: '#sign-in .welcome-message',
       opacity: '1',
       easing: 'easeInOutQuad',
-      duration: 3000
+      duration: 3000,
     });
 
     anime({
       targets: '#sign-in .button',
       opacity: '1',
       easing: 'easeInOutQuad',
-      duration: 1000
-    })
+      duration: 1000,
+    });
 
     anime({
       targets: '#sign-in .how-to-sign-in',
       opacity: '1',
       duration: 3000,
       easing: 'easeInOutQuad',
-      delay: 500
-    })
+      delay: 500,
+    });
 
-    setTimeout(function() {
+    setTimeout(function () {
       anime({
         targets: '#sign-in button',
         scale: {
           value: 1,
           duration: 3000,
-          easing: 'easeInOutQuart'
+          easing: 'easeInOutQuart',
         },
-      })
+      });
     }, 1000);
-
   }
 
   async ngOnInit(): Promise<void> {
-    if (this.elastosConnectivityService.isAlreadyConnected() && this.authService.isLoggedIn$) {
-      await this.elastosConnectivityService.restoreWalletSession()
+    if (
+      this.elastosConnectivityService.isAlreadyConnected() &&
+      this.authService.isLoggedIn$
+    ) {
+      await this.elastosConnectivityService.restoreWalletSession();
     }
     this.authService.isLoggedIn$.subscribe((v) => {
       this.isLoggedIn = v;
-    })
+    });
   }
-
 
   async onClickSignIn(): Promise<boolean> {
     try {
@@ -108,114 +112,112 @@ export class SignInPage implements OnInit, AfterViewInit {
       }
     } catch {
       this.isLoading = false;
-      return Promise.resolve(false)
+      return Promise.resolve(false);
     }
   }
 
-
-
   //  ======= PARTICLES
-  id = "tsparticles";
+  id = 'tsparticles';
   particlesOptions = {
     fpsLimit: 60,
     background: {
-      color: '#000B26' as const
+      color: '#000B26' as const,
     },
     fullScreen: {
       enabled: true,
-      zIndex: -1
+      zIndex: -1,
     },
     interactivity: {
       detect_on: 'window' as const,
       events: {
         onHover: {
           enable: true,
-          mode: "repulse",
-          parallax: { enable: false, force: 60, smooth: 10 }
+          mode: 'repulse',
+          parallax: { enable: false, force: 60, smooth: 10 },
         },
-        resize: true
+        resize: true,
       },
       modes: {
         bubble: {
           distance: 400,
           duration: 2,
           opacity: 0.8,
-          size: 40
+          size: 40,
         },
         push: {
-          quantity: 4
+          quantity: 4,
         },
         repulse: {
           distance: 200,
-          duration: 0.4
+          duration: 0.4,
         },
         light: {
           shadow: {
             enabled: true,
             color: {
-              value: "#FF66DD"
+              value: '#FF66DD',
             },
-            length: 5000
-          }
-        }
-      }
+            length: 5000,
+          },
+        },
+      },
     },
     particles: {
       collisions: {
         enable: false,
-        mode: "bounce" as const
+        mode: 'bounce' as const,
       },
       move: {
-        direction: "top-left" as const,
+        direction: 'top-left' as const,
         enable: true,
         random: false,
         speed: 4,
-        straight: false
+        straight: false,
       },
       number: {
         density: {
           enable: true,
-          area: 800
+          area: 800,
         },
-        value: 7
+        value: 7,
       },
       opacity: {
         value: 0.7,
         random: true,
       },
       shape: {
-        type: "circle" as const
+        type: 'circle' as const,
       },
       size: {
         random: true,
-        value: 100
+        value: 100,
       },
       gradient: [
         {
-          "type": GradientType.linear,
-          "colors": [
+          type: GradientType.linear,
+          colors: [
             {
-              "stop":0,
-              "value": {
-                value: "#FF66DD",
-                opacity: 1
-              }
+              stop: 0,
+              value: {
+                value: '#FF66DD',
+                opacity: 1,
+              },
             },
             {
-              "stop": 1,
-              "value": {
-                value: "#FF9838"
-              }
-            }
-          ]
-        }
+              stop: 1,
+              value: {
+                value: '#FF9838',
+              },
+            },
+          ],
+        },
       ],
     },
-    detectRetina: true
+    detectRetina: true,
   };
 
   particlesInit(main: Main): void {
     loadGradientUpdater(main);
     loadLightInteraction(main);
-  };
+  }
 }

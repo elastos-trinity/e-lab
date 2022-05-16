@@ -57,3 +57,11 @@ a:not([href]):not([class]):hover {
    border-left: 4px solid;
     border-image: linear-gradient(#FF9838,#FF66DD) 0 100%;
 }
+
+.animate__hover__zoomIn{
+  cursor: pointer;
+  &:hover .animate__animated {
+    animation-name: zoomIn;
+    animation-duration: 1s;
+}
+}
