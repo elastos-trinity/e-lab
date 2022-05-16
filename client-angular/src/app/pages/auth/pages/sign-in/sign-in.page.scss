@@ -26,7 +26,7 @@ button {
 }
 
 .accordion-button {
-    border-radius: 9999px !important;
+  border-radius: 9999px !important;
 }
 
 .accordian-button-color {
@@ -54,13 +54,6 @@ a:not([href]):not([class]):hover {
 }
 
 .module-border-wrap {
-   border-left: 4px solid;
-    border-image: linear-gradient(#FF9838,#FF66DD) 0 100%;
-}
-
-.animate__hover__zoomIn{
-  &:hover .animate__animated {
-    animation-name: zoomIn;
-    animation-duration: 1s;
-}
+  border-left: 4px solid;
+  border-image: linear-gradient(#ff9838, #ff66dd) 0 100%;
 }
