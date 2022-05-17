@@ -12,6 +12,8 @@ import { GradientType, Main } from 'tsparticles';
 import { loadLightInteraction } from 'tsparticles-interaction-light';
 import { loadGradientUpdater } from 'tsparticles-updater-gradient';
 import { AuthService } from '../../services/auth.service';
+import {ProposalsService} from "@pages/proposals/services/proposals.service";
+import {UserService} from "@pages/user/services/user.service";
 
 @Component({
   templateUrl: './sign-in.page.html',
@@ -25,12 +27,41 @@ export class SignInPage implements OnInit, AfterViewInit {
   isLoggedIn!: boolean;
   isLoading = false;
 
+  activeUserCount = 0;
+  totalActiveProposals = 0;
+  projectCompleted = 0;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private elastosConnectivityService: ElastosConnectivityService,
+    private proposalService: ProposalsService,
+    private userService: UserService,
     private authService: AuthService,
   ) {}
+
+
+  /**
+   * Get the proposal list
+   */
+  public getActivatedAccount(): void {
+    this.userService
+      .getActivedUserCount()
+      .subscribe(activeUserCount => {
+        this.activeUserCount = activeUserCount.active
+      })
+  }
+
+  /**
+   * Get the proposal list
+   */
+  public getActiveProposals(): void {
+    this.proposalService
+      .getActiveProposals()
+      .subscribe(activeProposalResponse => {
+        this.totalActiveProposals = activeProposalResponse.totalActive
+      })
+  }
 
   ngAfterViewInit(): void {
     anime({
@@ -96,6 +127,9 @@ export class SignInPage implements OnInit, AfterViewInit {
     this.authService.isLoggedIn$.subscribe((v) => {
       this.isLoggedIn = v;
     });
+
+    this.getActivatedAccount();
+    this.getActiveProposals();
   }
 
   async onClickSignIn(): Promise<boolean> {

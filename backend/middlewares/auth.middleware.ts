@@ -5,7 +5,9 @@ import { dbService } from "../services/db.service";
 
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
-    if (req.path !== "/api/v1/login" && req.path != "/api/v1/check") {
+    if (req.path !== "/api/v1/login" && req.path != "/api/v1/check" && req.path != "/api/v1/users/count"
+        && req.path != "/api/v1/proposals/active"
+    ) {
         let token = req.headers['token'] as string;
         if (token) {
             // eslint-disable-next-line @typescript-eslint/no-misused-promises

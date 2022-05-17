@@ -884,6 +884,15 @@ class DBService {
             return err
         }
     }
+
+    async countUsers() {
+        const users = await this.client.db().collection('users').count({});
+        const activeUsers = await this.client.db().collection('users').count({active: true});
+        return {
+            users: users,
+            active: activeUsers
+        }
+    }
 }
 
 export const dbService = new DBService();

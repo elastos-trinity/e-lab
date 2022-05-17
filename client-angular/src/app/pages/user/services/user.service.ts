@@ -42,4 +42,8 @@ export class UserService {
   activateByDiscord(userId: string, discordId: string): Observable<any> {
     return this.elabUserService.setDiscordId(userId, discordId);
   }
+
+  getActivedUserCount(): Observable<any> {
+    return this.elabUserService.count();
+  }
 }

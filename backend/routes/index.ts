@@ -258,6 +258,17 @@ router.post('/user/wallet', async (req, res) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/users/count', async (req, res) => {
+    try {
+        res.json(await dbService.countUsers());
+    } catch (e) {
+        console.error(e);
+        res.json({ code: 400, message: 'bad request' });
+        return;
+    }
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/users/list', async (req, res) => {
     if (req.user.type !== 'superadmin') {
         res.json({ code: 403, message: 'forbidden' });
@@ -483,7 +494,7 @@ router.get('/proposals/active', async (req, res) => {
     let pageNumStr = req.query.pageNum as string;
     let pageSizeStr = req.query.pageSize as string;
     let title = req.query.title as string;
-    let userId: string = req.user.did;
+    let userId: string = req?.user?.did;
 
     try {
         let pageNum: number = pageNumStr ? parseInt(pageNumStr) : 1;

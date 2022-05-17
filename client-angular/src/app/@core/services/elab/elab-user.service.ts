@@ -41,6 +41,10 @@ export class ElabUserService {
       }))
   }
 
+  count(): Observable<any> {
+    return this.http.get<ElabBackendUserListDto>(ElabUserService.userURL + '/users/count')
+  }
+
   /**
    * Set the user status
    * @param userDid
